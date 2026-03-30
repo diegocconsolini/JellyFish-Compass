@@ -1,8 +1,12 @@
 export type SectionId =
+  | "sprint-health"
+  | "delivery"
+  | "allocation"
+  | "devex"
+  | "people-teams"
+  | "reference"
   | "academy"
   | "playbooks"
-  | "examples"
-  | "reference"
   | "workspace"
   | "showcase";
 
@@ -50,4 +54,68 @@ export type EndpointDefinition = {
   path: string;
   domain: string;
   description: string;
+};
+
+export type JellyfishEndpoint = {
+  path: string;
+  name: string;
+  desc: string;
+};
+
+export type EndpointGroup = {
+  domain: string;
+  endpoints: JellyfishEndpoint[];
+};
+
+export type DoraMetric = {
+  name: string;
+  desc: string;
+};
+
+export type Framework = {
+  name: string;
+  desc: string;
+};
+
+export type IntegrationCategory = {
+  category: string;
+  tools: string[];
+};
+
+export type PlatformFeatureCategory = {
+  category: string;
+  features: string[];
+};
+
+export type MockSprint = {
+  name: string;
+  committed: number;
+  completed: number;
+  carryOver: number;
+  velocity: number;
+  points: number;
+};
+
+export type MockDeliverable = {
+  name: string;
+  category: string;
+  issues: number;
+  percentComplete: number;
+  status: "on-track" | "at-risk" | "behind";
+};
+
+export type MockTeamAllocation = {
+  team: string;
+  totalFte: number;
+  features: number;
+  ktlo: number;
+  techDebt: number;
+};
+
+export type MockPersonAllocation = {
+  name: string;
+  fte: number;
+  primaryCategory: string;
+  spreadCount: number;
+  flag?: string;
 };
