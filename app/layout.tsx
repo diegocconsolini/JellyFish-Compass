@@ -1,30 +1,31 @@
 import type { Metadata } from "next";
+import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import { ReactNode } from "react";
 
 import "./globals.css";
-
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
+const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
   title: "Jellyfish Compass",
-  description:
-    "A Jellyfish educational reference, examples library, and guided workflow app for Scrum Masters and Jellyfish users.",
+  description: "Modern dashboard for Scrum Masters — metrics, API explorer, and guided workflows powered by Jellyfish.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
-      <body>
-        <div className="app-shell">
-          <SiteHeader />
-          <main>{children}</main>
-          <SiteFooter />
-        </div>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${dmSans.variable} ${jetBrainsMono.variable}`}>
+        <ThemeProvider>
+          <div className="min-h-screen flex flex-col">
+            <SiteHeader />
+            <main className="flex-1">{children}</main>
+            <SiteFooter />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
