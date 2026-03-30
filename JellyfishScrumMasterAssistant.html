@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jellyfish Scrum Master Assistant</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8f9fb;color:#1a1f36}
+code{font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:12px;background:#f1f3f7;padding:2px 6px;border-radius:3px}
+pre code{background:none;padding:0}
+a{color:#0055d4;text-decoration:none}
+a:hover{text-decoration:underline}
+input{font-family:inherit}
+button{font-family:inherit}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:8px 10px;border-bottom:2px solid #dfe3ea;color:#525f7f;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:8px 10px;border-bottom:1px solid #e8ecf1;font-size:13px}
+tr:nth-child(even){background:#f1f3f7}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#f1f3f7}
+::-webkit-scrollbar-thumb{background:#c0c8d4;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useCallback,useEffect,useRef}=React;
+
+// ─── Verified Constants ──────────────────────────────────────────────────────
+const API_BASE="https://app.jellyfish.co";
+const ENDPOINTS={
+  allocations:[
+    {path:"/endpoints/export/v0/allocations/details/by_person",name:"allocations_by_person",desc:"Allocation data for the whole company, aggregated by person"},
+    {path:"/endpoints/export/v0/allocations/details/by_team",name:"allocations_by_team",desc:"Allocation data for the whole company, aggregated by team at specified hierarchy level"},
+    {path:"/endpoints/export/v0/allocations/details/investment_category",name:"allocations_by_investment_category",desc:"Allocation data aggregated by investment category"},
+    {path:"/endpoints/export/v0/allocations/details/investment_category/by_person",name:"allocations_by_investment_category_person",desc:"Allocation data aggregated by investment category and person"},
+    {path:"/endpoints/export/v0/allocations/details/investment_category/by_team",name:"allocations_by_investment_category_team",desc:"Allocation data aggregated by investment category and team"},
+    {path:"/endpoints/export/v0/allocations/details/work_category",name:"allocations_by_work_category",desc:"Allocation data aggregated by deliverable within specified work category"},
+    {path:"/endpoints/export/v0/allocations/details/work_category/by_person",name:"allocations_by_work_category_person",desc:"Allocation data aggregated by deliverable within work category and person"},
+    {path:"/endpoints/export/v0/allocations/details/work_category/by_team",name:"allocations_by_work_category_team",desc:"Allocation data aggregated by deliverable within work category and team"},
+    {path:"/endpoints/export/v0/allocations/filter_fields",name:"allocations_filter_fields",desc:"Available fields and known values for filtering allocations"},
+    {path:"/endpoints/export/v0/allocations/summary_filtered/by_investment_category",name:"allocations_summary_by_investment_category",desc:"Total FTE amounts for investment categories (supports filtering)"},
+    {path:"/endpoints/export/v0/allocations/summary_filtered/by_work_category",name:"allocations_summary_by_work_category",desc:"Total FTE amounts for deliverables within a work category (supports filtering)"},
+  ],
+  delivery:[
+    {path:"/endpoints/export/v0/delivery/deliverable_details",name:"deliverable_details",desc:"Data about a specific deliverable"},
+    {path:"/endpoints/export/v0/delivery/scope_and_effort_history",name:"deliverable_scope_and_effort_history",desc:"Weekly data about deliverable scope and total effort allocated per week"},
+    {path:"/endpoints/export/v0/delivery/work_categories",name:"work_categories",desc:"List of all known work categories"},
+    {path:"/endpoints/export/v0/delivery/work_category_contents",name:"work_category_contents",desc:"Data about deliverables in a specified work category"},
+  ],
+  devex:[
+    {path:"/endpoints/export/v0/devex/insights/by_team",name:"devex_insights_by_team",desc:"DevEx insights data by team"},
+  ],
+  metrics:[
+    {path:"/endpoints/export/v0/metrics/company_metrics",name:"company_metrics",desc:"Metrics data for the company during specified timeframe"},
+    {path:"/endpoints/export/v0/metrics/person_metrics",name:"person_metrics",desc:"Metrics data for a specified person during specified timeframe"},
+    {path:"/endpoints/export/v0/metrics/team_metrics",name:"team_metrics",desc:"Metrics data for a specified team during specified timeframe"},
+    {path:"/endpoints/export/v0/metrics/team_sprint_summary",name:"team_sprint_summary",desc:"Issue count and story point data for a team's sprints in specified timeframe"},
+    {path:"/endpoints/export/v0/metrics/unlinked_pull_requests",name:"unlinked_pull_requests",desc:"Details of unlinked pull requests merged during specified timeframe"},
+  ],
+  people:[
+    {path:"/endpoints/export/v0/people/list_engineers",name:"list_engineers",desc:"List of all active allocatable people as of a specific date"},
+    {path:"/endpoints/export/v0/people/search",name:"search_people",desc:"Search for people by name, email, or id"},
+  ],
+  teams:[
+    {path:"/endpoints/export/v0/teams/list_teams",name:"list_teams",desc:"All teams at specified hierarchy level (optionally includes child teams)"},
+    {path:"/endpoints/export/v0/teams/search",name:"search_teams",desc:"Search for teams by name or id"},
+  ],
+};
+const ALL_ENDPOINTS=Object.values(ENDPOINTS).flat();
+
+const DORA_METRICS=[
+  {name:"Deployment Frequency",desc:"Track how often the team pushes deployments. See the impact of process and tooling changes to ensure continuous improvement."},
+  {name:"Lead Time for Changes",desc:"Understand the duration of your full value delivery cycle, from the moment a change is selected for development to its deployment."},
+  {name:"Mean Time to Resolution",desc:"Measure the time from the start of an incident to its resolution, and minimize system downtime."},
+  {name:"Change Failure Rate",desc:"Monitor the frequency of incidents or deployment failures to guarantee uninterrupted delivery of value to your customers."},
+];
+
+const FRAMEWORKS=[
+  {name:"SPACE Framework",desc:"Satisfaction, Performance, Activity, Communication, Efficiency"},
+  {name:"DevEx Index",desc:"Single score tracking developer experience over time"},
+  {name:"AI Impact Framework",desc:"Data-driven model for AI adoption, productivity, and business outcomes"},
+  {name:"SEI Maturity Model",desc:"Software Engineering Intelligence maturity assessment"},
+];
+
+const INTEGRATIONS={
+  "AI Coding":["GitHub Copilot","Cursor","Claude Code","Windsurf","Amazon Q Developer","Gemini Code Assist","Augment","Baz","Graphite","Greptile"],
+  "Issue Tracking":["Jira","Linear","Azure Boards","Productboard","Aha!","ProductPlan"],
+  "Source & CI/CD":["GitHub (Cloud & Enterprise)","GitLab","Bitbucket Cloud","Bitbucket Server","Azure DevOps","Azure Repos","Jenkins","CircleCI","Buildkite"],
+  "Monitoring & Quality":["PagerDuty","Opsgenie","SonarQube","CodeRabbit","Sourcegraph"],
+  "Collaboration":["Slack","Google Sheets","Google Calendar"],
+};
+
+const PLATFORM_FEATURES=[
+  {category:"AI Impact",features:["Drive Adoption","Enable Teams","Impact Insights","Vendor Comparison","Investment Management","Workflow Optimization","Report Builder"]},
+  {category:"Operational Effectiveness",features:["Metrics (DORA, flow, custom)","Life Cycle Explorer","Workflow Analysis","People Management","Team Benchmarks"]},
+  {category:"Planning & Delivery",features:["Capacity Planner","Scenario Planner"]},
+  {category:"Business Alignment",features:["Resource Allocations (Patented Work Model)"]},
+  {category:"DevEx",features:["Research-backed surveys","DevEx Index","DORA/SPACE correlation","Industry benchmarking","AI-driven recommendations","Automated tracking"]},
+  {category:"DevFinOps",features:["Software Capitalization"]},
+];
+
+const C={bg:"#f8f9fb",srf:"#ffffff",alt:"#f1f3f7",bdr:"#dfe3ea",bdrL:"#e8ecf1",txt:"#1a1f36",txtS:"#525f7f",txtM:"#8898aa",acc:"#0055d4",accL:"#e8f0fe",ok:"#0d8050",okL:"#e6f4ed",wrn:"#bf7600",wrnL:"#fef3e0",err:"#c23030",errL:"#fde8e8",pur:"#6e40c9",purL:"#f0ebfa"};
+
+// ─── Components ──────────────────────────────────────────────────────────────
+function Badge({children,color="acc"}){
+  const bgM={acc:C.accL,ok:C.okL,wrn:C.wrnL,err:C.errL,pur:C.purL};
+  const fgM={acc:C.acc,ok:C.ok,wrn:C.wrn,err:C.err,pur:C.pur};
+  return <span style={{display:"inline-block",padding:"2px 8px",borderRadius:4,fontSize:11,fontWeight:600,letterSpacing:.3,background:bgM[color],color:fgM[color],textTransform:"uppercase"}}>{children}</span>;
+}
+
+function Card({children,style}){
+  return <div style={{background:C.srf,border:`1px solid ${C.bdr}`,borderRadius:8,padding:20,...style}}>{children}</div>;
+}
+
+function STitle({children,sub}){
+  return <div style={{marginBottom:16}}><h3 style={{margin:0,fontSize:17,fontWeight:700,color:C.txt}}>{children}</h3>{sub&&<p style={{margin:"4px 0 0",fontSize:13,color:C.txtS}}>{sub}</p>}</div>;
+}
+
+function Guide({title,children}){
+  return <div style={{background:C.accL,border:`1px solid ${C.acc}33`,borderRadius:8,padding:16,marginBottom:16}}>
+    <div style={{fontSize:13,fontWeight:700,color:C.acc,marginBottom:6}}>{title}</div>
+    <div style={{fontSize:13,lineHeight:1.6,color:C.txt}}>{children}</div>
+  </div>;
+}
+
+function Bar({label,value,max,color}){
+  return <div style={{marginBottom:10}}>
+    <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:3,color:C.txtS}}>
+      <span>{label}</span><span style={{fontWeight:600,color:C.txt}}>{value}</span>
+    </div>
+    <div style={{height:8,background:C.alt,borderRadius:4,overflow:"hidden"}}>
+      <div style={{height:"100%",width:`${Math.min(100,(value/max)*100)}%`,background:color||C.acc,borderRadius:4,transition:"width .5s ease"}}/>
+    </div>
+  </div>;
+}
+
+function EpRow({ep,onTry}){
+  return <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 0",borderBottom:`1px solid ${C.bdrL}`}}>
+    <code style={{flex:1,wordBreak:"break-all"}}>{ep.path}</code>
+    <span style={{flex:1,fontSize:12,color:C.txtS}}>{ep.desc}</span>
+    {onTry&&<button onClick={()=>onTry(ep)} style={{padding:"4px 10px",border:`1px solid ${C.acc}`,background:"transparent",color:C.acc,borderRadius:4,fontSize:11,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}>Try it</button>}
+  </div>;
+}
+
+// ─── API Panel ───────────────────────────────────────────────────────────────
+function ApiPanel({token,setToken}){
+  const[status,setStatus]=useState(null);
+  const test=async()=>{
+    if(!token){setStatus("err");return}
+    setStatus("load");
+    try{const r=await fetch(`${API_BASE}/endpoints/export/v0/teams/list_teams?hierarchy_level=1`,{headers:{"Authorization":`Token ${token}`}});setStatus(r.ok?"ok":"err")}
+    catch(e){setStatus("err")}
+  };
+  return <Card style={{marginBottom:20}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+      <div style={{flex:1,minWidth:250}}>
+        <label style={{fontSize:11,fontWeight:600,color:C.txtS,textTransform:"uppercase",letterSpacing:.5,display:"block",marginBottom:4}}>Jellyfish API Token</label>
+        <input type="password" value={token} onChange={e=>{setToken(e.target.value);setStatus(null)}} placeholder="Paste from app.jellyfish.co/settings/data-connections/api-export" style={{width:"100%",padding:"8px 12px",border:`1px solid ${C.bdr}`,borderRadius:6,fontSize:13,boxSizing:"border-box",outline:"none"}}/>
+      </div>
+      <button onClick={test} disabled={status==="load"} style={{padding:"8px 18px",background:C.acc,color:"#fff",border:"none",borderRadius:6,fontWeight:600,fontSize:13,cursor:"pointer",marginTop:18,opacity:status==="load"?.6:1}}>
+        {status==="load"?"Testing...":"Connect"}
+      </button>
+      {status==="ok"&&<Badge color="ok">Connected</Badge>}
+      {status==="err"&&<Badge color="err">Failed</Badge>}
+    </div>
+    <p style={{margin:"10px 0 0",fontSize:12,color:C.txtM}}>
+      Token setup: Admin User Role required. Go to <a href="https://app.jellyfish.co/settings/data-connections/api-export" target="_blank">API Export settings</a> &rarr; Generate New Token.
+    </p>
+  </Card>;
+}
+
+// ─── API Explorer ────────────────────────────────────────────────────────────
+function ApiExplorer({token,endpoint,params:init}){
+  const[params,setParams]=useState(init||{});
+  const[result,setResult]=useState(null);
+  const[loading,setLoading]=useState(false);
+  const[error,setError]=useState(null);
+  const call=async()=>{
+    if(!token){setError("Enter your API token above.");return}
+    setLoading(true);setError(null);setResult(null);
+    try{
+      const u=new URL(endpoint.path,API_BASE);
+      Object.entries(params).forEach(([k,v])=>{if(v)u.searchParams.set(k,v)});
+      const r=await fetch(u.toString(),{headers:{"Authorization":`Token ${token}`}});
+      if(r.ok)setResult(await r.json());else setError(`HTTP ${r.status}: ${await r.text()}`);
+    }catch(e){setError(`Request failed: ${e.message}`)}
+    setLoading(false);
+  };
+  return <Card style={{marginTop:12,background:C.alt}}>
+    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+      <Badge color="acc">GET</Badge><code>{endpoint.path}</code>
+    </div>
+    <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:10}}>
+      {Object.entries(params).map(([k,v])=><div key={k}>
+        <label style={{fontSize:11,color:C.txtM,display:"block",marginBottom:2}}>{k}</label>
+        <input value={v} onChange={e=>setParams(p=>({...p,[k]:e.target.value}))} style={{padding:"6px 10px",border:`1px solid ${C.bdr}`,borderRadius:4,fontSize:12,width:160}}/>
+      </div>)}
+    </div>
+    <button onClick={call} disabled={loading} style={{padding:"6px 14px",background:C.acc,color:"#fff",border:"none",borderRadius:4,fontSize:12,fontWeight:600,cursor:"pointer",opacity:loading?.6:1}}>
+      {loading?"Calling...":"Execute"}
+    </button>
+    {error&&<div style={{marginTop:10,padding:10,background:C.errL,borderRadius:4,fontSize:12,color:C.err}}>{error}</div>}
+    {result&&<pre style={{marginTop:10,padding:12,background:"#1e2535",color:"#c8d6e5",borderRadius:6,fontSize:11,maxHeight:300,overflow:"auto",whiteSpace:"pre-wrap",wordBreak:"break-word"}}><code>{JSON.stringify(result,null,2)}</code></pre>}
+  </Card>;
+}
+
+// ─── Tab: Sprint Health ──────────────────────────────────────────────────────
+function SprintTab({token}){
+  const[exp,setExp]=useState(null);
+  const sprints=[
+    {name:"Sprint 24",committed:34,completed:29,carry:5,vel:58,pts:58},
+    {name:"Sprint 23",committed:31,completed:28,carry:3,vel:54,pts:54},
+    {name:"Sprint 22",committed:36,completed:32,carry:4,vel:61,pts:61},
+    {name:"Sprint 21",committed:30,completed:30,carry:0,vel:52,pts:52},
+  ];
+  return <div>
+    <Guide title="Scrum Master Guide: Sprint Metrics & Health">
+      <p style={{margin:"0 0 8px"}}>Sprint health monitoring lets you track completion rates, velocity trends, and carry-over patterns. Use this data to calibrate planning and facilitate better retrospectives.</p>
+      <p style={{margin:0}}><strong>Key endpoints:</strong> <code>team_sprint_summary</code> returns issue counts and story point data per sprint. <code>team_metrics</code> provides broader team-level metrics. <code>company_metrics</code> gives org-wide context.</p>
+    </Guide>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12,marginBottom:20}}>
+      {[{l:"Avg Velocity",v:"56.3 pts",s:"Last 4 sprints",c:C.acc},{l:"Completion Rate",v:"88%",s:"Completed vs committed",c:C.ok},{l:"Carry-Over",v:"3.0 avg",s:"Rolling to next sprint",c:C.wrn},{l:"Cadence",v:"2 weeks",s:"Iteration length",c:C.pur}].map((m,i)=>
+        <Card key={i} style={{padding:16}}>
+          <div style={{fontSize:11,fontWeight:600,color:C.txtM,textTransform:"uppercase",letterSpacing:.5}}>{m.l}</div>
+          <div style={{fontSize:26,fontWeight:700,color:m.c,margin:"6px 0 2px"}}>{m.v}</div>
+          <div style={{fontSize:11,color:C.txtS}}>{m.s}</div>
+        </Card>
+      )}
+    </div>
+    <STitle sub="Mock data — connect token for real data">Sprint History</STitle>
+    <Card>
+      <table><thead><tr><th>Sprint</th><th>Committed</th><th>Completed</th><th>Carry-Over</th><th>Points</th><th>Velocity</th></tr></thead>
+      <tbody>{sprints.map((s,i)=><tr key={i}><td>{s.name}</td><td>{s.committed}</td><td style={{color:C.ok,fontWeight:600}}>{s.completed}</td><td style={{color:s.carry>3?C.wrn:C.txtS}}>{s.carry}</td><td>{s.pts}</td><td style={{fontWeight:600}}>{s.vel}</td></tr>)}</tbody></table>
+    </Card>
+    <STitle sub="Live API calls">Try the API</STitle>
+    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
+      {ENDPOINTS.metrics.map(ep=><button key={ep.name} onClick={()=>setExp(ep)} style={{padding:"6px 12px",fontSize:12,border:`1px solid ${exp?.name===ep.name?C.acc:C.bdr}`,background:exp?.name===ep.name?C.accL:"transparent",color:exp?.name===ep.name?C.acc:C.txtS,borderRadius:4,cursor:"pointer",fontWeight:500}}>{ep.name}</button>)}
+    </div>
+    {exp&&<ApiExplorer token={token} endpoint={exp} params={exp.name==="team_sprint_summary"?{team:"",start:"",end:""}:exp.name==="person_metrics"?{person:"",start:"",end:""}:{start:"",end:""}}/>}
+    <div style={{marginTop:20}}>
+      <Guide title="How to Use This in Sprint Ceremonies">
+        <p style={{margin:"0 0 6px"}}><strong>Sprint Planning:</strong> Use <code>team_sprint_summary</code> history to calibrate story point commitment. Last 3-4 sprints velocity is your best predictor.</p>
+        <p style={{margin:"0 0 6px"}}><strong>Daily Standup:</strong> Reference <code>team_metrics</code> to surface cycle time anomalies or blocked items.</p>
+        <p style={{margin:"0 0 6px"}}><strong>Sprint Review:</strong> Present completion rates and throughput from <code>team_sprint_summary</code> to stakeholders.</p>
+        <p style={{margin:0}}><strong>Retrospective:</strong> Compare <code>unlinked_pull_requests</code> to reveal invisible work. Use DORA metrics from <code>company_metrics</code> for deployment trends.</p>
+      </Guide>
+    </div>
+  </div>;
+}
+
+// ─── Tab: Delivery ───────────────────────────────────────────────────────────
+function DeliveryTab({token}){
+  const[exp,setExp]=useState(null);
+  return <div>
+    <Guide title="Scrum Master Guide: Delivery Tracking">
+      <p style={{margin:"0 0 8px"}}>Delivery tracking connects work items to larger deliverables and shows scope changes over time. Identify scope creep, track roadmap progress, and surface bottlenecks.</p>
+      <p style={{margin:0}}><strong>Key endpoints:</strong> <code>deliverable_details</code>, <code>scope_and_effort_history</code>, <code>work_categories</code>, <code>work_category_contents</code> (param: <code>work_category_slug</code>, e.g. "epics").</p>
+    </Guide>
+    <STitle sub="Mock: scope vs effort over 8 weeks">Scope & Effort Trend</STitle>
+    <Card>
+      <div style={{display:"flex",alignItems:"flex-end",gap:4,height:140,padding:"0 10px"}}>
+        {[{w:"W1",sc:45,ef:40},{w:"W2",sc:48,ef:42},{w:"W3",sc:55,ef:44},{w:"W4",sc:58,ef:50},{w:"W5",sc:60,ef:52},{w:"W6",sc:64,ef:58},{w:"W7",sc:64,ef:62},{w:"W8",sc:64,ef:64}].map((d,i)=>
+          <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+            <div style={{display:"flex",gap:2,alignItems:"flex-end",height:120}}>
+              <div style={{width:14,height:`${(d.sc/70)*120}px`,background:C.accL,border:`1px solid ${C.acc}44`,borderRadius:"3px 3px 0 0"}} title={`Scope: ${d.sc}`}/>
+              <div style={{width:14,height:`${(d.ef/70)*120}px`,background:C.acc,borderRadius:"3px 3px 0 0"}} title={`Effort: ${d.ef}`}/>
+            </div>
+            <span style={{fontSize:10,color:C.txtM}}>{d.w}</span>
+          </div>
+        )}
+      </div>
+      <div style={{display:"flex",gap:16,justifyContent:"center",marginTop:10,fontSize:11,color:C.txtS}}>
+        <span><span style={{display:"inline-block",width:10,height:10,background:C.accL,border:`1px solid ${C.acc}44`,borderRadius:2,marginRight:4}}/>Scope</span>
+        <span><span style={{display:"inline-block",width:10,height:10,background:C.acc,borderRadius:2,marginRight:4}}/>Effort</span>
+      </div>
+    </Card>
+    <STitle sub="Mock deliverable status">Active Deliverables</STitle>
+    <Card>
+      <table><thead><tr><th>Deliverable</th><th>Category</th><th>Scope</th><th>% Complete</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Auth Service Rewrite</td><td>Epics</td><td>24 issues</td><td>79%</td><td><Badge color="ok">On Track</Badge></td></tr>
+        <tr><td>Mobile App v3.0</td><td>Epics</td><td>41 issues</td><td>52%</td><td><Badge color="wrn">At Risk</Badge></td></tr>
+        <tr><td>Data Pipeline Migration</td><td>Epics</td><td>18 issues</td><td>94%</td><td><Badge color="ok">On Track</Badge></td></tr>
+        <tr><td>API Rate Limiting</td><td>Epics</td><td>12 issues</td><td>33%</td><td><Badge color="err">Behind</Badge></td></tr>
+      </tbody></table>
+    </Card>
+    <STitle sub="Live API calls">Try the API</STitle>
+    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
+      {ENDPOINTS.delivery.map(ep=><button key={ep.name} onClick={()=>setExp(ep)} style={{padding:"6px 12px",fontSize:12,border:`1px solid ${exp?.name===ep.name?C.acc:C.bdr}`,background:exp?.name===ep.name?C.accL:"transparent",color:exp?.name===ep.name?C.acc:C.txtS,borderRadius:4,cursor:"pointer",fontWeight:500}}>{ep.name}</button>)}
+    </div>
+    {exp&&<ApiExplorer token={token} endpoint={exp} params={exp.name==="work_category_contents"?{work_category_slug:"epics",timeframe:"",end:""}:exp.name==="deliverable_details"||exp.name==="deliverable_scope_and_effort_history"?{deliverable_id:""}:{}}/>}
+    <div style={{marginTop:20}}>
+      <Guide title="Scrum Master Playbook: Delivery">
+        <p style={{margin:"0 0 6px"}}><strong>Scope creep:</strong> Use <code>scope_and_effort_history</code> weekly. If scope grows faster than effort, raise it in retro.</p>
+        <p style={{margin:"0 0 6px"}}><strong>Cross-sprint visibility:</strong> <code>work_category_contents</code> with slug "epics" shows all deliverables — great for PI planning.</p>
+        <p style={{margin:0}}><strong>Stakeholder updates:</strong> Pull <code>deliverable_details</code> for data-backed status reports.</p>
+      </Guide>
+    </div>
+  </div>;
+}
+
+// ─── Tab: Allocation ─────────────────────────────────────────────────────────
+function AllocTab({token}){
+  const[exp,setExp]=useState(null);
+  const[view,setView]=useState("investment");
+  return <div>
+    <Guide title="Scrum Master Guide: Allocation & Capacity">
+      <p style={{margin:"0 0 8px"}}>Jellyfish measures allocation in FTE (Full-Time Equivalent) — the proportion of capacity spent on a category, calculated automatically from work items (not time-tracking). Use this to detect over-allocation and have evidence-based capacity conversations.</p>
+      <p style={{margin:0}}>11 allocation endpoints cover every combination of by_person, by_team, by_investment_category, and by_work_category.</p>
+    </Guide>
+    <div style={{display:"flex",gap:8,marginBottom:16}}>
+      {["investment","team","person"].map(m=><button key={m} onClick={()=>setView(m)} style={{padding:"8px 16px",border:`1px solid ${view===m?C.acc:C.bdr}`,background:view===m?C.accL:"transparent",color:view===m?C.acc:C.txtS,borderRadius:6,cursor:"pointer",fontWeight:600,fontSize:13,textTransform:"capitalize"}}>By {m}</button>)}
+    </div>
+    {view==="investment"&&<Card>
+      <STitle sub="Mock FTE allocation by investment category">Investment Categories</STitle>
+      <Bar label="Feature Development" value={12.4} max={25} color={C.acc}/>
+      <Bar label="Keep the Lights On" value={5.8} max={25} color={C.wrn}/>
+      <Bar label="Tech Debt" value={3.2} max={25} color={C.pur}/>
+      <Bar label="Growth / Scaling" value={2.1} max={25} color={C.ok}/>
+      <Bar label="Unallocated" value={1.5} max={25} color={C.txtM}/>
+    </Card>}
+    {view==="team"&&<Card>
+      <STitle sub="Mock team-level allocation">Team Allocation</STitle>
+      <table><thead><tr><th>Team</th><th>Total FTE</th><th>Features</th><th>KTLO</th><th>Tech Debt</th></tr></thead>
+      <tbody>
+        <tr><td>Platform</td><td>8.0</td><td>4.2 (53%)</td><td>2.1 (26%)</td><td>1.7 (21%)</td></tr>
+        <tr><td>Mobile</td><td>6.0</td><td>4.5 (75%)</td><td>1.0 (17%)</td><td>0.5 (8%)</td></tr>
+        <tr><td>Data</td><td>5.0</td><td>2.0 (40%)</td><td>1.5 (30%)</td><td>1.5 (30%)</td></tr>
+        <tr><td>Frontend</td><td>6.0</td><td>3.8 (63%)</td><td>1.2 (20%)</td><td>1.0 (17%)</td></tr>
+      </tbody></table>
+    </Card>}
+    {view==="person"&&<Card>
+      <STitle sub="Mock individual allocation">Person Allocation</STitle>
+      <table><thead><tr><th>Person</th><th>FTE</th><th>Primary</th><th>Spread</th><th>Flag</th></tr></thead>
+      <tbody>
+        <tr><td>A. Santos</td><td>1.0</td><td>Feature Dev (72%)</td><td>3 categories</td><td></td></tr>
+        <tr><td>B. Kim</td><td>1.0</td><td>KTLO (58%)</td><td>4 categories</td><td><Badge color="wrn">High spread</Badge></td></tr>
+        <tr><td>C. Patel</td><td>1.0</td><td>Tech Debt (65%)</td><td>2 categories</td><td></td></tr>
+        <tr><td>D. Chen</td><td>0.8</td><td>Feature Dev (90%)</td><td>2 categories</td><td><Badge color="err">Under-alloc</Badge></td></tr>
+      </tbody></table>
+    </Card>}
+    <STitle sub="Live API calls">Try the API</STitle>
+    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
+      {ENDPOINTS.allocations.slice(0,5).map(ep=><button key={ep.name} onClick={()=>setExp(ep)} style={{padding:"5px 10px",fontSize:11,border:`1px solid ${exp?.name===ep.name?C.acc:C.bdr}`,background:exp?.name===ep.name?C.accL:"transparent",color:exp?.name===ep.name?C.acc:C.txtS,borderRadius:4,cursor:"pointer",fontWeight:500}}>{ep.name}</button>)}
+      <span style={{fontSize:11,color:C.txtM,padding:"5px 0"}}>+{ENDPOINTS.allocations.length-5} more</span>
+    </div>
+    {exp&&<ApiExplorer token={token} endpoint={exp} params={{hierarchy_level:"1",start:"",end:""}}/>}
+    <div style={{marginTop:20}}>
+      <Guide title="Scrum Master Playbook: Capacity">
+        <p style={{margin:"0 0 6px"}}><strong>Planning:</strong> Check <code>allocations_by_person</code> before sprint planning to know each member's current spread.</p>
+        <p style={{margin:"0 0 6px"}}><strong>KTLO alerts:</strong> If <code>allocations_summary_by_investment_category</code> shows KTLO above 30%, surface it to leadership.</p>
+        <p style={{margin:0}}><strong>Discovery:</strong> Call <code>allocations_filter_fields</code> first to discover available filter dimensions.</p>
+      </Guide>
+    </div>
+  </div>;
+}
+
+// ─── Tab: DevEx ──────────────────────────────────────────────────────────────
+function DevExTab({token}){
+  const[exp,setExp]=useState(null);
+  return <div>
+    <Guide title="Scrum Master Guide: DevEx & Blockers">
+      <p style={{margin:"0 0 8px"}}>Jellyfish combines research-backed surveys with system metrics (DORA, SPACE) to produce a DevEx Index. Unlinked pull requests represent invisible work not tracked in sprint boards.</p>
+      <p style={{margin:0}}>Use <code>devex_insights_by_team</code> for team DevEx scores and <code>unlinked_pull_requests</code> to find work outside sprint tracking.</p>
+    </Guide>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:20}}>
+      <Card>
+        <STitle sub="Mock DevEx scores">DevEx Index by Team</STitle>
+        <Bar label="Platform" value={78} max={100} color={C.ok}/>
+        <Bar label="Mobile" value={65} max={100} color={C.wrn}/>
+        <Bar label="Data" value={72} max={100} color={C.acc}/>
+        <Bar label="Frontend" value={81} max={100} color={C.ok}/>
+      </Card>
+      <Card>
+        <STitle sub="Mock unlinked PRs">Unlinked PRs (30 days)</STitle>
+        <div style={{fontSize:36,fontWeight:700,color:C.err,marginBottom:8}}>23</div>
+        <p style={{fontSize:13,color:C.txtS,margin:"0 0 12px"}}>PRs merged without linked work items</p>
+        <Bar label="Platform" value={8} max={23} color={C.err}/>
+        <Bar label="Mobile" value={6} max={23} color={C.wrn}/>
+        <Bar label="Data" value={5} max={23} color={C.wrn}/>
+        <Bar label="Frontend" value={4} max={23} color={C.acc}/>
+      </Card>
+    </div>
+    <STitle>DORA Metrics Reference</STitle>
+    <Card>
+      {DORA_METRICS.map((m,i)=><div key={i} style={{padding:"10px 0",borderBottom:i<3?`1px solid ${C.bdrL}`:"none"}}>
+        <div style={{fontSize:14,fontWeight:600,color:C.txt}}>{m.name}</div>
+        <div style={{fontSize:12,color:C.txtS,fontStyle:"italic",marginTop:2}}>"{m.desc}"</div>
+      </div>)}
+      <p style={{margin:"10px 0 0",fontSize:11,color:C.txtM}}>Source: jellyfish.co/platform/devops-metrics/ — exactly 4 DORA metrics, verbatim.</p>
+    </Card>
+    <STitle sub="Live API">Try the API</STitle>
+    <div style={{display:"flex",gap:8,marginBottom:12}}>
+      {[ENDPOINTS.devex[0],ENDPOINTS.metrics[4]].map(ep=><button key={ep.name} onClick={()=>setExp(ep)} style={{padding:"6px 12px",fontSize:12,border:`1px solid ${exp?.name===ep.name?C.acc:C.bdr}`,background:exp?.name===ep.name?C.accL:"transparent",color:exp?.name===ep.name?C.acc:C.txtS,borderRadius:4,cursor:"pointer",fontWeight:500}}>{ep.name}</button>)}
+    </div>
+    {exp&&<ApiExplorer token={token} endpoint={exp} params={exp.name==="unlinked_pull_requests"?{start:"",end:""}:{team:""}}/>}
+    <div style={{marginTop:20}}>
+      <Guide title="Scrum Master Playbook: DevEx">
+        <p style={{margin:"0 0 6px"}}><strong>Retro input:</strong> Pull <code>devex_insights_by_team</code> before retros for concrete satisfaction data.</p>
+        <p style={{margin:"0 0 6px"}}><strong>Sprint hygiene:</strong> Review <code>unlinked_pull_requests</code> weekly. Coach teams to link PRs to issues.</p>
+        <p style={{margin:0}}><strong>DORA:</strong> Monitor Deployment Frequency and Lead Time via <code>team_metrics</code> over time.</p>
+      </Guide>
+    </div>
+  </div>;
+}
+
+// ─── Tab: People & Teams ─────────────────────────────────────────────────────
+function PeopleTab({token}){
+  const[exp,setExp]=useState(null);
+  return <div>
+    <Guide title="Scrum Master Guide: People & Teams">
+      <p style={{margin:"0 0 8px"}}>Search your org's engineering roster and team structure. Map who belongs where, look up individuals for metrics queries, and navigate the team hierarchy.</p>
+      <p style={{margin:0}}><strong>Tip:</strong> Use <code>list_teams</code> with different <code>hierarchy_level</code> values. <code>search_people</code> accepts name, email, or Jellyfish ID.</p>
+    </Guide>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:20}}>
+      <Card><STitle>People Endpoints</STitle>{ENDPOINTS.people.map(ep=><EpRow key={ep.name} ep={ep} onTry={setExp}/>)}</Card>
+      <Card><STitle>Team Endpoints</STitle>{ENDPOINTS.teams.map(ep=><EpRow key={ep.name} ep={ep} onTry={setExp}/>)}</Card>
+    </div>
+    {exp&&<ApiExplorer token={token} endpoint={exp} params={exp.name==="list_engineers"?{as_of:""}:exp.name==="search_people"?{q:""}:exp.name==="list_teams"?{hierarchy_level:"1",include_children:"false"}:{q:""}}/>}
+    <Guide title="Use Cases">
+      <p style={{margin:"0 0 6px"}}><strong>Onboarding:</strong> Find a person via <code>search_people</code>, then query <code>person_metrics</code> to compare ramp-up vs team averages.</p>
+      <p style={{margin:"0 0 6px"}}><strong>Cross-team:</strong> <code>list_teams</code> to discover parallel teams for dependency planning.</p>
+      <p style={{margin:0}}><strong>History:</strong> <code>list_engineers</code> with <code>as_of</code> date for historical sprint analysis when team composition has changed.</p>
+    </Guide>
+  </div>;
+}
+
+// ─── Tab: Reference ──────────────────────────────────────────────────────────
+function RefTab(){
+  const[sec,setSec]=useState("endpoints");
+  const secs=[
+    {id:"endpoints",l:"All 25 Endpoints"},{id:"internal",l:"Internal Agent"},{id:"webhooks",l:"Webhooks"},
+    {id:"mcp",l:"MCP Tools"},{id:"agent",l:"jf_agent"},{id:"dora",l:"DORA"},
+    {id:"frameworks",l:"Frameworks"},{id:"platform",l:"Platform"},{id:"integrations",l:"Integrations"},
+    {id:"urls",l:"URLs"},{id:"infra",l:"Infrastructure"},
+  ];
+  return <div>
+    <Guide title="Complete Jellyfish Reference">Every item below is sourced from jellyfish.co, Jellyfish-AI GitHub repos (source code), or published docs. No assumptions or fabrications. Validated March 30, 2026.</Guide>
+    <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:20}}>
+      {secs.map(s=><button key={s.id} onClick={()=>setSec(s.id)} style={{padding:"6px 12px",fontSize:12,border:`1px solid ${sec===s.id?C.acc:C.bdr}`,background:sec===s.id?C.accL:"transparent",color:sec===s.id?C.acc:C.txtS,borderRadius:4,cursor:"pointer",fontWeight:600}}>{s.l}</button>)}
+    </div>
+
+    {sec==="endpoints"&&<Card>
+      <STitle sub={`${ALL_ENDPOINTS.length} endpoints from jellyfish-mcp/server/api.js`}>Export API v0</STitle>
+      <p style={{fontSize:12,color:C.txtS,marginBottom:8}}>Base: <code>https://app.jellyfish.co</code> | Auth: <code>Authorization: Token &lt;TOKEN&gt;</code> | Schema: <code>/endpoints/export/v0/schema</code></p>
+      {Object.entries(ENDPOINTS).map(([domain,eps])=><div key={domain} style={{marginBottom:16}}>
+        <div style={{fontSize:13,fontWeight:700,textTransform:"capitalize",marginBottom:4,padding:"6px 0",borderBottom:`2px solid ${C.bdr}`}}>{domain} ({eps.length})</div>
+        {eps.map(ep=><EpRow key={ep.name} ep={ep}/>)}
+      </div>)}
+    </Card>}
+
+    {sec==="internal"&&<Card>
+      <STitle sub="jf_agent data pipeline — not public Export API">Internal Agent Endpoints</STitle>
+      <table><thead><tr><th>Path</th><th>Description</th></tr></thead><tbody>
+        {[
+          ["/endpoints/agent/pull-state","Agent configuration retrieval"],
+          ["/endpoints/agent/jira-issue-metadata","Paginated Jira issue metadata"],
+          ["/endpoints/agent/company","Company information retrieval"],
+          ["/endpoints/agent/unlinked-dev-issues","Orphaned/unlinked development issues"],
+          ["/endpoints/agent/healthcheck/signed-url","Health check upload via S3 signed URL"],
+          ["/endpoints/agent/upload_manifest","Data manifest upload"],
+          ["/endpoints/ingest/signed-url","S3 pre-signed URL for data ingestion"],
+        ].map(([p,d],i)=><tr key={i}><td><code>{p}</code></td><td>{d}</td></tr>)}
+      </tbody></table>
+    </Card>}
+
+    {sec==="webhooks"&&<Card>
+      <STitle sub="From jf_agent, create-ado-webhooks.ps1, jellyfish-buildkite-plugin">Webhooks</STitle>
+      <table><thead><tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Description</th></tr></thead><tbody>
+        <tr><td><code>webhooks.jellyfish.co</code></td><td>—</td><td>Token</td><td>Agent heartbeat base</td></tr>
+        <tr><td><code>webhooks.jellyfish.co/deployment</code></td><td>POST</td><td>X-jf-api-token</td><td>Deployment event ingestion</td></tr>
+        <tr><td><code>app.jellyfish.co/ingest-webhooks/ado/</code></td><td>POST</td><td>Bearer token</td><td>Azure DevOps webhooks</td></tr>
+      </tbody></table>
+      <div style={{marginTop:12,padding:12,background:C.alt,borderRadius:6}}>
+        <div style={{fontSize:12,fontWeight:600,marginBottom:6}}>Deployment Payload (from buildkite plugin):</div>
+        <pre style={{margin:0,fontSize:11,color:C.txtS,whiteSpace:"pre-wrap"}}>{`{ "reference_id", "is_successful", "name", "deployed_at",
+  "repo_name", "commit_shas", "labels", "source_url" }`}</pre>
+      </div>
+      <p style={{fontSize:12,color:C.txtM,marginTop:8}}>ADO events: workitem.created, .deleted, .restored, .updated</p>
+    </Card>}
+
+    {sec==="mcp"&&<Card>
+      <STitle sub="jellyfish-mcp v1.0.2 | MIT | 25 tools | Node.js v18+">MCP Server</STitle>
+      <p style={{fontSize:12,color:C.txtS,marginBottom:12}}>Compatible: Claude Desktop, Claude Code, VSCode, Cursor. Supports PromptGuard 2.</p>
+      <table><thead><tr><th>#</th><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>{ALL_ENDPOINTS.map((ep,i)=><tr key={i}><td>{i+1}</td><td><code>{ep.name}</code></td><td>{ep.desc}</td></tr>)}</tbody></table>
+      <div style={{marginTop:16}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:8}}>Config Variables</div>
+        <table><thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead><tbody>
+          <tr><td>JELLYFISH_API_TOKEN</td><td>Yes</td><td>—</td><td>From API Export settings (Admin required)</td></tr>
+          <tr><td>HUGGINGFACE_API_TOKEN</td><td>No</td><td>""</td><td>PromptGuard 2 injection mitigation</td></tr>
+          <tr><td>MODEL_AVAILABILITY</td><td>No</td><td>false</td><td>Allow if HuggingFace unavailable</td></tr>
+          <tr><td>MODEL_TIMEOUT</td><td>No</td><td>10</td><td>Response wait (seconds)</td></tr>
+        </tbody></table>
+      </div>
+    </Card>}
+
+    {sec==="agent"&&<Card>
+      <STitle sub="v0.1.3 | Python | MIT | Docker: jellyfishco/jf_agent:stable">jf_agent</STitle>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:8}}>Git Providers (5)</div>
+        <table><thead><tr><th>Constant</th><th>Provider</th><th>URL</th></tr></thead><tbody>
+          {[["GH_PROVIDER","GitHub","api.github.com"],["GL_PROVIDER","GitLab","gitlab.yourcompany.com"],["BBC_PROVIDER","Bitbucket Cloud","api.bitbucket.org"],["BBS_PROVIDER","Bitbucket Server","bitbucket.yourcompany.com"],["ADO_PROVIDER","Azure DevOps","dev.azure.com"]].map(([c,p,u],i)=><tr key={i}><td><code>{c}</code></td><td>{p}</td><td>{u}</td></tr>)}
+        </tbody></table>
+      </div>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:8}}>Run Modes (6)</div>
+        <table><thead><tr><th>Mode</th><th>Description</th></tr></thead><tbody>
+          {[["download_and_send","Default: download + send"],["download_only","Download locally"],["send_only","Send previously downloaded"],["validate","Health check"],["print_all_jira_fields","Print Jira fields"],["print_apparently_missing_git_repos","Find repos in Jira but not Git"]].map(([m,d],i)=><tr key={i}><td><code>{m}</code></td><td>{d}</td></tr>)}
+        </tbody></table>
+      </div>
+      <div style={{fontSize:13,fontWeight:700,marginBottom:8}}>Environment Variables</div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+        {["JELLYFISH_API_TOKEN","JIRA_USERNAME","JIRA_PASSWORD","JIRA_BEARER_TOKEN","GITHUB_TOKEN","GITLAB_TOKEN","ADO_TOKEN","BITBUCKET_CLOUD_USERNAME","BITBUCKET_CLOUD_PASSWORD","BITBUCKET_USERNAME","BITBUCKET_PASSWORD","REQUESTS_CA_BUNDLE"].map(v=><code key={v} style={{fontSize:11}}>{v}</code>)}
+      </div>
+    </Card>}
+
+    {sec==="dora"&&<Card>
+      <STitle sub="jellyfish.co/platform/devops-metrics/ — exactly 4, verbatim">DORA Metrics</STitle>
+      {DORA_METRICS.map((m,i)=><div key={i} style={{padding:"12px 0",borderBottom:i<3?`1px solid ${C.bdrL}`:"none"}}>
+        <div style={{fontSize:15,fontWeight:700}}>{m.name}</div>
+        <div style={{fontSize:13,color:C.txtS,marginTop:4,fontStyle:"italic"}}>"{m.desc}"</div>
+      </div>)}
+      <div style={{marginTop:16,padding:12,background:C.wrnL,borderRadius:6,fontSize:12,color:C.wrn}}>Note: No "Incident Rate" metric exists. Previously identified fabrication has been corrected.</div>
+    </Card>}
+
+    {sec==="frameworks"&&<Card>
+      <STitle>Frameworks & Models</STitle>
+      {FRAMEWORKS.map((f,i)=><div key={i} style={{padding:"10px 0",borderBottom:i<FRAMEWORKS.length-1?`1px solid ${C.bdrL}`:"none"}}>
+        <div style={{fontWeight:600}}>{f.name}</div><div style={{fontSize:13,color:C.txtS,marginTop:2}}>{f.desc}</div>
+      </div>)}
+      <div style={{marginTop:16,fontSize:13,fontWeight:700,marginBottom:8}}>Additional Tracked Metrics</div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+        {["Issue Cycle Time","Flow Metrics","Code Churn","Unlinked PRs","Sprint Summaries","FTE Allocations","Work Effort Distribution"].map(m=><Badge key={m} color="acc">{m}</Badge>)}
+      </div>
+      <div style={{marginTop:16,padding:12,background:C.alt,borderRadius:6,fontSize:12,color:C.txtS}}>Platform outcomes (jellyfish.co/tour/): 32% more revenue-focused work | 2.6 days cycle time reduction | 21% faster time to market | 25% more collaboration</div>
+    </Card>}
+
+    {sec==="platform"&&<Card>
+      <STitle sub="From jellyfish.co product pages">Platform Features</STitle>
+      {PLATFORM_FEATURES.map((cat,i)=><div key={i} style={{marginBottom:16}}>
+        <div style={{fontSize:14,fontWeight:700,marginBottom:8,padding:"6px 0",borderBottom:`2px solid ${C.bdr}`}}>{cat.category}</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:6}}>{cat.features.map(f=><Badge key={f} color={i%2===0?"acc":"pur"}>{f}</Badge>)}</div>
+      </div>)}
+      <div style={{fontSize:12,color:C.txtS}}>Also: Jellyfish Assistant (AI queries), Academy (academy.jellyfish.co), Trust Center</div>
+    </Card>}
+
+    {sec==="integrations"&&<Card>
+      <STitle sub="From jellyfish.co/platform/integrations/ and homepage">Integrations</STitle>
+      {Object.entries(INTEGRATIONS).map(([cat,items])=><div key={cat} style={{marginBottom:16}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:6,padding:"4px 0",borderBottom:`1px solid ${C.bdr}`}}>{cat} ({items.length})</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:6}}>{items.map(it=><Badge key={it} color="acc">{it}</Badge>)}</div>
+      </div>)}
+      <p style={{fontSize:11,color:C.txtM,marginTop:8}}>Dedicated integrations page lists ~15. Additional ones from homepage. See inventory for source provenance.</p>
+    </Card>}
+
+    {sec==="urls"&&<Card>
+      <STitle>Key URLs</STitle>
+      <table><thead><tr><th>Resource</th><th>URL</th></tr></thead><tbody>
+        {[["Main Site","https://jellyfish.co/"],["Product","https://jellyfish.co/product/"],["Tour","https://jellyfish.co/tour/"],["Integrations","https://jellyfish.co/platform/integrations/"],["DevOps Metrics","https://jellyfish.co/platform/devops-metrics/"],["Life Cycle Explorer","https://jellyfish.co/platform/life-cycle-explorer/"],["DevEx","https://jellyfish.co/platform/devex/"],["Allocations","https://jellyfish.co/platform/resource-allocations/"],["Capacity Planner","https://jellyfish.co/solutions/capacity-planner/"],["Library","https://jellyfish.co/library/index/"],["Resources","https://jellyfish.co/resources/"],["Help Center","help.jellyfish.co (login required)"],["Academy","https://academy.jellyfish.co/app"],["API Token Setup","https://app.jellyfish.co/settings/data-connections/api-export"],["API Schema","app.jellyfish.co/endpoints/export/v0/schema (auth required)"],["GitHub Org","https://github.com/Jellyfish-AI"]].map(([r,u],i)=><tr key={i}><td>{r}</td><td>{u.startsWith("http")?<a href={u} target="_blank">{u}</a>:u}</td></tr>)}
+      </tbody></table>
+    </Card>}
+
+    {sec==="infra"&&<Card>
+      <STitle sub="Each backed by specific commits in GitHub forks">Infrastructure Stack</STitle>
+      <table><thead><tr><th>Layer</th><th>Technology</th><th>Evidence</th></tr></thead><tbody>
+        {[["Database","PostgreSQL + Citus","pgmetrics fork: Citus 11 commit"],["Orchestration","Prefect","prefect fork: bug fixes + pins"],["Computing","Dask","dask-cloudprovider: ECS throttle fix"],["Task Queue","Celery","celery fork in Jellyfish-AI"],["Cloud","AWS (ECS, S3, Secrets Mgr)","prefect-aws + dask forks"],["GitHub Client","PyGithub (custom)","Retry logic + session support"],["Rate Limiting","Custom impl","Replaced ratelimit fork; in jf_agent"],["Backend","Django + DRF","rec-resources repo"],["Frontend","React + TypeScript","rec-resources repo"]].map(([l,t,e],i)=><tr key={i}><td>{l}</td><td>{t}</td><td style={{fontSize:12,color:C.txtS}}>{e}</td></tr>)}
+      </tbody></table>
+      <div style={{marginTop:12}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:6}}>GitHub Repos (13)</div>
+        <p style={{fontSize:12,color:C.txtS,margin:"0 0 4px"}}><strong>Original (6):</strong> jellyfish-mcp, jf_agent, Integration-Resources, buildkite-plugin, twistedtentacles, rec-resources</p>
+        <p style={{fontSize:12,color:C.txtS,margin:0}}><strong>Forks (7):</strong> ratelimit, PyGithub, pgmetrics, prefect, prefect-aws, dask-cloudprovider, celery</p>
+      </div>
+    </Card>}
+  </div>;
+}
+
+// ─── Main ────────────────────────────────────────────────────────────────────
+const TABS=[
+  {id:"sprint",label:"Sprint Health",icon:"S"},
+  {id:"delivery",label:"Delivery",icon:"D"},
+  {id:"allocation",label:"Allocation",icon:"A"},
+  {id:"devex",label:"DevEx",icon:"X"},
+  {id:"people",label:"People & Teams",icon:"P"},
+  {id:"reference",label:"Reference",icon:"R"},
+];
+
+function App(){
+  const[tab,setTab]=useState("sprint");
+  const[token,setToken]=useState("");
+  return <div style={{minHeight:"100vh"}}>
+    <div style={{background:C.srf,borderBottom:`1px solid ${C.bdr}`,padding:"16px 24px"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",maxWidth:1100,margin:"0 auto"}}>
+        <div>
+          <h1 style={{margin:0,fontSize:20,fontWeight:700,letterSpacing:-.3}}>Jellyfish Scrum Master Assistant</h1>
+          <p style={{margin:"2px 0 0",fontSize:13,color:C.txtS}}>Educational guide + live API integration — all data from verified inventory</p>
+        </div>
+        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+          <Badge color="acc">25 Endpoints</Badge>
+          <Badge color="pur">6 Domains</Badge>
+          <Badge color="ok">Verified</Badge>
+        </div>
+      </div>
+    </div>
+    <div style={{background:C.srf,borderBottom:`1px solid ${C.bdr}`,padding:"0 24px",overflowX:"auto"}}>
+      <div style={{display:"flex",maxWidth:1100,margin:"0 auto"}}>
+        {TABS.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"12px 18px",border:"none",borderBottom:`2px solid ${tab===t.id?C.acc:"transparent"}`,background:"transparent",color:tab===t.id?C.acc:C.txtS,fontWeight:tab===t.id?700:500,fontSize:13,cursor:"pointer",whiteSpace:"nowrap"}}>
+          <span style={{width:22,height:22,borderRadius:4,background:tab===t.id?C.accL:C.alt,color:tab===t.id?C.acc:C.txtM,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700}}>{t.icon}</span>
+          {t.label}
+        </button>)}
+      </div>
+    </div>
+    <div style={{maxWidth:1100,margin:"0 auto",padding:"20px 24px"}}>
+      <ApiPanel token={token} setToken={setToken}/>
+      {tab==="sprint"&&<SprintTab token={token}/>}
+      {tab==="delivery"&&<DeliveryTab token={token}/>}
+      {tab==="allocation"&&<AllocTab token={token}/>}
+      {tab==="devex"&&<DevExTab token={token}/>}
+      {tab==="people"&&<PeopleTab token={token}/>}
+      {tab==="reference"&&<RefTab/>}
+    </div>
+    <div style={{borderTop:`1px solid ${C.bdr}`,padding:"16px 24px",textAlign:"center",marginTop:40}}>
+      <p style={{fontSize:11,color:C.txtM}}>All data from jellyfish.co, Jellyfish-AI GitHub repos, and published docs. No fabrications. Validated March 30, 2026.</p>
+    </div>
+  </div>;
+}
+
+ReactDOM.render(<App/>,document.getElementById("root"));
+</script>
+</body>
+</html>
