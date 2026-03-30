@@ -2,24 +2,21 @@ import { HighlightCard } from "@/lib/types";
 
 export const homePaths: HighlightCard[] = [
   {
-    title: "Learn the platform clearly",
-    description:
-      "Structured Academy modules explain DORA, DevEx, allocations, delivery, AI impact, and planning concepts in Scrum Master language.",
-    href: "/academy",
-    tags: ["Learning-first", "Full platform"],
+    title: "Monitor sprint health & delivery",
+    description: "Track velocity, completion rates, carry-over, and delivery patterns with live Jellyfish data.",
+    href: "/sprint-health",
+    tags: ["Metrics", "Real-time"],
   },
   {
-    title: "Run guided Jellyfish workflows",
-    description:
-      "Playbooks turn platform features into real rituals like retros, sprint health reviews, capacity reviews, and stakeholder updates.",
+    title: "Explore team allocations",
+    description: "Understand FTE distribution across investment categories, teams, and individuals.",
+    href: "/allocation",
+    tags: ["Capacity", "Planning"],
+  },
+  {
+    title: "Run guided playbooks",
+    description: "Step-by-step workflows for retros, capacity reviews, and stakeholder updates.",
     href: "/playbooks",
     tags: ["Ceremonies", "Outputs"],
-  },
-  {
-    title: "Explore realistic examples",
-    description:
-      "Examples show mock data, interpretation, and next actions so users understand what a good Jellyfish workflow looks like before live connectivity arrives in V2.",
-    href: "/examples",
-    tags: ["Mock mode", "Interpretation"],
   },
 ];

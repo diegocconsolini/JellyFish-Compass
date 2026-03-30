@@ -15,6 +15,3 @@ export const secondaryNav: NavItem[] = [
   { href: "/workspace", label: "Workspace", section: "workspace" },
   { href: "/showcase", label: "Showcase", section: "showcase" },
 ];
-
-/** @deprecated Use primaryNav + secondaryNav instead */
-export const navItems = [...primaryNav, ...secondaryNav];
