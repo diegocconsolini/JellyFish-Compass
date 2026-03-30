@@ -1,147 +1,203 @@
 import Link from "next/link";
 
-import { HighlightCard } from "@/components/ui/highlight-card";
+import { Badge } from "@/components/ui/badge";
 import { SectionBlock } from "@/components/ui/section-block";
 import { StatCard } from "@/components/ui/stat-card";
-import { examples } from "@/data/examples";
-import { homePaths } from "@/data/highlights";
+import { mockSprintKpis } from "@/data/mock-data";
 import { metrics } from "@/data/metrics";
 import { playbooks } from "@/data/playbooks";
+
+const highlightCards = [
+  {
+    title: "Sprint Health",
+    description:
+      "Monitor velocity, carry-over, and completion rate trends across sprints with Jellyfish data.",
+    href: "/sprint-health",
+    tags: ["Velocity", "Carry-over"],
+  },
+  {
+    title: "Allocation",
+    description:
+      "Understand how engineering effort is split across features, KTLO, and tech debt by team and person.",
+    href: "/allocation",
+    tags: ["FTE", "Investment mix"],
+  },
+  {
+    title: "Playbooks",
+    description:
+      "Run guided retros, capacity reviews, and stakeholder updates using structured Jellyfish workflows.",
+    href: "/playbooks",
+    tags: ["Ceremonies", "Outputs"],
+  },
+];
 
 export default function HomePage() {
   return (
     <>
-      <section className="page-section">
-        <div className="hero">
-          <div className="hero-card">
-            <p className="eyebrow">Learning-first V1</p>
-            <h1 className="hero-title">
-              A polished Jellyfish learning studio for Scrum Masters and teams that want to
-              use the platform well.
-            </h1>
-            <p className="hero-copy">
-              Jellyfish Compass turns product breadth into practical guidance. Users can learn
-              the platform, see realistic examples, follow guided playbooks, create reusable
-              summaries, and save their work in one place.
-            </p>
-            <div className="hero-actions">
-              <Link className="button-primary" href="/academy">
-                Start with Academy
-              </Link>
-              <Link className="button-secondary" href="/playbooks">
-                Explore Playbooks
-              </Link>
-            </div>
-          </div>
-
-          <aside className="hero-card hero-side">
-            <span className="kicker">What V1 already does</span>
-            <div className="stat-list">
-              <StatCard
-                label="Platform Coverage"
-                value="Full breadth"
-                note="Academy, examples, reference, showcase, and guided outputs cover the whole Jellyfish story."
-              />
-              <StatCard
-                label="Primary User"
-                value="Scrum Masters"
-                note="The workflows are tuned for retros, sprint health, delivery, blockers, and capacity discussions."
-              />
-              <StatCard
-                label="Saved Work"
-                value="Workspace-ready"
-                note="Bookmarks, summaries, templates, notes, and favorite examples are first-class concepts."
-              />
-            </div>
-          </aside>
+      {/* Hero */}
+      <section className="mb-10 rounded-xl border border-border bg-surface p-8">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-text-ghost mb-3">
+          Scrum Master Dashboard
+        </p>
+        <h1 className="font-serif text-4xl font-bold tracking-tight text-text-primary mb-3">
+          Jellyfish Compass
+        </h1>
+        <p className="max-w-2xl text-sm text-text-dim leading-relaxed mb-6">
+          A modern dashboard for Scrum Masters. Translate Jellyfish signals into sprint ceremonies,
+          stakeholder updates, and continuous improvement — with guided playbooks, featured metrics,
+          and real allocation data.
+        </p>
+        <div className="flex gap-3">
+          <Link
+            href="/sprint-health"
+            className="inline-flex items-center rounded-lg bg-blue px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+          >
+            Sprint Health
+          </Link>
+          <Link
+            href="/playbooks"
+            className="inline-flex items-center rounded-lg border border-border bg-surface-raised px-4 py-2 text-sm font-semibold text-text-primary hover:bg-surface transition-colors"
+          >
+            Explore Playbooks
+          </Link>
         </div>
       </section>
 
+      {/* KPI Stat Cards */}
       <SectionBlock
-        title="Choose your path"
-        copy="Each area of the app supports a different kind of Jellyfish adoption, from learning to guided workflows to saved outputs."
+        title="Sprint KPIs"
+        copy="Key performance indicators from the current sprint cycle."
       >
-        <div className="grid cols-3">
-          {homePaths.map((item) => (
-            <HighlightCard key={item.href} item={item} />
+        <div className="grid grid-cols-4 gap-3">
+          <StatCard
+            label="Avg Velocity"
+            value={mockSprintKpis.avgVelocity.value}
+            note={mockSprintKpis.avgVelocity.unit}
+            trend={mockSprintKpis.avgVelocity.trend}
+            trendDirection={mockSprintKpis.avgVelocity.direction}
+            color="blue"
+          />
+          <StatCard
+            label="Completion Rate"
+            value={mockSprintKpis.completionRate.value}
+            note={mockSprintKpis.completionRate.unit}
+            trend={mockSprintKpis.completionRate.trend}
+            trendDirection={mockSprintKpis.completionRate.direction}
+            color="green"
+          />
+          <StatCard
+            label="Carry-Over"
+            value={mockSprintKpis.carryOver.value}
+            note={mockSprintKpis.carryOver.unit}
+            trend={mockSprintKpis.carryOver.trend}
+            trendDirection={mockSprintKpis.carryOver.direction}
+            color="amber"
+          />
+          <StatCard
+            label="Sprint Cadence"
+            value={mockSprintKpis.sprintCadence.value}
+            note={mockSprintKpis.sprintCadence.unit}
+            trend={mockSprintKpis.sprintCadence.trend}
+            trendDirection={mockSprintKpis.sprintCadence.direction}
+            color="violet"
+          />
+        </div>
+      </SectionBlock>
+
+      {/* Highlight Cards */}
+      <SectionBlock
+        title="Explore sections"
+        copy="Jump into the key areas of the dashboard."
+      >
+        <div className="grid grid-cols-3 gap-3">
+          {highlightCards.map((card) => (
+            <article
+              key={card.href}
+              className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-3"
+            >
+              <div>
+                <h3 className="text-sm font-bold text-text-primary mb-1">{card.title}</h3>
+                <p className="text-xs text-text-dim leading-relaxed">{card.description}</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {card.tags.map((tag) => (
+                  <Badge key={tag} variant="ghost">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <div className="mt-auto pt-1">
+                <Link
+                  href={card.href}
+                  className="inline-flex items-center rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-xs font-semibold text-text-primary hover:bg-surface transition-colors"
+                >
+                  Open
+                </Link>
+              </div>
+            </article>
           ))}
         </div>
       </SectionBlock>
 
+      {/* Featured Metrics */}
       <SectionBlock
-        title="Core capabilities"
-        copy="The first release is designed to help users understand Jellyfish, apply it in ceremonies, and keep the outputs that matter."
+        title="Featured metrics"
+        copy="Core Jellyfish metrics every Scrum Master should know."
       >
-        <div className="grid cols-3">
-          <div className="card">
-            <h3>Academy and platform reference</h3>
-            <p>
-              Educational modules teach the meaning of DORA, DevEx, allocations, delivery,
-              AI impact, integrations, and the Jellyfish operating model.
-            </p>
-          </div>
-          <div className="card">
-            <h3>Guided playbooks</h3>
-            <p>
-              Playbooks show how to run retros, capacity reviews, stakeholder updates, and
-              blocker reviews using Jellyfish concepts and examples.
-            </p>
-          </div>
-          <div className="card">
-            <h3>Examples and reusable outputs</h3>
-            <p>
-              Example scenarios, interpretation panels, and generated summaries make it easy
-              to go from learning to practical communication.
-            </p>
-          </div>
+        <div className="grid grid-cols-4 gap-3">
+          {metrics.map((metric) => (
+            <div
+              key={metric.id}
+              className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-2"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="text-sm font-bold text-text-primary leading-snug">{metric.name}</h3>
+                <Badge variant="blue">{metric.category}</Badge>
+              </div>
+              <p className="text-xs text-text-dim leading-relaxed">{metric.summary}</p>
+              <p className="text-[11px] text-text-ghost leading-relaxed mt-auto pt-1">
+                {metric.scrumUse}
+              </p>
+            </div>
+          ))}
         </div>
       </SectionBlock>
 
+      {/* Featured Playbooks */}
       <SectionBlock
-        title="Featured metrics and workflows"
-        copy="These are the first content pillars migrated from the prototype and inventory."
+        title="Featured playbooks"
+        copy="Guided workflows for your most important ceremonies."
       >
-        <div className="split-panel">
-          <div className="panel card">
-            <h3>Featured metrics</h3>
-            <div className="grid">
-              {metrics.map((metric) => (
-                <div key={metric.id}>
-                  <h4>{metric.name}</h4>
-                  <p>{metric.summary}</p>
+        <div className="grid grid-cols-3 gap-3">
+          {playbooks.slice(0, 3).map((playbook) => (
+            <div
+              key={playbook.id}
+              className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-3"
+            >
+              <div>
+                <h3 className="text-sm font-bold text-text-primary mb-1">{playbook.title}</h3>
+                <p className="text-xs text-text-dim leading-relaxed">{playbook.goal}</p>
+              </div>
+              <div>
+                <p className="text-[10.5px] font-semibold uppercase tracking-wider text-text-ghost mb-1.5">
+                  Outputs
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {playbook.outputs.map((output) => (
+                    <Badge key={output} variant="ghost">
+                      {output}
+                    </Badge>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="panel card">
-            <h3>Featured playbooks</h3>
-            <div className="grid">
-              {playbooks.map((playbook) => (
-                <div key={playbook.id}>
-                  <h4>{playbook.title}</h4>
-                  <p>{playbook.goal}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </SectionBlock>
-
-      <SectionBlock
-        title="Example scenarios"
-        copy="The examples library teaches users how to read Jellyfish signals before real connectivity lands in V2."
-      >
-        <div className="grid cols-2">
-          {examples.map((example) => (
-            <div key={example.id} className="card">
-              <h3>{example.title}</h3>
-              <p>{example.scenario}</p>
-              <ul className="list-reset">
-                {example.whatToNotice.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+              </div>
+              <div className="mt-auto pt-1">
+                <Link
+                  href={`/playbooks#${playbook.id}`}
+                  className="inline-flex items-center rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-xs font-semibold text-text-primary hover:bg-surface transition-colors"
+                >
+                  Run playbook
+                </Link>
+              </div>
             </div>
           ))}
         </div>
