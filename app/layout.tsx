@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 import "./globals.css";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { AppSidebar } from "@/components/layout/app-sidebar";
+import { LayoutShell } from "@/components/layout/layout-shell";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
@@ -37,12 +37,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           >
             Skip to main content
           </a>
-          <AppSidebar />
-          {/* Content area — shifted right by sidebar width on desktop */}
-          <div className="md:pl-12 flex flex-col min-h-screen">
+          <LayoutShell>
             <main id="main-content" className="flex-1">{children}</main>
             <SiteFooter />
-          </div>
+          </LayoutShell>
         </ThemeProvider>
       </body>
     </html>
