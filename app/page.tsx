@@ -138,12 +138,12 @@ export default function HomePage() {
           data — all in one place.
         </p>
         <div className="flex justify-center gap-3">
-          <Link
-            href="/sprint-health"
+          <a
+            href="#explore"
             className="inline-flex items-center rounded-xl bg-blue px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
           >
             Get Started
-          </Link>
+          </a>
           <Link
             href="/reference"
             className="inline-flex items-center rounded-xl border border-border-vivid bg-transparent px-5 py-2.5 text-sm font-semibold text-text-primary hover:bg-surface transition-colors"
@@ -180,7 +180,7 @@ export default function HomePage() {
       </section>
 
       {/* All sections */}
-      <section className="mb-12">
+      <section id="explore" className="mb-12 scroll-mt-24">
         <p className="text-xs font-bold uppercase tracking-widest text-text-ghost mb-2">
           Explore
         </p>
