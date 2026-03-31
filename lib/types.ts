@@ -5,10 +5,7 @@ export type SectionId =
   | "devex"
   | "people-teams"
   | "reference"
-  | "academy"
-  | "playbooks"
-  | "workspace"
-  | "showcase";
+  | "academy";
 
 export type NavItem = {
   href: string;
