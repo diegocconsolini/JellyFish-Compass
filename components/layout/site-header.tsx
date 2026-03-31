@@ -19,18 +19,8 @@ const navGroups = [
       { href: "/delivery-forecast", label: "Forecasting" },
       { href: "/product-metrics", label: "Product Metrics" },
       { href: "/devex", label: "DevEx" },
-      { href: "/life-cycle", label: "Life Cycle" },
-    ],
-  },
-  {
-    id: "operations",
-    label: "Operations",
-    color: "bg-green",
-    items: [
-      { href: "/allocation", label: "Allocation" },
-      { href: "/people-teams", label: "People & Teams" },
-      { href: "/workflow", label: "Workflow" },
       { href: "/benchmarks", label: "Benchmarks" },
+      { href: "/process", label: "Process" },
     ],
   },
   {
@@ -41,12 +31,11 @@ const navGroups = [
       { href: "/capacity", label: "Capacity" },
       { href: "/scenarios", label: "Scenarios" },
       { href: "/roadmap", label: "Roadmap" },
-      { href: "/ai-impact", label: "AI Impact" },
     ],
   },
   {
-    id: "knowledge",
-    label: "Knowledge",
+    id: "tools",
+    label: "Tools",
     color: "bg-amber",
     items: [
       { href: "/metrics", label: "Deck Builder" },
@@ -63,7 +52,7 @@ function findActiveGroup(pathname: string): string {
     }
   }
   if (secondaryNav.some((item) => item.href === pathname)) {
-    return "knowledge";
+    return "tools";
   }
   return "metrics";
 }
