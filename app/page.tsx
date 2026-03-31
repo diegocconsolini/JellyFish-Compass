@@ -1,4 +1,16 @@
 import Link from "next/link";
+import {
+  Activity,
+  Rocket,
+  Scale,
+  Code2,
+  Users,
+  BookOpen,
+  GraduationCap,
+  ClipboardList,
+  Save,
+  Sparkles,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 
@@ -26,17 +38,30 @@ const steps = [
   },
 ];
 
+const sectionIcons: Record<string, React.ReactNode> = {
+  "/sprint-health": <Activity className="w-5 h-5 text-blue" />,
+  "/delivery": <Rocket className="w-5 h-5 text-green" />,
+  "/allocation": <Scale className="w-5 h-5 text-amber" />,
+  "/devex": <Code2 className="w-5 h-5 text-violet" />,
+  "/people-teams": <Users className="w-5 h-5 text-cyan" />,
+  "/reference": <BookOpen className="w-5 h-5 text-blue" />,
+  "/academy": <GraduationCap className="w-5 h-5 text-green" />,
+  "/playbooks": <ClipboardList className="w-5 h-5 text-amber" />,
+  "/workspace": <Save className="w-5 h-5 text-violet" />,
+  "/showcase": <Sparkles className="w-5 h-5 text-cyan" />,
+};
+
 const sections = [
-  { href: "/sprint-health", icon: "📊", label: "Sprint Health", desc: "Velocity, completion, carry-over trends", primary: true },
-  { href: "/delivery", icon: "🚀", label: "Delivery", desc: "Scope, effort, deliverable tracking" },
-  { href: "/allocation", icon: "⚖️", label: "Allocation", desc: "FTE by investment, team, person" },
-  { href: "/devex", icon: "🧑‍💻", label: "DevEx", desc: "Developer experience & unlinked PRs" },
-  { href: "/people-teams", icon: "👥", label: "People & Teams", desc: "Roster, hierarchy, search" },
-  { href: "/reference", icon: "📖", label: "Reference", desc: "25 endpoints, MCP, DORA, integrations" },
-  { href: "/academy", icon: "🎓", label: "Academy", desc: "Learning modules & core metrics" },
-  { href: "/playbooks", icon: "📋", label: "Playbooks", desc: "Guided retros, capacity, stakeholder" },
-  { href: "/workspace", icon: "💾", label: "Workspace", desc: "Save notes, summaries, templates" },
-  { href: "/showcase", icon: "✨", label: "Showcase", desc: "Platform capabilities by audience" },
+  { href: "/sprint-health", label: "Sprint Health", desc: "Velocity, completion, carry-over trends", primary: true },
+  { href: "/delivery", label: "Delivery", desc: "Scope, effort, deliverable tracking" },
+  { href: "/allocation", label: "Allocation", desc: "FTE by investment, team, person" },
+  { href: "/devex", label: "DevEx", desc: "Developer experience & unlinked PRs" },
+  { href: "/people-teams", label: "People & Teams", desc: "Roster, hierarchy, search" },
+  { href: "/reference", label: "Reference", desc: "25 endpoints, MCP, DORA, integrations" },
+  { href: "/academy", label: "Academy", desc: "Learning modules & core metrics" },
+  { href: "/playbooks", label: "Playbooks", desc: "Guided retros, capacity, stakeholder" },
+  { href: "/workspace", label: "Workspace", desc: "Save notes, summaries, templates" },
+  { href: "/showcase", label: "Showcase", desc: "Platform capabilities by audience" },
 ];
 
 const dataFeatures = [
@@ -67,7 +92,7 @@ export default function HomePage() {
       {/* Hero */}
       <section className="text-center py-12 mb-10">
         <Badge variant="blue" className="mb-5 text-xs px-3.5 py-1">
-          🪼 For Scrum Masters & Engineering Teams
+          For Scrum Masters & Engineering Teams
         </Badge>
         <h1 className="font-serif text-5xl font-normal tracking-tight mb-4">
           Your Jellyfish companion{" "}
@@ -141,7 +166,7 @@ export default function HomePage() {
                   : "border-border bg-surface"
               }`}
             >
-              <div className="text-xl mb-2">{s.icon}</div>
+              <div className="mb-2">{sectionIcons[s.href]}</div>
               <div className="text-[13px] font-bold mb-0.5">{s.label}</div>
               <div className="text-[11px] text-text-ghost leading-snug">{s.desc}</div>
             </Link>
