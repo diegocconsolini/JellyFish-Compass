@@ -324,11 +324,11 @@ export default function ReferencePage() {
         <div className="space-y-8">
           <div className="flex flex-wrap gap-6 text-sm">
             <div>
-              <span className="text-text-ghost text-[11px] font-semibold uppercase tracking-wider">Base URL</span>
+              <span className="text-text-ghost text-xs font-semibold uppercase tracking-wider">Base URL</span>
               <code className="ml-2 font-mono text-blue text-[13px]">https://app.jellyfish.co</code>
             </div>
             <div>
-              <span className="text-text-ghost text-[11px] font-semibold uppercase tracking-wider">Auth</span>
+              <span className="text-text-ghost text-xs font-semibold uppercase tracking-wider">Auth</span>
               <code className="ml-2 font-mono text-blue text-[13px]">Authorization: Token &lt;token&gt;</code>
             </div>
           </div>
@@ -336,11 +336,12 @@ export default function ReferencePage() {
             <div key={group.domain} className="space-y-3">
               <div className="flex items-center gap-2">
                 <h2 className="font-semibold text-[15px]">{group.domain}</h2>
-                <span className="text-[10.5px] text-text-ghost bg-surface-raised border border-border rounded-full px-2 py-0.5">
+                <span className="text-xs text-text-ghost bg-surface-raised border border-border rounded-full px-2 py-0.5">
                   {group.endpoints.length} endpoint{group.endpoints.length !== 1 ? "s" : ""}
                 </span>
               </div>
               <DataTable
+                caption={`${group.domain} API endpoints`}
                 headers={["Name", "Path", "Description"]}
                 rows={group.endpoints.map((ep) => [
                   <code key="name" className="font-mono text-[12px] text-blue">{ep.name}</code>,
@@ -358,6 +359,7 @@ export default function ReferencePage() {
         <div className="space-y-4">
           <p className="text-sm text-text-dim">Internal API endpoints used by the <code className="font-mono text-[12px]">jf_agent</code> for data ingestion. These are not part of the public Export API.</p>
           <DataTable
+            caption="Internal agent API endpoints"
             headers={["Endpoint", "Method", "Description"]}
             rows={agentEndpoints.map((ep) => [
               <code key="ep" className="font-mono text-[12px] text-blue">{ep.endpoint}</code>,
@@ -375,17 +377,18 @@ export default function ReferencePage() {
       {section === "webhooks" && (
         <div className="space-y-6">
           <DataTable
+            caption="Webhook endpoints"
             headers={["Method", "Endpoint", "Auth Header", "Description"]}
             rows={webhookEndpoints.map((wh) => [
               <span key="method" className="inline-block px-2 py-0.5 rounded text-[10.5px] font-bold bg-violet-dim text-violet">{wh.method}</span>,
               <code key="path" className="font-mono text-[12px] text-blue">{wh.path}</code>,
-              <code key="auth" className="font-mono text-[11px] text-text-dim">{wh.auth}</code>,
+              <code key="auth" className="font-mono text-xs text-text-dim">{wh.auth}</code>,
               <span key="desc" className="text-[13px] text-text-dim">{wh.desc}</span>,
             ])}
           />
           <div className="space-y-2">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-text-ghost">Deployment Webhook Payload Schema</h3>
-            <pre className="bg-surface-raised border border-border rounded-xl p-4 overflow-x-auto text-[12px] font-mono text-text-dim leading-relaxed">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-text-ghost">Deployment Webhook Payload Schema</h3>
+            <pre tabIndex={0} className="bg-surface-raised border border-border rounded-xl p-4 overflow-x-auto text-[12px] font-mono text-text-dim leading-relaxed">
               <code>{deploymentPayload}</code>
             </pre>
           </div>
@@ -398,9 +401,10 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">25 MCP Tools</h2>
             <DataTable
+              caption="MCP tools inventory"
               headers={["#", "Tool Name", "Description"]}
               rows={allEndpoints.map((ep, i) => [
-                <span key="num" className="text-[11px] text-text-ghost font-mono">{String(i + 1).padStart(2, "0")}</span>,
+                <span key="num" className="text-xs text-text-ghost font-mono">{String(i + 1).padStart(2, "0")}</span>,
                 <code key="name" className="font-mono text-[12px] text-blue">{ep.name}</code>,
                 <span key="desc" className="text-[13px] text-text-dim">{ep.desc}</span>,
               ])}
@@ -409,6 +413,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">MCP Configuration Variables</h2>
             <DataTable
+              caption="MCP configuration variables"
               headers={["Variable", "Required", "Default", "Description"]}
               rows={mcpConfigVars.map((v) => [
                 <code key="name" className="font-mono text-[12px] text-blue">{v.name}</code>,
@@ -430,6 +435,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Supported Git Providers</h2>
             <DataTable
+              caption="Supported git providers"
               headers={["Provider", "Constant", "URL Format"]}
               rows={gitProviders.map((p) => [
                 <span key="name" className="text-[13px] font-medium">{p.name}</span>,
@@ -441,6 +447,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Run Modes</h2>
             <DataTable
+              caption="Agent run modes"
               headers={["Mode", "Description"]}
               rows={runModes.map((m) => [
                 <code key="mode" className="font-mono text-[12px] text-blue">{m.mode}</code>,
@@ -543,7 +550,7 @@ export default function ReferencePage() {
             <div key={cat.category} className="space-y-3">
               <div className="flex items-center gap-2">
                 <h2 className="font-semibold text-[15px]">{cat.category}</h2>
-                <span className="text-[10.5px] text-text-ghost bg-surface-raised border border-border rounded-full px-2 py-0.5">
+                <span className="text-xs text-text-ghost bg-surface-raised border border-border rounded-full px-2 py-0.5">
                   {cat.tools.length} tool{cat.tools.length !== 1 ? "s" : ""}
                 </span>
               </div>
@@ -561,6 +568,7 @@ export default function ReferencePage() {
       {section === "urls" && (
         <div className="space-y-4">
           <DataTable
+            caption="Key URLs and access points"
             headers={["Name", "URL", "Purpose"]}
             rows={keyUrls.map((u) => [
               <span key="name" className="text-[13px] font-medium">{u.name}</span>,
@@ -604,6 +612,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Jira Configuration (example.yml)</h2>
             <DataTable
+              caption="Jira configuration options"
               headers={["Option", "Description"]}
               rows={agentConfig.jira.map((j) => [
                 <code key="name" className="font-mono text-[12px] text-blue">{j.name}</code>,
@@ -615,6 +624,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Git Configuration (example.yml)</h2>
             <DataTable
+              caption="Git configuration options"
               headers={["Option", "Description"]}
               rows={agentConfig.git.map((g) => [
                 <code key="name" className="font-mono text-[12px] text-blue">{g.name}</code>,
@@ -626,6 +636,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">CLI Arguments</h2>
             <DataTable
+              caption="CLI arguments"
               headers={["Flag", "Description"]}
               rows={agentConfig.cli.map((c) => [
                 <code key="flag" className="font-mono text-[12px] text-blue">{c.flag}</code>,
@@ -637,6 +648,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Buildkite Plugin Configuration (pipeline.yml)</h2>
             <DataTable
+              caption="Buildkite plugin parameters"
               headers={["Parameter", "Required", "Default", "Description"]}
               rows={buildkiteConfig.map((b) => [
                 <code key="param" className="font-mono text-[12px] text-blue">{b.param}</code>,
@@ -654,6 +666,7 @@ export default function ReferencePage() {
         <div className="space-y-4">
           <p className="text-sm text-text-dim">Jellyfish serves 7 target personas across engineering, product, finance, and operations.</p>
           <DataTable
+            caption="Target personas"
             headers={["Persona", "Use Cases"]}
             rows={personas.map((p) => [
               <span key="role" className="text-[13px] font-medium">{p.role}</span>,
@@ -678,7 +691,7 @@ export default function ReferencePage() {
               {publishedResources.reports.map((r) => <li key={r} className="text-[13px] text-text-dim">• {r}</li>)}
             </ul>
           </div>
-          <p className="text-[11px] text-text-ghost">Note: Webinar archive spans 7 pages with 9+ on-demand sessions. See jellyfish.co/webinars/ for the full list.</p>
+          <p className="text-xs text-text-ghost">Note: Webinar archive spans 7 pages with 9+ on-demand sessions. See jellyfish.co/webinars/ for the full list.</p>
         </div>
       )}
 
@@ -703,7 +716,7 @@ export default function ReferencePage() {
           <ol className="space-y-3">
             {limitations.map((l, i) => (
               <li key={i} className="flex gap-3 text-[13px]">
-                <span className="text-text-ghost font-mono text-[11px] mt-0.5 shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-text-ghost font-mono text-xs mt-0.5 shrink-0">{String(i + 1).padStart(2, "0")}</span>
                 <span className="text-text-dim">{l}</span>
               </li>
             ))}
@@ -717,6 +730,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Infrastructure Layers</h2>
             <DataTable
+              caption="Infrastructure stack"
               headers={["Layer", "Technology", "Evidence"]}
               rows={infraLayers.map((l) => [
                 <span key="layer" className="text-[13px] font-medium">{l.layer}</span>,
@@ -728,7 +742,7 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">
               GitHub Repositories
-              <span className="ml-2 text-[11px] font-normal text-text-ghost">13 total — 6 original, 7 forked</span>
+              <span className="ml-2 text-xs font-normal text-text-ghost">13 total — 6 original, 7 forked</span>
             </h2>
             <ul className="space-y-2">
               {repos.map((r) => (

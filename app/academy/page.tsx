@@ -414,7 +414,7 @@ export default function AcademyPage() {
                         <li key={index} className="mb-1.5">
                           {step}
                           {endpointMap[playbook.id]?.[index] && (
-                            <code className="ml-1.5 font-mono text-[11px] bg-blue-dim text-blue px-1.5 py-0.5 rounded">
+                            <code className="ml-1.5 font-mono text-xs bg-blue-dim text-blue px-1.5 py-0.5 rounded">
                               {endpointMap[playbook.id][index]}
                             </code>
                           )}
@@ -588,7 +588,7 @@ export default function AcademyPage() {
                   <div
                     className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${card.accentFrom} ${card.accentTo}`}
                   />
-                  <h3 className="font-bold text-sm mb-1.5">{card.title}</h3>
+                  <h3 className="font-bold mb-1.5">{card.title}</h3>
                   <p className="text-sm text-text-dim leading-relaxed mb-3">
                     {card.description}
                   </p>

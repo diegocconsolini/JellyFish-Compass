@@ -13,7 +13,7 @@ export function DataTable({ headers, rows, caption }: DataTableProps) {
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+            <tr key={i} className="hover:bg-surface-raised transition-colors">
               {row.map((cell, j) => (
                 <td key={j} className="px-3 py-2.5 text-sm border-b border-border">{cell}</td>
               ))}
