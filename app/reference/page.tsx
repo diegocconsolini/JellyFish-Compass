@@ -254,6 +254,7 @@ const publishedResources = {
     "AI in Engineering: Moving Beyond Hype Into Reality (Nov 2025)",
     "7 AI KPIs Every Engineering Leader Should Track (Oct 2025)",
     "The AI Impact Framework (Sep 2025)",
+    "6 Slides R&D Leaders Should Show at Board Meetings in an AI-Driven World (Sep 2025)",
     "Bridging Finance and R&D: Efficient Software Capitalization (May 2025)",
     "The 5 Elements of Software Engineering Management",
     "The Jellyfish Guide to Engineering Metrics",

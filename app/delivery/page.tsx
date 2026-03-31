@@ -203,8 +203,9 @@ export default function DeliveryPage() {
               Use <code>deliverable_scope_and_effort_history</code> to compare
               week-over-week scope changes. A rising scope line alongside flat or
               declining effort signals unplanned work entering the deliverable.
-              Flag deliverables where scope grew more than 15% in a rolling
-              4-week window and bring them to the next planning session.
+              Flag deliverables with significant week-over-week scope growth and bring them to the
+              next planning session. Define your own threshold based on your team&apos;s tolerance for
+              scope change.
             </p>
           </div>
           <div>

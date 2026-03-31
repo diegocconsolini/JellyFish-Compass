@@ -137,7 +137,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* All 10 sections */}
+      {/* All sections */}
       <section className="mb-12">
         <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
           Explore

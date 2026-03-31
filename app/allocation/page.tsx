@@ -71,8 +71,10 @@ export default function AllocationPage() {
           Use these views to identify imbalances and realign capacity with strategic priorities.
         </p>
         <p className="mt-2">
-          A healthy team typically targets <strong>50–60% Features</strong>, <strong>20–30% KTLO</strong>,
-          and <strong>10–20% Tech Debt</strong>. Deviations warrant a conversation in your next planning session.
+          There is no universal split — the right balance depends on your team&apos;s context, product maturity,
+          and business priorities. Review your team&apos;s allocation trends over time and discuss significant
+          shifts in your next planning session. Jellyfish&apos;s <strong>patented Work Model</strong> automatically
+          calculates these allocations from work items — no manual time tracking required.
         </p>
       </GuideBox>
 

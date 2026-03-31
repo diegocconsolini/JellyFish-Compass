@@ -61,8 +61,9 @@ export default function DevExPage() {
           The <strong>DevEx Index</strong> is a composite score derived from two sources:{" "}
           <code>developer surveys</code> (measuring perceived friction, tool satisfaction, and
           psychological safety) and <code>DORA / SPACE metrics</code> (deployment frequency, lead
-          time, change failure rate, and mean time to resolution). A score above 75 is considered
-          healthy; below 65 warrants a focused retro.
+          time, change failure rate, and mean time to resolution). Track your team&apos;s score over
+          time and investigate drops in any quarter. Use the trend — not a fixed threshold — to
+          decide when a focused retro is warranted.
         </p>
         <p className="mt-2">
           <strong>Unlinked PRs</strong> are pull requests merged during the period that have no
@@ -154,7 +155,7 @@ export default function DevExPage() {
             <div className="font-semibold text-text-primary mb-0.5">Retrospective: DevEx deep dive</div>
             <p>
               Use <code>devex_insights_by_team</code> at the end of each quarter to present survey
-              scores alongside DORA indicators. Teams with a DevEx score below 70 should identify
+              scores alongside DORA indicators. Teams showing a declining DevEx trend should identify
               the top friction sources — tooling, review wait time, or unclear requirements — and
               commit to one improvement per sprint.
             </p>
@@ -172,14 +173,18 @@ export default function DevExPage() {
             <div className="font-semibold text-text-primary mb-0.5">DORA baseline & goal-setting</div>
             <p>
               At the start of each quarter, record your team&apos;s four DORA metrics using{" "}
-              <code>team_metrics</code>. Set specific, measurable targets — for example, reduce lead
-              time from 4 days to 2 days — and track weekly progress in your sprint review. Pair
+              <code>team_metrics</code>. Set specific, measurable targets based on your team&apos;s
+              baseline and track weekly progress in your sprint review. Pair
               DORA improvements with DevEx survey results to confirm that tooling changes are
               actually felt by engineers.
             </p>
           </div>
         </div>
       </GuideBox>
+
+      <p className="text-xs text-text-ghost mt-6">
+        Customer-reported DevEx outcomes: Kaleris achieved 21% more productive and 19% more efficient engineering teams (jellyfish.co/platform/devex/). Platform rated 4.5/5 on G2 and 4.8/5 on Gartner.
+      </p>
     </div>
   );
 }
