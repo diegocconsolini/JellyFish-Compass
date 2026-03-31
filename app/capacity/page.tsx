@@ -202,6 +202,12 @@ export default function CapacityPage() {
           </li>
         </ul>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Roadmap Forecasting">
+        <p>Use historical capacity data to <strong>set realistic delivery expectations</strong>. If a team has 8.2 FTE available but 9.1 planned, something must give — negotiate scope or timeline before committing.</p>
+        <p className="mt-2">Build trust in <strong>roadmap predictability</strong> by showing data-backed forecasts. When priorities shift, model the impact on timeline before committing to stakeholders.</p>
+        <p className="mt-2 text-xs text-text-ghost">Source: jellyfish.co/solutions/capacity-planner/ — &quot;Build realistic roadmaps so your teams can thrive.&quot;</p>
+      </GuideBox>
     </div>
   );
 }

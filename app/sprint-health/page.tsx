@@ -207,6 +207,12 @@ export default function SprintHealthPage() {
           </div>
         </div>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Sprint Predictability">
+        <p>Use sprint completion rate and velocity trends to <strong>forecast delivery confidence</strong> for stakeholders. A consistent completion rate above 85% signals reliable planning — share this in roadmap reviews.</p>
+        <p className="mt-2">Track carry-over trends to identify capacity issues <strong>before they impact your roadmap</strong>. Rising carry-over means the team is overcommitted — adjust scope in the next planning cycle rather than waiting for a missed deadline.</p>
+        <p className="mt-2 text-xs text-text-ghost">Source: jellyfish.co/solutions/engineering-product-operations/ — Precisely achieved 22% increase in sprint predictability.</p>
+      </GuideBox>
     </div>
   );
 }

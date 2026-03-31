@@ -190,6 +190,12 @@ export default function AllocationPage() {
           </li>
         </ol>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Investment Alignment">
+        <p>Use allocation data to verify that <strong>engineering investment matches roadmap priorities</strong>. If your top product initiative has 10% of planned effort but 40% goes to KTLO, that&apos;s a misalignment to raise in planning.</p>
+        <p className="mt-2">Jellyfish&apos;s <strong>patented Work Model</strong> automatically calculates how effort distributes across product lines, initiatives, and deliverables — no manual tracking required. Use <code>allocations_by_work_category</code> to see effort by initiative.</p>
+        <p className="mt-2">Compare effort across teams to identify where investment concentrates and whether it matches your product strategy.</p>
+      </GuideBox>
     </div>
   );
 }

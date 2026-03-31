@@ -165,6 +165,11 @@ export default function LifeCyclePage() {
           </div>
         </div>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Bottleneck Visibility">
+        <p>Identify which development stages consistently slow delivery. If &apos;In Review&apos; takes 3x longer than &apos;In Progress&apos;, <strong>budget accordingly in your roadmap</strong> — the bottleneck is real regardless of story point estimates.</p>
+        <p className="mt-2">Use stage timing data to set <strong>accurate feature timelines</strong>. Tell stakeholders: &quot;Based on cycle time data, features of this size typically take 5-7 business days from start to deploy.&quot;</p>
+      </GuideBox>
     </div>
   );
 }

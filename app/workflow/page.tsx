@@ -257,6 +257,12 @@ export default function WorkflowPage() {
           </div>
         </div>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Process Efficiency">
+        <p>Understand handoff delays that <strong>impact your delivery timeline</strong>. The transitions with highest idle time are where your features sit waiting — not being worked on.</p>
+        <p className="mt-2">Focus improvement efforts on the <strong>single worst handoff</strong>. Reducing one transition&apos;s idle time by 50% has more roadmap impact than small improvements across all stages.</p>
+        <p className="mt-2">Use workflow data to explain delivery timelines to stakeholders with specifics: &quot;Features spend an average of 16 hours waiting between Review and QA — we&apos;re working to reduce that.&quot;</p>
+      </GuideBox>
     </div>
   );
 }

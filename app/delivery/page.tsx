@@ -232,6 +232,12 @@ export default function DeliveryPage() {
           </div>
         </div>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Delivery Tracking">
+        <p>Monitor deliverable completion % to <strong>communicate credible timelines</strong> to stakeholders. Use <code>deliverable_scope_and_effort_history</code> to detect scope creep before it impacts ship dates.</p>
+        <p className="mt-2">Track delivery status by work category to understand <strong>initiative-level progress</strong> — this is what leadership and product stakeholders want to see, not sprint-level detail.</p>
+        <p className="mt-2">When a deliverable&apos;s scope grows week-over-week while effort stays flat, flag it immediately — this is the earliest signal of a timeline slip.</p>
+      </GuideBox>
     </div>
   );
 }

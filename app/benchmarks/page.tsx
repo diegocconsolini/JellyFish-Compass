@@ -286,6 +286,12 @@ export default function BenchmarksPage() {
           </div>
         </div>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Setting Team Expectations">
+        <p>Use benchmarks to <strong>set realistic expectations per team</strong> when planning. A team with 4.8-day cycle time needs more roadmap buffer than one with 2.1-day cycle time.</p>
+        <p className="mt-2">Compare deployment frequency across teams to understand which teams can deliver <strong>faster iterations</strong> — useful for deciding where to place time-sensitive features.</p>
+        <p className="mt-2">Benchmarks help product leaders have informed conversations about timelines without guessing or pressuring teams into unrealistic commitments.</p>
+      </GuideBox>
     </div>
   );
 }

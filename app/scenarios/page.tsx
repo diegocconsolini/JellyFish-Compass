@@ -179,6 +179,11 @@ export default function ScenariosPage() {
           </li>
         </ul>
       </GuideBox>
+
+      <GuideBox title="Product Owner Guide: Trade-off Modeling">
+        <p>Model &apos;what if&apos; scenarios before quarter planning to prepare <strong>data-backed proposals</strong>. Show stakeholders the trade-off clearly: &quot;If we shift 2 FTE to Feature X, Initiative Y slips by 3 weeks.&quot;</p>
+        <p className="mt-2">Use allocation scenarios to <strong>align product priorities with engineering capacity</strong>. This turns resource conversations from opinions into data — instead of &quot;we need more engineers,&quot; present the specific impact of reallocation.</p>
+      </GuideBox>
     </div>
   );
 }
