@@ -22,8 +22,8 @@ import {
   mockTeamBenchmarks,
 } from "@/data/mock-data";
 import { doraMetrics } from "@/data/dora-metrics";
-import { generateDeck, type SlideData } from "@/lib/export-pptx";
 import { jellyfishDark, jellyfishLight } from "@/lib/export-pptx-themes";
+import type { SlideData } from "@/lib/export-pptx";
 
 export default function MetricsPage() {
   const [templateId, setTemplateId] = useState<string | null>(null);
@@ -190,7 +190,9 @@ export default function MetricsPage() {
         return { blockId, data };
       });
 
-      const pptx = generateDeck(slideData, theme, {
+      // Dynamic import to avoid bundling node:https at build time
+      const { generateDeck } = await import("@/lib/export-pptx");
+      const pptx = await generateDeck(slideData, theme, {
         title: titleText,
         subtitle: subtitleText,
       });

@@ -13,6 +13,7 @@ import {
   Gauge,
   Bot,
   Shuffle,
+  Presentation,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -53,6 +54,7 @@ const sectionIcons: Record<string, React.ReactNode> = {
   "/capacity": <Gauge className="w-5 h-5 text-blue" />,
   "/ai-impact": <Bot className="w-5 h-5 text-cyan" />,
   "/scenarios": <Shuffle className="w-5 h-5 text-amber" />,
+  "/metrics": <Presentation className="w-5 h-5 text-amber" />,
   "/reference": <BookOpen className="w-5 h-5 text-blue" />,
   "/academy": <GraduationCap className="w-5 h-5 text-green" />,
 };
@@ -91,6 +93,7 @@ const sectionGroups = [
     title: "Knowledge",
     color: "from-amber to-yellow-300",
     items: [
+      { href: "/metrics", label: "Deck Builder", desc: "Build branded PPTX from Jellyfish metrics" },
       { href: "/reference", label: "Reference", desc: "25 endpoints, MCP, DORA, integrations" },
       { href: "/academy", label: "Academy", desc: "Learning hub — modules, playbooks, workspace" },
     ],

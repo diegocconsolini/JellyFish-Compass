@@ -46,6 +46,7 @@ const navGroups = [
     label: "Knowledge",
     color: "bg-amber",
     items: [
+      { href: "/metrics", label: "Deck Builder" },
       { href: "/reference", label: "Reference" },
       { href: "/academy", label: "Academy" },
     ],
