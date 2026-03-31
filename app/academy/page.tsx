@@ -175,10 +175,10 @@ const audienceCards: AudienceCard[] = [
 // ─── Tab config ───────────────────────────────────────────────────────────────
 
 const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-  { id: "modules", label: "Modules", icon: <BookOpen size={16} /> },
-  { id: "playbooks", label: "Playbooks", icon: <ClipboardList size={16} /> },
-  { id: "workspace", label: "Workspace", icon: <Save size={16} /> },
-  { id: "showcase", label: "Showcase", icon: <Sparkles size={16} /> },
+  { id: "modules", label: "Modules", icon: <BookOpen size={16} aria-hidden="true" /> },
+  { id: "playbooks", label: "Playbooks", icon: <ClipboardList size={16} aria-hidden="true" /> },
+  { id: "workspace", label: "Workspace", icon: <Save size={16} aria-hidden="true" /> },
+  { id: "showcase", label: "Showcase", icon: <Sparkles size={16} aria-hidden="true" /> },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -517,7 +517,11 @@ export default function AcademyPage() {
                   </div>
 
                   <div className="flex gap-2">
+                    <label htmlFor={`input-${key}`} className="sr-only">
+                      New item for {label}
+                    </label>
                     <input
+                      id={`input-${key}`}
                       type="text"
                       value={inputValue}
                       onChange={(e) =>
@@ -532,11 +536,11 @@ export default function AcademyPage() {
                       }}
                       placeholder={`Add to ${label}…`}
                       className="flex-1 min-w-0 min-h-[44px] rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-xs placeholder:text-text-ghost focus:outline-none focus:ring-2 focus:ring-blue/40"
-                      aria-label={`New item for ${label}`}
                     />
                     <button
                       type="button"
                       onClick={() => addItem(key as ArtifactKey, inputValue)}
+                      aria-label={`Add item to ${label}`}
                       className="shrink-0 min-h-[44px] rounded-lg bg-blue px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
                     >
                       Add
@@ -547,7 +551,7 @@ export default function AcademyPage() {
                     <button
                       type="button"
                       onClick={() => clearType(key as ArtifactKey)}
-                      className="text-[11px] text-text-ghost hover:text-red transition-colors text-left"
+                      className="text-xs min-h-[44px] px-2 text-text-ghost hover:text-red transition-colors text-left"
                       aria-label={`Clear all items from ${label}`}
                     >
                       Clear all
@@ -604,7 +608,7 @@ export default function AcademyPage() {
             title="Platform-reported outcomes"
             copy="Real signals from teams using Jellyfish across delivery, alignment, and efficiency."
           >
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <StatCard
                 label="Revenue Focus"
                 value="32%"

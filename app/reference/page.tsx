@@ -569,7 +569,7 @@ export default function ReferencePage() {
                 href={u.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-[12px] text-blue hover:underline"
+                className="font-mono text-xs text-blue hover:underline break-all"
               >
                 {u.url}
               </a>,
@@ -739,7 +739,7 @@ export default function ReferencePage() {
                   )}>
                     {r.forked ? "fork" : "orig"}
                   </span>
-                  <code className="font-mono text-[12px] text-blue w-44 shrink-0">{r.name}</code>
+                  <code className="font-mono text-xs text-blue break-all">{r.name}</code>
                   <span className="text-text-dim">{r.desc}</span>
                 </li>
               ))}
