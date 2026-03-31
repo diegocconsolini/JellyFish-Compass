@@ -4,6 +4,12 @@ export type SectionId =
   | "allocation"
   | "devex"
   | "people-teams"
+  | "life-cycle"
+  | "workflow"
+  | "benchmarks"
+  | "capacity"
+  | "ai-impact"
+  | "scenarios"
   | "reference"
   | "academy";
 

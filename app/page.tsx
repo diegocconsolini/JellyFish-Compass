@@ -7,6 +7,12 @@ import {
   Users,
   BookOpen,
   GraduationCap,
+  RefreshCw,
+  GitBranch,
+  BarChart3,
+  Gauge,
+  Bot,
+  Shuffle,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +47,12 @@ const sectionIcons: Record<string, React.ReactNode> = {
   "/allocation": <Scale className="w-5 h-5 text-amber" />,
   "/devex": <Code2 className="w-5 h-5 text-violet" />,
   "/people-teams": <Users className="w-5 h-5 text-cyan" />,
+  "/life-cycle": <RefreshCw className="w-5 h-5 text-green" />,
+  "/workflow": <GitBranch className="w-5 h-5 text-amber" />,
+  "/benchmarks": <BarChart3 className="w-5 h-5 text-violet" />,
+  "/capacity": <Gauge className="w-5 h-5 text-blue" />,
+  "/ai-impact": <Bot className="w-5 h-5 text-cyan" />,
+  "/scenarios": <Shuffle className="w-5 h-5 text-amber" />,
   "/reference": <BookOpen className="w-5 h-5 text-blue" />,
   "/academy": <GraduationCap className="w-5 h-5 text-green" />,
 };
@@ -51,8 +63,14 @@ const sections = [
   { href: "/allocation", label: "Allocation", desc: "FTE by investment, team, person" },
   { href: "/devex", label: "DevEx", desc: "Developer experience & unlinked PRs" },
   { href: "/people-teams", label: "People & Teams", desc: "Roster, hierarchy, search" },
+  { href: "/life-cycle", label: "Life Cycle", desc: "Issue-level cycle time & bottlenecks" },
+  { href: "/workflow", label: "Workflow", desc: "Intake-to-deployment handoff analysis" },
+  { href: "/benchmarks", label: "Benchmarks", desc: "Cross-team comparison for learning" },
+  { href: "/capacity", label: "Capacity", desc: "FTE forecasting & workload planning" },
+  { href: "/ai-impact", label: "AI Impact", desc: "Tool adoption & ROI measurement" },
+  { href: "/scenarios", label: "Scenarios", desc: "What-if allocation modeling" },
   { href: "/reference", label: "Reference", desc: "25 endpoints, MCP, DORA, integrations" },
-  { href: "/academy", label: "Academy", desc: "Learning hub — modules, playbooks, workspace, showcase" },
+  { href: "/academy", label: "Academy", desc: "Learning hub — modules, playbooks, workspace" },
 ];
 
 const dataFeatures = [
@@ -144,9 +162,9 @@ export default function HomePage() {
         </p>
         <h2 className="text-xl font-bold mb-1">All sections</h2>
         <p className="text-sm text-text-dim mb-5">
-          Six data dashboards plus a learning hub with playbooks, workspace, and showcase.
+          Eleven data dashboards, a complete API reference, and a learning hub.
         </p>
-        <div className="grid grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-4 gap-2.5 lg:grid-cols-5">
           {sections.map((s) => (
             <Link
               key={s.href}
