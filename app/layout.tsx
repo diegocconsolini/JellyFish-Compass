@@ -32,8 +32,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${dmSans.variable} ${jetBrainsMono.variable}`}>
         <ThemeProvider>
           <div className="min-h-screen flex flex-col">
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-bg focus:text-text-primary focus:px-4 focus:py-2 focus:rounded-lg focus:border focus:border-blue focus:text-sm focus:font-semibold"
+            >
+              Skip to main content
+            </a>
             <SiteHeader />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1">{children}</main>
             <SiteFooter />
           </div>
         </ThemeProvider>
