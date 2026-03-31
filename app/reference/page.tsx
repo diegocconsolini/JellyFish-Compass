@@ -304,9 +304,11 @@ export default function ReferencePage() {
         {SECTIONS.map(({ id, label }) => (
           <button
             key={id}
+            type="button"
             onClick={() => setSection(id)}
+            aria-pressed={section === id}
             className={cn(
-              "px-3 py-2 rounded-full text-xs font-semibold border transition-colors",
+              "px-3 py-2.5 min-h-[44px] rounded-full text-xs font-semibold border transition-colors",
               section === id
                 ? "bg-blue-dim text-blue border-blue/30"
                 : "bg-surface-raised border-border text-text-ghost hover:text-text-dim"
@@ -732,7 +734,7 @@ export default function ReferencePage() {
               {repos.map((r) => (
                 <li key={r.name} className="flex items-start gap-3 text-[13px]">
                   <span className={cn(
-                    "mt-0.5 inline-block px-1.5 py-0 rounded text-[9.5px] font-bold uppercase tracking-wide shrink-0",
+                    "mt-0.5 inline-block px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide shrink-0",
                     r.forked ? "bg-amber-dim text-amber" : "bg-blue-dim text-blue"
                   )}>
                     {r.forked ? "fork" : "orig"}

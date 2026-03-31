@@ -243,14 +243,18 @@ export default function AcademyPage() {
       />
 
       {/* Tab bar */}
-      <div className="flex gap-2 mb-8">
+      <div role="tablist" aria-label="Academy sections" className="flex gap-2 mb-8">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
+            role="tab"
+            id={`tab-${tab.id}`}
+            aria-selected={activeTab === tab.id}
+            aria-controls={`tabpanel-${tab.id}`}
             onClick={() => setActiveTab(tab.id)}
             className={cn(
-              "px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all cursor-pointer",
+              "px-4 py-2.5 min-h-[44px] rounded-lg text-sm font-medium flex items-center gap-2 transition-all cursor-pointer",
               activeTab === tab.id
                 ? "bg-blue-dim text-blue border border-blue/30"
                 : "bg-surface-raised border border-border text-text-ghost hover:text-text-dim"
@@ -264,7 +268,7 @@ export default function AcademyPage() {
 
       {/* ── Tab 1: Modules ── */}
       {activeTab === "modules" && (
-        <>
+        <div role="tabpanel" id="tabpanel-modules" aria-labelledby="tab-modules" tabIndex={0}>
           <GuideBox title="Getting Started">
             Work through the modules in order if you are new to Jellyfish. If
             you already know the platform, jump to the metric definitions to
@@ -361,12 +365,12 @@ export default function AcademyPage() {
               ))}
             </div>
           </SectionBlock>
-        </>
+        </div>
       )}
 
       {/* ── Tab 2: Playbooks ── */}
       {activeTab === "playbooks" && (
-        <>
+        <div role="tabpanel" id="tabpanel-playbooks" aria-labelledby="tab-playbooks" tabIndex={0}>
           <GuideBox title="How playbooks work">
             Playbooks guide you through a structured sequence of steps tied to a
             specific ceremony or communication need. Each playbook starts with
@@ -445,12 +449,12 @@ export default function AcademyPage() {
               </div>
             </div>
           </SectionBlock>
-        </>
+        </div>
       )}
 
       {/* ── Tab 3: Workspace ── */}
       {activeTab === "workspace" && (
-        <>
+        <div role="tabpanel" id="tabpanel-workspace" aria-labelledby="tab-workspace" tabIndex={0}>
           <GuideBox title="How Workspace works">
             Your workspace stores summaries, notes, templates, and artifacts
             collected from other pages. Use items from the{" "}
@@ -497,7 +501,7 @@ export default function AcademyPage() {
                               onClick={() =>
                                 removeItem(key as ArtifactKey, index)
                               }
-                              className="shrink-0 min-w-[24px] min-h-[24px] flex items-center justify-center text-text-ghost hover:text-red transition-colors"
+                              className="shrink-0 min-w-[44px] min-h-[44px] -my-2 -mr-1 flex items-center justify-center text-text-ghost hover:text-red transition-colors"
                               aria-label={`Remove "${item}" from ${label}`}
                             >
                               ×
@@ -527,13 +531,13 @@ export default function AcademyPage() {
                           addItem(key as ArtifactKey, inputValue);
                       }}
                       placeholder={`Add to ${label}…`}
-                      className="flex-1 min-w-0 rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-xs placeholder:text-text-ghost focus:outline-none focus:ring-2 focus:ring-blue/40"
+                      className="flex-1 min-w-0 min-h-[44px] rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-xs placeholder:text-text-ghost focus:outline-none focus:ring-2 focus:ring-blue/40"
                       aria-label={`New item for ${label}`}
                     />
                     <button
                       type="button"
                       onClick={() => addItem(key as ArtifactKey, inputValue)}
-                      className="shrink-0 rounded-lg bg-blue px-3 py-1.5 text-[11px] font-semibold text-white hover:opacity-90 transition-opacity"
+                      className="shrink-0 min-h-[44px] rounded-lg bg-blue px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
                     >
                       Add
                     </button>
@@ -553,12 +557,12 @@ export default function AcademyPage() {
               );
             })}
           </div>
-        </>
+        </div>
       )}
 
       {/* ── Tab 4: Showcase ── */}
       {activeTab === "showcase" && (
-        <>
+        <div role="tabpanel" id="tabpanel-showcase" aria-labelledby="tab-showcase" tabIndex={0}>
           <GuideBox title="How this connects">
             Each capability story below links to a <code>Playbook</code> for
             step-by-step guidance or an <code>Academy</code> module for deeper
@@ -640,7 +644,7 @@ export default function AcademyPage() {
               4.5/5 on G2 (357 reviews) and 4.8/5 on Gartner.
             </p>
           </SectionBlock>
-        </>
+        </div>
       )}
     </div>
   );
