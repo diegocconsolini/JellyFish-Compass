@@ -29,3 +29,18 @@ pnpm-debug.log*
 # Coverage and reports
 coverage/
 .vercel
+
+# Tool runtime artifacts
+.superpowers/
+.claude/
+
+# Source repos (cloned submodules — not part of this app)
+SourceRepos/
+
+# Original prototype files
+JellyfishScrumMasterAssistant.jsx
+JellyfishScrumMasterAssistant.html
+
+# Inventory and planning docs (internal)
+Jellyfish_Complete_Inventory.md
+docs/
