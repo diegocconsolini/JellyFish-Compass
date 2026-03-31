@@ -115,21 +115,95 @@ Each block maps to specific data and a PPTX slide template:
 ### Library
 `pptxgenjs` — MIT, client-side only, no server needed.
 
-### Brand
-- Background: `#0b0f18` (dark) or `#ffffff` (light — user toggle)
-- Accent: `#4f8ff7` (blue)
-- Text: `#e8ecf4` (dark bg) or `#112033` (light bg)
-- Font: Calibri (PPTX standard, closest to DM Sans)
-- Slide size: 16:9 widescreen
+### Default Theme: Jellyfish Brand (from jellyfish.co)
+
+Sourced directly from jellyfish.co brand:
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| Navy | `#0D062B` | Slide backgrounds |
+| Purple | `#7319F2` | Primary accent, headings, KPI highlights |
+| Purple Light | `#8F47F3` | Secondary accent, hover states |
+| Neon Green | `#CFEF09` | Positive trends, success indicators |
+| Aqua | `#13E2BF` | Charts, progress bars |
+| Red | `#FF502A` | Negative trends, alerts |
+| Light Purple BG | `#F9F6FE` | Light theme slide backgrounds |
+| White | `#FFFFFF` | Text on dark, card backgrounds on light |
+| Dark Gray | `#313131` | Text on light backgrounds |
+| Purple Tint | `#E3D1FC` | Subtle borders, dividers |
+
+**Gradients:**
+- Title slide: `135deg, #0693e3 → #9b51e0` (vivid-cyan-blue to vivid-purple)
+- Accent bar: `135deg, #020381 → #2874fc` (midnight gradient)
+
+**Typography:**
+- Font: Calibri (PPTX-safe, closest to Jellyfish's system font)
+- Title: 42px bold
+- Heading: 28px semibold
+- Body: 16px regular
+- KPI numbers: 48px bold
+- Labels: 12px uppercase tracking
+
+**Slide Layout Principles:**
+- Generous whitespace — no cramming
+- Left-aligned headings with purple accent bar (4px, gradient)
+- KPI cards: dark navy background with colored top border (matches StatCard pattern)
+- Tables: alternating row backgrounds (`#0D062B` / `#1a1040`)
+- Progress bars: gradient fill (aqua to purple)
+- Footer on every slide: "Jellyfish Compass · {date}" in small gray text
+
+### Theme Options (user-selectable)
+
+1. **Jellyfish Dark** (default) — navy backgrounds, white text, purple accents
+2. **Jellyfish Light** — white/light purple backgrounds, dark text, purple accents
+3. **Custom** — user uploads a PPTX template file. The builder extracts the slide master colors and applies them to generated slides. Uses pptxgenjs `defineSlideMaster()` API.
+
+### Custom Template Upload
+
+Users can upload a `.pptx` file as a base template:
+- The builder reads the file's slide master (background, colors, fonts)
+- Applies the master to all generated slides
+- Data content (tables, charts, KPIs) adapts to the template's color scheme
+- Stored in localStorage for reuse across sessions
+- "Reset to Jellyfish theme" button to revert
 
 ### Slide Templates
+
 Each slide block has a corresponding function in `lib/export-pptx.ts`:
-- `addTitleSlide(pptx, { title, subtitle, date })`
-- `addKpiSlide(pptx, kpis)`
-- `addTableSlide(pptx, { title, headers, rows })`
-- `addBarSlide(pptx, { title, bars })`
-- `addBigNumberSlide(pptx, { title, number, breakdown })`
-- `addTextSlide(pptx, { title, body })`
+
+**Title Slide:** `addTitleSlide(pptx, { title, subtitle, date })`
+- Full gradient background (135deg purple)
+- Large centered title (42px bold white)
+- Subtitle below (20px regular, white 80% opacity)
+- Date + "Jellyfish Compass" footer
+- Optional: Jellyfish logo placement area
+
+**KPI Slide:** `addKpiSlide(pptx, kpis)`
+- 4 stat cards in a 2x2 grid
+- Each card: navy background, colored top border (4px), KPI number (48px bold, colored), label (12px uppercase), trend indicator
+- Colors: blue for velocity, green for completion, amber for carry-over, purple for cadence
+
+**Table Slide:** `addTableSlide(pptx, { title, headers, rows })`
+- Title + purple accent bar at top
+- Full-width table with header row (purple background, white text)
+- Alternating body rows (navy / slightly lighter navy)
+- Status cells colored: green for on-track, amber for at-risk, red for behind
+
+**Bar Chart Slide:** `addBarSlide(pptx, { title, bars })`
+- Title + accent bar
+- Horizontal bars with gradient fills (aqua → purple)
+- Labels left, values right
+- Proportional widths
+
+**Big Number Slide:** `addBigNumberSlide(pptx, { title, number, subtitle, breakdown })`
+- Title at top
+- Massive centered number (72px bold, colored)
+- Subtitle below (20px, gray)
+- Small breakdown table or bars below
+
+**Text Slide:** `addTextSlide(pptx, { title, body })`
+- Title + accent bar
+- Body text (16px, white)
 
 ### Output
 File: `jellyfish-metrics-YYYY-MM-DD.pptx`
