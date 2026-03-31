@@ -78,7 +78,7 @@ export default function LifeCyclePage() {
   });
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="Life Cycle Explorer"
         title="Issue-level cycle time"
@@ -95,7 +95,7 @@ export default function LifeCyclePage() {
         </p>
       </GuideBox>
 
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
         <div className="rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-bold mb-4">Stage Averages</h2>
           {mockStageAverages.map((stage) => (
@@ -140,7 +140,7 @@ export default function LifeCyclePage() {
       />
 
       <GuideBox title="Using Cycle Time in Ceremonies">
-        <div className="grid grid-cols-3 gap-x-6 gap-y-3 mt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 mt-1">
           <div>
             <div className="font-semibold text-text-primary mb-0.5">Retrospective</div>
             <p>

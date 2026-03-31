@@ -42,7 +42,7 @@ export default function AiImpactPage() {
   const [token, setToken] = useState("");
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="AI Impact"
         title="AI tool adoption"
@@ -61,7 +61,7 @@ export default function AiImpactPage() {
         </p>
       </GuideBox>
 
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
         {/* Left card: AI Tool Adoption by Team */}
         <div className="rounded-xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between mb-4">
@@ -149,7 +149,7 @@ export default function AiImpactPage() {
       </div>
 
       <GuideBox title="Using AI Data in Ceremonies">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-1">
           <div>
             <div className="font-semibold text-text-primary mb-0.5">
               Retrospective

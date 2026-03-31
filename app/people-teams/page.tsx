@@ -108,7 +108,7 @@ export default function PeopleTeamsPage() {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="People & Teams"
         title="People & teams"
@@ -149,7 +149,7 @@ export default function PeopleTeamsPage() {
         </ul>
       </GuideBox>
 
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
         {/* People Endpoints Card */}
         <div className="bg-surface rounded-xl border border-border p-5">
           <h2 className="text-sm font-bold mb-3">People Endpoints</h2>

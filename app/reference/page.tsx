@@ -291,7 +291,7 @@ export default function ReferencePage() {
   const [section, setSection] = useState<SectionId>("endpoints");
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       {/* PageHero */}
       <PageHero
         eyebrow="Reference"
@@ -520,7 +520,7 @@ export default function ReferencePage() {
           ))}
           <div className="mt-6 space-y-3">
             <h2 className="font-semibold text-[15px]">Additional Platform Features</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="rounded-xl border border-border bg-surface p-5 space-y-2">
                 <h3 className="text-sm font-bold">Jellyfish Assistant</h3>
                 <p className="text-[13px] text-text-dim">AI-powered assistant for natural language queries against engineering data.</p>
@@ -587,7 +587,7 @@ export default function ReferencePage() {
 
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Data Types Collected</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="rounded-xl border border-border bg-surface p-5 space-y-2">
                 <h3 className="text-sm font-bold">Jira Data</h3>
                 <ul className="space-y-1">{agentConfig.dataTypes.jira.map((d) => <li key={d} className="text-[13px] text-text-dim">• {d}</li>)}</ul>

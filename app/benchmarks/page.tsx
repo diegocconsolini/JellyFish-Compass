@@ -105,7 +105,7 @@ export default function BenchmarksPage() {
   const [token, setToken] = useState("");
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="Team Benchmarks"
         title="Cross-team comparison"
@@ -122,7 +122,7 @@ export default function BenchmarksPage() {
       </GuideBox>
 
       {/* Metric visualization grid */}
-      <div className="grid grid-cols-2 gap-3 mb-5 xl:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 xl:grid-cols-3">
         {metricGroups.map((metric) => (
           <div
             key={metric.key}

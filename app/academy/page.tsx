@@ -234,7 +234,7 @@ export default function AcademyPage() {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="Academy"
         title="Learning hub"
@@ -276,7 +276,7 @@ export default function AcademyPage() {
             title="Learning modules"
             copy="These modules form the core of the learning-first experience and connect directly into examples, reference, and playbooks."
           >
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {modules.map((module) => (
                 <div
                   key={module.title}
@@ -311,7 +311,7 @@ export default function AcademyPage() {
             title="DORA Metrics"
             copy="All 4 DORA metrics tracked by Jellyfish, verbatim from jellyfish.co/platform/devops-metrics/"
           >
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {doraMetrics.map((m) => (
                 <div
                   key={m.name}
@@ -332,7 +332,7 @@ export default function AcademyPage() {
             title="Core metrics"
             copy="These metric definitions cover the signals that matter most to Scrum Master workflows."
           >
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {metrics.map((metric) => (
                 <div
                   key={metric.id}
@@ -424,7 +424,7 @@ export default function AcademyPage() {
           </SectionBlock>
 
           <SectionBlock title="Implementation principles">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               <div className="relative overflow-hidden bg-surface rounded-xl border border-border p-5">
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue to-cyan" />
                 <h3 className="font-bold text-base mb-2">Structured and calm</h3>
@@ -459,7 +459,7 @@ export default function AcademyPage() {
             return.
           </GuideBox>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {ARTIFACT_TYPES.map(({ label, key }, artifactIndex) => {
               const typeItems = items[key] ?? [];
               const inputValue = inputs[key] ?? "";
@@ -571,7 +571,7 @@ export default function AcademyPage() {
             title="Capability stories"
             copy="Polished narrative pages that explain what Jellyfish can unlock across roles and use cases."
           >
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {audienceCards.map((card) => (
                 <div
                   key={card.title}
@@ -600,7 +600,7 @@ export default function AcademyPage() {
             title="Platform-reported outcomes"
             copy="Real signals from teams using Jellyfish across delivery, alignment, and efficiency."
           >
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <StatCard
                 label="Revenue Focus"
                 value="32%"

@@ -120,7 +120,7 @@ const dotColors: Record<string, string> = {
 
 export default function HomePage() {
   return (
-    <div className="max-w-[1100px] mx-auto px-7 py-10">
+    <div className="max-w-[1100px] mx-auto px-4 sm:px-7 py-10">
 
       {/* Hero */}
       <section className="text-center py-12 mb-10">
@@ -162,7 +162,7 @@ export default function HomePage() {
         <p className="text-sm text-text-dim mb-5">
           Whether you&apos;re learning Jellyfish, running ceremonies, or exploring the API.
         </p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {steps.map((s) => (
             <div
               key={s.num}
@@ -195,7 +195,7 @@ export default function HomePage() {
                 <div className={`w-8 h-0.5 rounded-full bg-gradient-to-r ${group.color}`} />
                 <span className="text-[11px] font-bold uppercase tracking-widest text-text-ghost">{group.title}</span>
               </div>
-              <div className={`grid gap-2.5 ${group.items.length === 2 ? "grid-cols-2" : group.items.length === 3 ? "grid-cols-3" : "grid-cols-4"}`}>
+              <div className={`grid gap-2.5 ${group.items.length === 2 ? "grid-cols-1 sm:grid-cols-2" : group.items.length === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}>
                 {group.items.map((s) => (
                   <Link
                     key={s.href}
@@ -230,7 +230,7 @@ export default function HomePage() {
           Every endpoint, metric, and integration is sourced from official
           Jellyfish documentation and source code.
         </p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="rounded-xl border border-border bg-surface p-6">
             <h3 className="text-sm font-bold mb-4">Data & Metrics</h3>
             {dataFeatures.map((f) => (

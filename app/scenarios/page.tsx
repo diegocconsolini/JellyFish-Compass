@@ -35,7 +35,7 @@ export default function ScenariosPage() {
   const [token, setToken] = useState("");
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="Scenario Planner"
         title="What-if modeling"

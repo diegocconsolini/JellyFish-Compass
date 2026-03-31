@@ -120,7 +120,7 @@ export default function DeliveryPage() {
   ]);
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="Delivery"
         title="Delivery tracking"

@@ -49,7 +49,7 @@ export default function DevExPage() {
   const [token, setToken] = useState("");
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="DevEx"
         title="Developer experience"
@@ -73,7 +73,7 @@ export default function DevExPage() {
         </p>
       </GuideBox>
 
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
         {/* Left card: DevEx Index by Team */}
         <div className="rounded-xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between mb-4">
@@ -116,7 +116,7 @@ export default function DevExPage() {
       {/* DORA Metrics Reference */}
       <div className="mb-5">
         <h2 className="text-sm font-bold mb-3">DORA Metrics Reference</h2>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {doraMetrics.map((metric) => (
             <div
               key={metric.name}
@@ -151,7 +151,7 @@ export default function DevExPage() {
       />
 
       <GuideBox title="Scrum Master Playbook: DevEx & Unlinked Work">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-1">
           <div>
             <div className="font-semibold text-text-primary mb-0.5">Retrospective: DevEx deep dive</div>
             <p>

@@ -80,7 +80,7 @@ export default function SprintHealthPage() {
   ];
 
   return (
-    <div className="max-w-[1440px] mx-auto px-7 py-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
         eyebrow="Sprint Health"
         title="Track velocity, completion"
@@ -100,7 +100,7 @@ export default function SprintHealthPage() {
         </p>
       </GuideBox>
 
-      <div className="grid grid-cols-4 gap-3 mb-5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
         <StatCard
           label="Avg Velocity"
           value={mockSprintKpis.avgVelocity.value}
@@ -135,7 +135,7 @@ export default function SprintHealthPage() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
         <div className="rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-bold mb-4">Sprint History</h2>
           <DataTable
@@ -172,7 +172,7 @@ export default function SprintHealthPage() {
       />
 
       <GuideBox title="How to Use This in Your Sprint Ceremonies">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-1">
           <div>
             <div className="font-semibold text-text-primary mb-0.5">Sprint Planning</div>
             <p>
