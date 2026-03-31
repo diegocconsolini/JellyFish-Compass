@@ -497,7 +497,7 @@ export default function AcademyPage() {
                               onClick={() =>
                                 removeItem(key as ArtifactKey, index)
                               }
-                              className="shrink-0 text-text-ghost hover:text-red transition-colors"
+                              className="shrink-0 min-w-[24px] min-h-[24px] flex items-center justify-center text-text-ghost hover:text-red transition-colors"
                               aria-label={`Remove "${item}" from ${label}`}
                             >
                               ×

@@ -6,7 +6,7 @@ export function BarChart({ data, legend }: BarChartProps) {
         {data.map((col) => (
           <div key={col.label} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
             {col.values.map((bar, i) => (<div key={i} aria-hidden="true" className={`w-full rounded-t ${bar.className}`} style={{ height: `${bar.height}%` }} />))}
-            <div className="text-[10px] text-text-ghost">{col.label}</div>
+            <div className="text-xs text-text-ghost">{col.label}</div>
           </div>
         ))}
       </div>

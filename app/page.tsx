@@ -155,7 +155,7 @@ export default function HomePage() {
 
       {/* How it works */}
       <section className="mb-12">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-text-ghost mb-2">
           How it works
         </p>
         <h2 className="text-xl font-bold mb-1">Three ways to use Compass</h2>
@@ -169,7 +169,7 @@ export default function HomePage() {
               className="relative overflow-hidden rounded-xl border border-border bg-surface p-6"
             >
               <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.color}`} aria-hidden="true" />
-              <p className="text-[11px] font-bold text-text-ghost mb-2.5">
+              <p className="text-xs font-bold text-text-ghost mb-2.5">
                 {s.num} — {s.phase}
               </p>
               <h3 className="text-[15px] font-bold mb-1.5">{s.title}</h3>
@@ -181,7 +181,7 @@ export default function HomePage() {
 
       {/* All sections */}
       <section className="mb-12">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-text-ghost mb-2">
           Explore
         </p>
         <h2 className="text-xl font-bold mb-1">All sections</h2>
@@ -193,7 +193,7 @@ export default function HomePage() {
             <div key={group.title}>
               <div className="flex items-center gap-2.5 mb-3">
                 <div className={`w-8 h-0.5 rounded-full bg-gradient-to-r ${group.color}`} aria-hidden="true" />
-                <span className="text-[11px] font-bold uppercase tracking-widest text-text-ghost">{group.title}</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-text-ghost">{group.title}</span>
               </div>
               <div className={`grid gap-2.5 ${group.items.length === 2 ? "grid-cols-1 sm:grid-cols-2" : group.items.length === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}>
                 {group.items.map((s) => (
@@ -208,7 +208,7 @@ export default function HomePage() {
                   >
                     <div className="mb-2" aria-hidden="true">{sectionIcons[s.href]}</div>
                     <h3 className="text-[13px] font-bold mb-0.5">{s.label}</h3>
-                    <div className="text-[11px] text-text-ghost leading-snug">{s.desc}</div>
+                    <div className="text-xs text-text-ghost leading-snug">{s.desc}</div>
                   </Link>
                 ))}
               </div>
@@ -222,7 +222,7 @@ export default function HomePage() {
 
       {/* What's inside */}
       <section className="mb-12">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-text-ghost mb-2">
           What&apos;s inside
         </p>
         <h2 className="text-xl font-bold mb-1">Built from verified Jellyfish data</h2>

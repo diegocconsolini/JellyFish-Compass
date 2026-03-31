@@ -7,7 +7,7 @@ export function DataTable({ headers, rows, caption }: DataTableProps) {
         <thead>
           <tr>
             {headers.map((h) => (
-              <th key={h} scope="col" className="text-left text-[10.5px] font-semibold uppercase tracking-wider text-text-ghost px-3 py-2 border-b border-border-vivid">{h}</th>
+              <th key={h} scope="col" className="text-left text-xs font-semibold uppercase tracking-wider text-text-ghost px-3 py-2 border-b border-border-vivid">{h}</th>
             ))}
           </tr>
         </thead>

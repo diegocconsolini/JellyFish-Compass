@@ -9,7 +9,7 @@ export function StatCard({ label, value, note, trend, trendDirection, color = "b
       <div className={`text-3xl font-extrabold tracking-tight ${valColor[color]}`}>{value}</div>
       <div className="text-[11px] text-text-ghost mt-1">{note}</div>
       {trend && trendDirection && (
-        <div className={`inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded mt-1.5 ${trendDirection === "up" ? "text-green bg-green-dim" : "text-red bg-red-dim"}`}>
+        <div className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded mt-1.5 ${trendDirection === "up" ? "text-green bg-green-dim" : "text-red bg-red-dim"}`}>
           <span className="sr-only">{trendDirection === "up" ? "Trending up:" : "Trending down:"}</span>
           <span aria-hidden="true">{trendDirection === "up" ? "\u2191" : "\u2193"}</span> {trend}
         </div>
