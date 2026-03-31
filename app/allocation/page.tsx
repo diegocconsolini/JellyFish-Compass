@@ -93,7 +93,7 @@ export default function AllocationPage() {
               onClick={() => setViewMode(mode)}
               className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer ${
                 isActive
-                  ? "bg-blue-dim text-blue border-blue/30"
+                  ? "bg-blue/[0.08] text-blue border-blue/30"
                   : "bg-surface-raised border-border text-text-ghost hover:text-text-dim"
               }`}
             >

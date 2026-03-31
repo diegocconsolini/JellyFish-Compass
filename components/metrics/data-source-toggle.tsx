@@ -38,7 +38,7 @@ export function DataSourceToggle({
             className={cn(
               "px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer",
               source === opt.id
-                ? "bg-blue-dim text-blue"
+                ? "bg-blue/[0.08] text-blue"
                 : "text-text-ghost hover:text-text-dim"
             )}
           >

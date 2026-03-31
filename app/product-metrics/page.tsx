@@ -195,7 +195,7 @@ export default function ProductMetricsPage() {
           className={cn(
             "px-4 py-2.5 min-h-[44px] rounded-lg text-sm font-medium flex items-center gap-2 transition-all cursor-pointer",
             tab === "metrics"
-              ? "bg-blue-dim text-blue border border-blue/30"
+              ? "bg-blue/[0.08] text-blue border border-blue/30"
               : "bg-surface-raised border border-border text-text-ghost hover:text-text-dim"
           )}
         >
@@ -211,7 +211,7 @@ export default function ProductMetricsPage() {
           className={cn(
             "px-4 py-2.5 min-h-[44px] rounded-lg text-sm font-medium flex items-center gap-2 transition-all cursor-pointer",
             tab === "ai-impact"
-              ? "bg-blue-dim text-blue border border-blue/30"
+              ? "bg-blue/[0.08] text-blue border border-blue/30"
               : "bg-surface-raised border border-border text-text-ghost hover:text-text-dim"
           )}
         >

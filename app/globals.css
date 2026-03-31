@@ -49,7 +49,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Accent colors — dark mode values (overridden per theme below) */
+  /* Accent colors — same in both themes (Tailwind v4 bakes these at build time) */
   --color-blue: #4f8ff7;
   --color-blue-interactive: #1a6be8;
   --color-blue-dim: rgba(79,143,247,0.12);
@@ -101,11 +101,6 @@
 }
 
 :root {
-  /* Light mode blue overrides — darker shades for AA contrast on light backgrounds */
-  --color-blue: #1060d6;
-  --color-blue-interactive: #0d58d0;
-  --color-blue-dim: rgba(16,96,214,0.08);
-
   /* Light mode app surfaces */
   --app-bg-deep: #f0f2f5;
   --app-bg: #f5f7fb;
@@ -152,11 +147,6 @@
 }
 
 .dark {
-  /* Dark mode blue — brighter shades for AA contrast on dark backgrounds */
-  --color-blue: #5a95f8;
-  --color-blue-interactive: #1a6be8;
-  --color-blue-dim: rgba(79,143,247,0.12);
-
   /* Dark mode app surfaces */
   --app-bg-deep: #06080d;
   --app-bg: #0b0f18;
