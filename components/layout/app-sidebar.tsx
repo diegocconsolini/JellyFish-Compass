@@ -27,9 +27,39 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+};
+
+type ExpandableItem = {
+  id: string;
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+  groups: {
+    label: string;
+    children: { href: string; label: string }[];
+  }[];
+};
+
 // ─── Nav structure ────────────────────────────────────────────────────────────
 
-const navGroups = [
+const navGroups: {
+  id: string;
+  label: string;
+  color: string;
+  dotColor: string;
+  hoverBg: string;
+  activeBg: string;
+  activeBorder: string;
+  activeText: string;
+  items: NavItem[];
+  expandables?: ExpandableItem[];
+}[] = [
   {
     id: "metrics",
     label: "Metrics",
@@ -75,8 +105,70 @@ const navGroups = [
     activeText: "text-amber",
     items: [
       { href: "/metrics", label: "Deck Builder", icon: Presentation },
-      { href: "/reference", label: "Reference", icon: BookOpen },
-      { href: "/academy", label: "Academy", icon: GraduationCap },
+    ],
+    expandables: [
+      {
+        id: "reference",
+        label: "Reference",
+        href: "/reference",
+        icon: BookOpen,
+        groups: [
+          {
+            label: "API",
+            children: [
+              { href: "/reference/endpoints", label: "All 25 Endpoints" },
+              { href: "/reference/agent", label: "Agent Endpoints" },
+              { href: "/reference/webhooks", label: "Webhooks" },
+              { href: "/reference/mcp", label: "MCP Tools" },
+              { href: "/reference/jf-agent", label: "jf_agent" },
+              { href: "/reference/agent-config", label: "Agent Config" },
+              { href: "/reference/urls", label: "Key URLs" },
+              { href: "/reference/infra", label: "Infrastructure" },
+            ],
+          },
+          {
+            label: "Platform",
+            children: [
+              { href: "/reference/dora", label: "DORA Metrics" },
+              { href: "/reference/frameworks", label: "Frameworks" },
+              { href: "/reference/features", label: "Platform Features" },
+              { href: "/reference/integrations", label: "Integrations" },
+              { href: "/reference/personas", label: "Personas" },
+              { href: "/reference/people-teams", label: "People & Teams" },
+            ],
+          },
+          {
+            label: "Knowledge",
+            children: [
+              { href: "/reference/resources", label: "Resources" },
+              { href: "/reference/library", label: "Knowledge Library" },
+              { href: "/reference/limitations", label: "Limitations" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "academy",
+        label: "Academy",
+        href: "/academy",
+        icon: GraduationCap,
+        groups: [
+          {
+            label: "Learn",
+            children: [
+              { href: "/academy/modules", label: "Modules" },
+              { href: "/academy/showcase", label: "Showcase" },
+            ],
+          },
+          {
+            label: "Practice",
+            children: [
+              { href: "/academy/playbooks", label: "Playbooks" },
+              { href: "/academy/workspace", label: "Workspace" },
+            ],
+          },
+        ],
+      },
     ],
   },
 ];
@@ -84,6 +176,9 @@ const navGroups = [
 function findActiveGroup(pathname: string): string {
   for (const group of navGroups) {
     if (group.items.some((item) => item.href === pathname)) return group.id;
+    for (const exp of group.expandables ?? []) {
+      if (pathname.startsWith(exp.href)) return group.id;
+    }
   }
   return "metrics";
 }
@@ -95,8 +190,32 @@ function DesktopSidebar() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { expanded, setExpanded } = useSidebar();
+  const [openExpandables, setOpenExpandables] = useState<Set<string>>(new Set());
 
   useEffect(() => setMounted(true), []);
+
+  // Auto-expand when pathname matches a child route
+  useEffect(() => {
+    const toOpen = new Set<string>();
+    for (const group of navGroups) {
+      for (const exp of group.expandables ?? []) {
+        if (pathname.startsWith(exp.href)) toOpen.add(exp.id);
+      }
+    }
+    setOpenExpandables((prev) => {
+      const next = new Set(prev);
+      toOpen.forEach((id) => next.add(id));
+      return next;
+    });
+  }, [pathname]);
+
+  function toggleExpandable(id: string) {
+    setOpenExpandables((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
 
   return (
     <aside
@@ -166,7 +285,7 @@ function DesktopSidebar() {
               <div className={cn("w-full h-px my-2", group.dotColor, "opacity-20")} aria-hidden="true" />
             )}
 
-            {/* Items */}
+            {/* Flat items */}
             {group.items.map(({ href, label, icon: Icon }) => {
               const isActive = pathname === href;
               return (
@@ -192,6 +311,73 @@ function DesktopSidebar() {
                     <span className="text-xs font-medium truncate">{label}</span>
                   )}
                 </Link>
+              );
+            })}
+
+            {/* Expandable items */}
+            {(group.expandables ?? []).map((exp) => {
+              const isOpen = openExpandables.has(exp.id);
+              const isParentActive = pathname.startsWith(exp.href);
+              const Icon = exp.icon;
+              return (
+                <div key={exp.id}>
+                  {/* Parent row */}
+                  <button
+                    type="button"
+                    onClick={() => toggleExpandable(exp.id)}
+                    aria-expanded={isOpen}
+                    title={expanded ? undefined : exp.label}
+                    className={cn(
+                      "w-full flex items-center gap-3 min-h-[44px] transition-colors border-l-2",
+                      expanded ? "px-3" : "justify-center px-0",
+                      isParentActive
+                        ? cn(group.activeBg, group.activeBorder, group.activeText)
+                        : cn("text-text-ghost hover:text-text-dim", group.hoverBg, "border-transparent")
+                    )}
+                  >
+                    <Icon size={16} className={cn("shrink-0", isParentActive ? group.activeText : "text-current")} aria-hidden="true" />
+                    {expanded && (
+                      <>
+                        <span className="text-xs font-medium truncate flex-1 text-left">{exp.label}</span>
+                        <ChevronRight
+                          size={12}
+                          className={cn("shrink-0 transition-transform text-text-ghost", isOpen && "rotate-90")}
+                        />
+                      </>
+                    )}
+                  </button>
+
+                  {/* Children */}
+                  {isOpen && expanded && (
+                    <div>
+                      {exp.groups.map((grp) => (
+                        <div key={grp.label}>
+                          <div className="text-[10px] font-bold uppercase tracking-widest text-text-ghost pl-6 py-1 mt-1">
+                            {grp.label}
+                          </div>
+                          {grp.children.map((child) => {
+                            const isChildActive = pathname === child.href;
+                            return (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                aria-current={isChildActive ? "page" : undefined}
+                                className={cn(
+                                  "flex items-center min-h-[44px] pl-6 pr-3 text-xs transition-colors border-l-2",
+                                  isChildActive
+                                    ? cn(group.activeBg, group.activeBorder, group.activeText)
+                                    : cn("text-text-ghost hover:text-text-dim", group.hoverBg, "border-transparent")
+                                )}
+                              >
+                                <span className="truncate">{child.label}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -236,10 +422,29 @@ function MobileNav() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
-  const activeGroup = findActiveGroup(pathname);
+  const [openExpandables, setOpenExpandables] = useState<Set<string>>(new Set());
 
   useEffect(() => setMounted(true), []);
   useEffect(() => setOpen(false), [pathname]);
+
+  // Auto-expand active expandable on pathname change
+  useEffect(() => {
+    const toOpen = new Set<string>();
+    for (const group of navGroups) {
+      for (const exp of group.expandables ?? []) {
+        if (pathname.startsWith(exp.href)) toOpen.add(exp.id);
+      }
+    }
+    setOpenExpandables(toOpen);
+  }, [pathname]);
+
+  function toggleMobileExpandable(id: string) {
+    setOpenExpandables((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
 
   return (
     <>
@@ -285,6 +490,7 @@ function MobileNav() {
                   <span className="text-xs font-bold uppercase tracking-widest">{group.label}</span>
                 </div>
                 <div className="space-y-1 pl-4">
+                  {/* Flat items */}
                   {group.items.map(({ href, label, icon: Icon }) => {
                     const isActive = pathname === href;
                     return (
@@ -303,6 +509,59 @@ function MobileNav() {
                         <Icon size={16} aria-hidden="true" />
                         {label}
                       </Link>
+                    );
+                  })}
+
+                  {/* Expandable items */}
+                  {(group.expandables ?? []).map((exp) => {
+                    const isExpOpen = openExpandables.has(exp.id);
+                    const Icon = exp.icon;
+                    return (
+                      <div key={exp.id}>
+                        <button
+                          type="button"
+                          onClick={() => toggleMobileExpandable(exp.id)}
+                          aria-expanded={isExpOpen}
+                          className={cn(
+                            "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
+                            pathname.startsWith(exp.href)
+                              ? cn(group.activeBg, group.activeText)
+                              : "text-text-dim hover:text-text-primary hover:bg-surface-raised/50"
+                          )}
+                        >
+                          <Icon size={16} aria-hidden="true" />
+                          <span className="flex-1 text-left">{exp.label}</span>
+                          <ChevronRight size={14} className={cn("transition-transform text-text-ghost", isExpOpen && "rotate-90")} />
+                        </button>
+                        {isExpOpen && (
+                          <div className="pl-4 mt-1 space-y-1">
+                            {exp.groups.map((grp) => (
+                              <div key={grp.label}>
+                                <div className="text-[10px] font-bold uppercase tracking-widest text-text-ghost px-3 py-1">{grp.label}</div>
+                                {grp.children.map((child) => {
+                                  const isChildActive = pathname === child.href;
+                                  return (
+                                    <Link
+                                      key={child.href}
+                                      href={child.href}
+                                      onClick={() => setOpen(false)}
+                                      aria-current={isChildActive ? "page" : undefined}
+                                      className={cn(
+                                        "flex items-center px-3 py-2 rounded-lg text-sm transition-all",
+                                        isChildActive
+                                          ? cn(group.activeBg, group.activeText)
+                                          : "text-text-dim hover:text-text-primary hover:bg-surface-raised/50"
+                                      )}
+                                    >
+                                      {child.label}
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
