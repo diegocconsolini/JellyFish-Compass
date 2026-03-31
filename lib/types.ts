@@ -116,3 +116,47 @@ export type MockPersonAllocation = {
   spreadCount: number;
   flag?: string;
 };
+
+export type MockIssueLifecycle = {
+  id: string;
+  title: string;
+  stages: { name: string; hours: number }[];
+  totalHours: number;
+};
+
+export type MockWorkflowStage = {
+  from: string;
+  to: string;
+  avgHours: number;
+  handoffDelay: number;
+};
+
+export type MockTeamBenchmark = {
+  team: string;
+  velocity: number;
+  cycleTimeDays: number;
+  prReviewHours: number;
+  deploymentsPerWeek: number;
+  devexScore: number;
+};
+
+export type MockCapacityPlan = {
+  team: string;
+  availableFte: number;
+  plannedFte: number;
+  gap: number;
+  status: "ok" | "tight" | "over";
+};
+
+export type MockAiAdoption = {
+  team: string;
+  copilot: number;
+  cursor: number;
+  claudeCode: number;
+};
+
+export type MockAiBeforeAfter = {
+  team: string;
+  before: { prsPerWeek: number; cycleTimeDays: number; reviewTimeHours: number };
+  after: { prsPerWeek: number; cycleTimeDays: number; reviewTimeHours: number };
+};

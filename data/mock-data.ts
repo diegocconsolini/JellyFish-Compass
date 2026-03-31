@@ -1,4 +1,15 @@
-import { MockSprint, MockDeliverable, MockTeamAllocation, MockPersonAllocation } from "@/lib/types";
+import {
+  MockSprint,
+  MockDeliverable,
+  MockTeamAllocation,
+  MockPersonAllocation,
+  MockIssueLifecycle,
+  MockWorkflowStage,
+  MockTeamBenchmark,
+  MockCapacityPlan,
+  MockAiAdoption,
+  MockAiBeforeAfter,
+} from "@/lib/types";
 
 export const mockSprints: MockSprint[] = [
   { name: "Sprint 24", committed: 18, completed: 16, carryOver: 2, velocity: 62, points: 62 },
@@ -70,3 +81,81 @@ export const mockSprintKpis = {
   carryOver: { value: "3.0", unit: "avg items / sprint", trend: "watch threshold", direction: "down" as const },
   sprintCadence: { value: "2w", unit: "consistent cadence", trend: "stable", direction: "up" as const },
 };
+
+// Life Cycle Explorer mock data
+export const mockIssueLifecycle: MockIssueLifecycle[] = [
+  { id: "PLAT-142", title: "Fix OAuth token refresh", stages: [{ name: "To Do", hours: 8 }, { name: "In Progress", hours: 24 }, { name: "In Review", hours: 12 }, { name: "QA", hours: 4 }, { name: "Done", hours: 0 }], totalHours: 48 },
+  { id: "PLAT-158", title: "Add rate limit headers", stages: [{ name: "To Do", hours: 16 }, { name: "In Progress", hours: 8 }, { name: "In Review", hours: 32 }, { name: "QA", hours: 6 }, { name: "Done", hours: 0 }], totalHours: 62 },
+  { id: "MOB-091", title: "Push notification rework", stages: [{ name: "To Do", hours: 4 }, { name: "In Progress", hours: 40 }, { name: "In Review", hours: 8 }, { name: "QA", hours: 16 }, { name: "Done", hours: 0 }], totalHours: 68 },
+  { id: "DATA-203", title: "Migrate user table indexes", stages: [{ name: "To Do", hours: 24 }, { name: "In Progress", hours: 16 }, { name: "In Review", hours: 4 }, { name: "QA", hours: 2 }, { name: "Done", hours: 0 }], totalHours: 46 },
+  { id: "FE-077", title: "Dashboard chart refactor", stages: [{ name: "To Do", hours: 48 }, { name: "In Progress", hours: 12 }, { name: "In Review", hours: 6 }, { name: "QA", hours: 3 }, { name: "Done", hours: 0 }], totalHours: 69 },
+];
+
+export const mockStageAverages = [
+  { name: "To Do", avgHours: 20 },
+  { name: "In Progress", avgHours: 20 },
+  { name: "In Review", avgHours: 12.4 },
+  { name: "QA", avgHours: 6.2 },
+];
+
+// Workflow Analysis mock data
+export const mockWorkflowStages: MockWorkflowStage[] = [
+  { from: "Intake", to: "Triage", avgHours: 4, handoffDelay: 2 },
+  { from: "Triage", to: "Development", avgHours: 8, handoffDelay: 12 },
+  { from: "Development", to: "Review", avgHours: 24, handoffDelay: 6 },
+  { from: "Review", to: "QA", avgHours: 8, handoffDelay: 16 },
+  { from: "QA", to: "Deploy", avgHours: 4, handoffDelay: 8 },
+];
+
+// Team Benchmarks mock data
+export const mockTeamBenchmarks: MockTeamBenchmark[] = [
+  { team: "Platform", velocity: 62, cycleTimeDays: 3.2, prReviewHours: 6, deploymentsPerWeek: 4, devexScore: 78 },
+  { team: "Mobile", velocity: 45, cycleTimeDays: 4.8, prReviewHours: 12, deploymentsPerWeek: 2, devexScore: 65 },
+  { team: "Data", velocity: 38, cycleTimeDays: 2.1, prReviewHours: 4, deploymentsPerWeek: 6, devexScore: 72 },
+  { team: "Frontend", velocity: 54, cycleTimeDays: 2.8, prReviewHours: 5, deploymentsPerWeek: 5, devexScore: 81 },
+];
+
+// Capacity Planner mock data
+export const mockCapacityPlan: MockCapacityPlan[] = [
+  { team: "Platform", availableFte: 8.2, plannedFte: 9.1, gap: -0.9, status: "over" },
+  { team: "Mobile", availableFte: 6.1, plannedFte: 5.8, gap: 0.3, status: "ok" },
+  { team: "Data", availableFte: 5.4, plannedFte: 5.2, gap: 0.2, status: "ok" },
+  { team: "Frontend", availableFte: 5.3, plannedFte: 5.5, gap: -0.2, status: "tight" },
+];
+
+export const mockSprintForecast = [
+  { sprint: "Sprint 25", totalAvailable: 25.0, totalPlanned: 25.6, status: "tight" as const },
+  { sprint: "Sprint 26", totalAvailable: 24.2, totalPlanned: 23.8, status: "ok" as const },
+  { sprint: "Sprint 27", totalAvailable: 23.5, totalPlanned: 26.1, status: "over" as const },
+];
+
+// AI Impact mock data
+export const mockAiAdoption: MockAiAdoption[] = [
+  { team: "Platform", copilot: 82, cursor: 35, claudeCode: 18 },
+  { team: "Mobile", copilot: 65, cursor: 52, claudeCode: 8 },
+  { team: "Data", copilot: 45, cursor: 12, claudeCode: 42 },
+  { team: "Frontend", copilot: 90, cursor: 68, claudeCode: 15 },
+];
+
+export const mockAiBeforeAfter: MockAiBeforeAfter[] = [
+  { team: "Platform", before: { prsPerWeek: 18, cycleTimeDays: 4.2, reviewTimeHours: 8 }, after: { prsPerWeek: 24, cycleTimeDays: 3.1, reviewTimeHours: 5 } },
+  { team: "Frontend", before: { prsPerWeek: 22, cycleTimeDays: 3.5, reviewTimeHours: 6 }, after: { prsPerWeek: 31, cycleTimeDays: 2.4, reviewTimeHours: 4 } },
+  { team: "Data", before: { prsPerWeek: 12, cycleTimeDays: 2.8, reviewTimeHours: 5 }, after: { prsPerWeek: 16, cycleTimeDays: 2.0, reviewTimeHours: 3 } },
+];
+
+// Scenario Planner mock data
+export const mockCurrentScenario = [
+  { label: "Feature Development", value: 12.4, color: "blue" as const },
+  { label: "Keep the Lights On", value: 5.8, color: "amber" as const },
+  { label: "Tech Debt", value: 3.2, color: "violet" as const },
+  { label: "Growth / Scaling", value: 2.1, color: "green" as const },
+  { label: "Unallocated", value: 1.5, color: "ghost" as const },
+];
+
+export const mockAdjustedScenario = [
+  { label: "Feature Development", value: 14.2, color: "blue" as const },
+  { label: "Keep the Lights On", value: 4.0, color: "amber" as const },
+  { label: "Tech Debt", value: 3.2, color: "violet" as const },
+  { label: "Growth / Scaling", value: 2.1, color: "green" as const },
+  { label: "Unallocated", value: 1.5, color: "ghost" as const },
+];
