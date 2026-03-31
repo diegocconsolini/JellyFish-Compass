@@ -11,7 +11,4 @@ export const primaryNav: NavItem[] = [
 
 export const secondaryNav: NavItem[] = [
   { href: "/academy", label: "Academy", section: "academy" },
-  { href: "/playbooks", label: "Playbooks", section: "playbooks" },
-  { href: "/workspace", label: "Workspace", section: "workspace" },
-  { href: "/showcase", label: "Showcase", section: "showcase" },
 ];
