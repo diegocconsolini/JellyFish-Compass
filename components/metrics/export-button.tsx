@@ -21,7 +21,7 @@ export function ExportButton({ onExport, loading, slideCount }: Props) {
           type="button"
           onClick={() => onExport("dark")}
           disabled={loading || slideCount === 0}
-          className="flex items-center gap-2 px-4 py-2 rounded-l-lg bg-blue text-white text-xs font-semibold disabled:opacity-50 cursor-pointer transition-opacity hover:opacity-90"
+          className="flex items-center gap-2 px-4 py-2 rounded-l-lg bg-blue-interactive text-white text-xs font-semibold disabled:opacity-50 cursor-pointer transition-opacity hover:opacity-90"
         >
           <Download size={14} />
           {loading ? "Generating..." : `Export PPTX (${slideCount} slides)`}
@@ -30,7 +30,7 @@ export function ExportButton({ onExport, loading, slideCount }: Props) {
           type="button"
           onClick={() => setShowMenu(!showMenu)}
           disabled={loading || slideCount === 0}
-          className="px-2 py-2 rounded-r-lg bg-blue/80 text-white disabled:opacity-50 cursor-pointer border-l border-blue/50"
+          className="px-2 py-2 rounded-r-lg bg-blue-interactive/80 text-white disabled:opacity-50 cursor-pointer border-l border-blue-interactive/50"
           aria-label="Export theme options"
         >
           <ChevronDown size={14} />

@@ -57,7 +57,7 @@ export function ApiExplorer({ token, endpoints, getParams, mockResponses }: ApiE
               <input aria-label={`Parameter: ${k}`} value={v} onChange={(e) => setParams((p) => ({ ...p, [k]: e.target.value }))} className="flex-1 px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue" />
             </div>
           ))}
-          <button onClick={handleExecute} disabled={loading} className="mt-2.5 px-5 py-2 rounded-lg bg-blue text-white text-sm font-semibold disabled:opacity-50 cursor-pointer">{loading ? "Calling..." : "\u25B6 Execute"}</button>
+          <button onClick={handleExecute} disabled={loading} className="mt-2.5 px-5 py-2 rounded-lg bg-blue-interactive text-white text-sm font-semibold disabled:opacity-50 cursor-pointer">{loading ? "Calling..." : "\u25B6 Execute"}</button>
           {error && <div className="mt-3 p-3 rounded-lg bg-red-dim text-red text-sm">{error}</div>}
           {result !== null && result !== undefined && <pre className="mt-3 bg-bg-deep border border-border rounded-lg p-4 max-h-[200px] overflow-auto font-mono text-[11.5px] text-[#24292e] dark:text-[#c9d1d9] leading-relaxed" tabIndex={0} aria-label="API response JSON">{JSON.stringify(result, null, 2) as string}</pre>}
         </div>

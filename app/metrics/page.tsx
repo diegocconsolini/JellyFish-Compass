@@ -251,19 +251,19 @@ export default function MetricsPage() {
           { n: 2, label: "Customize Slides" },
           { n: 3, label: "Export" },
         ] as const).map(({ n, label }, i) => (
-          <>
-            <div key={label} className={[
+          <div key={label} className="flex items-center gap-1.5">
+            <div className={[
               "flex items-center gap-1.5 font-medium transition-colors",
               currentStep === n ? "text-blue" : currentStep > n ? "text-text-dim" : "text-text-ghost",
             ].join(" ")}>
               <span className={[
                 "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border",
-                currentStep === n ? "bg-blue text-white border-blue" : currentStep > n ? "bg-surface-raised border-border text-text-dim" : "border-border text-text-ghost",
+                currentStep === n ? "bg-blue-interactive text-white border-blue-interactive" : currentStep > n ? "bg-surface-raised border-border text-text-dim" : "border-border text-text-ghost",
               ].join(" ")}>{n}</span>
               {label}
             </div>
-            {i < 2 && <span key={`sep-${i}`} className="text-text-ghost/40 mx-1">→</span>}
-          </>
+            {i < 2 && <span className="text-text-ghost/40 mx-1">→</span>}
+          </div>
         ))}
       </div>
 

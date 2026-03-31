@@ -138,7 +138,7 @@ export default function HomePage() {
         <div className="flex justify-center gap-3">
           <a
             href="#explore"
-            className="inline-flex items-center rounded-xl bg-blue px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+            className="inline-flex items-center rounded-xl bg-blue-interactive px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
           >
             Get Started
           </a>

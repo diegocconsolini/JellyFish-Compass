@@ -51,6 +51,7 @@
 
   /* Accent colors — same in both themes */
   --color-blue: #4f8ff7;
+  --color-blue-interactive: #1a6be8;
   --color-blue-dim: rgba(79,143,247,0.12);
   --color-blue-glow: rgba(79,143,247,0.06);
   --color-green: #34d399;
@@ -152,7 +153,7 @@
   --app-border-vivid: rgba(255,255,255,0.1);
   --app-text-primary: #e8ecf4;
   --app-text-dim: #909aac;
-  --app-text-ghost: #6b7a8d;
+  --app-text-ghost: #7d8ea0;
 
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

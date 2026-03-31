@@ -164,7 +164,7 @@ export default function AcademyWorkspacePage() {
                   type="button"
                   onClick={() => addItem(key as ArtifactKey, inputValue)}
                   aria-label={`Add item to ${label}`}
-                  className="shrink-0 min-h-[44px] rounded-lg bg-blue px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
+                  className="shrink-0 min-h-[44px] rounded-lg bg-blue-interactive px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
                 >
                   Add
                 </button>
