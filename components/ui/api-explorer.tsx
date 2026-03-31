@@ -42,7 +42,7 @@ export function ApiExplorer({ token, endpoints, getParams, mockResponses }: ApiE
       </div>
       <div className="flex flex-wrap gap-1.5 mb-3.5">
         {endpoints.map((ep) => (
-          <button key={ep.name} onClick={() => handleSelect(ep)} className={`px-3 py-1.5 rounded-md font-mono text-[11.5px] font-medium border transition-all cursor-pointer ${selected?.name === ep.name ? "bg-surface-raised border-blue/50 text-blue" : "bg-surface-raised border-border text-text-ghost hover:text-text-dim hover:border-border-vivid"}`}>{ep.name}</button>
+          <button key={ep.name} onClick={() => handleSelect(ep)} className={`px-3 py-1.5 rounded-md font-mono text-[11.5px] font-medium border transition-all cursor-pointer ${selected?.name === ep.name ? "bg-blue/[0.08] border-blue/30 text-blue" : "bg-surface-raised border-border text-text-ghost hover:text-text-dim hover:border-border-vivid"}`}>{ep.name}</button>
         ))}
       </div>
       {selected && (

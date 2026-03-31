@@ -25,7 +25,7 @@ export function TemplatePicker({ selected, onSelect }: Props) {
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer",
                 selected === t.id
-                  ? "bg-surface-raised text-blue border-blue/50"
+                  ? "bg-blue/[0.08] text-blue border-blue/30"
                   : "bg-surface-raised border-border text-text-ghost hover:text-text-dim"
               )}
             >
@@ -45,7 +45,7 @@ export function TemplatePicker({ selected, onSelect }: Props) {
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer",
                 selected === t.id
-                  ? "bg-surface-raised text-blue border-blue/50"
+                  ? "bg-blue/[0.08] text-blue border-blue/30"
                   : "bg-surface-raised border-border text-text-ghost hover:text-text-dim"
               )}
             >
