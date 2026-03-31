@@ -167,3 +167,24 @@ export type MockAiBeforeAfter = {
   before: { prsPerWeek: number; cycleTimeDays: number; reviewTimeHours: number };
   after: { prsPerWeek: number; cycleTimeDays: number; reviewTimeHours: number };
 };
+
+// Product pages
+export type MockBurndown = {
+  week: string;
+  deliverable: string;
+  percentComplete: number;
+};
+
+export type MockProductFlow = {
+  team: string;
+  cycleTimeDays: number;
+  leadTimeDays: number;
+  deployFrequency: number;
+};
+
+export type MockRoadmapItem = {
+  initiative: string;
+  plannedFte: number;
+  actualFte: number;
+  status: "on-track" | "under-invested" | "over-invested";
+};

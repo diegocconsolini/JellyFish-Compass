@@ -9,6 +9,9 @@ import {
   MockCapacityPlan,
   MockAiAdoption,
   MockAiBeforeAfter,
+  MockBurndown,
+  MockProductFlow,
+  MockRoadmapItem,
 } from "@/lib/types";
 
 export const mockSprints: MockSprint[] = [
@@ -158,4 +161,59 @@ export const mockAdjustedScenario = [
   { label: "Tech Debt", value: 3.2, color: "violet" as const },
   { label: "Growth / Scaling", value: 2.1, color: "green" as const },
   { label: "Unallocated", value: 1.5, color: "ghost" as const },
+];
+
+// Product pages mock data
+
+export const mockBurndown: MockBurndown[] = [
+  { week: "W1", deliverable: "Auth Service Rewrite", percentComplete: 45 },
+  { week: "W2", deliverable: "Auth Service Rewrite", percentComplete: 52 },
+  { week: "W3", deliverable: "Auth Service Rewrite", percentComplete: 58 },
+  { week: "W4", deliverable: "Auth Service Rewrite", percentComplete: 65 },
+  { week: "W5", deliverable: "Auth Service Rewrite", percentComplete: 70 },
+  { week: "W6", deliverable: "Auth Service Rewrite", percentComplete: 74 },
+  { week: "W7", deliverable: "Auth Service Rewrite", percentComplete: 78 },
+  { week: "W1", deliverable: "Mobile App v3.0", percentComplete: 15 },
+  { week: "W2", deliverable: "Mobile App v3.0", percentComplete: 20 },
+  { week: "W3", deliverable: "Mobile App v3.0", percentComplete: 25 },
+  { week: "W4", deliverable: "Mobile App v3.0", percentComplete: 30 },
+  { week: "W5", deliverable: "Mobile App v3.0", percentComplete: 34 },
+  { week: "W6", deliverable: "Mobile App v3.0", percentComplete: 38 },
+  { week: "W7", deliverable: "Mobile App v3.0", percentComplete: 45 },
+  { week: "W1", deliverable: "Data Pipeline Migration", percentComplete: 72 },
+  { week: "W2", deliverable: "Data Pipeline Migration", percentComplete: 78 },
+  { week: "W3", deliverable: "Data Pipeline Migration", percentComplete: 82 },
+  { week: "W4", deliverable: "Data Pipeline Migration", percentComplete: 85 },
+  { week: "W5", deliverable: "Data Pipeline Migration", percentComplete: 88 },
+  { week: "W6", deliverable: "Data Pipeline Migration", percentComplete: 90 },
+  { week: "W7", deliverable: "Data Pipeline Migration", percentComplete: 92 },
+];
+
+export const mockShipEstimates = [
+  { deliverable: "Auth Service Rewrite", percentComplete: 78, remainingPoints: 14, avgVelocity: 62, estimatedSprints: 1, estimatedDate: "2026-04-14", confidence: "high" as const },
+  { deliverable: "Mobile App v3.0", percentComplete: 45, remainingPoints: 42, avgVelocity: 45, estimatedSprints: 3, estimatedDate: "2026-05-26", confidence: "medium" as const },
+  { deliverable: "Data Pipeline Migration", percentComplete: 92, remainingPoints: 4, avgVelocity: 38, estimatedSprints: 1, estimatedDate: "2026-04-07", confidence: "high" as const },
+  { deliverable: "API Rate Limiting", percentComplete: 30, remainingPoints: 18, avgVelocity: 54, estimatedSprints: 2, estimatedDate: "2026-04-28", confidence: "low" as const },
+];
+
+export const mockProductFlow: MockProductFlow[] = [
+  { team: "Platform", cycleTimeDays: 3.2, leadTimeDays: 5.8, deployFrequency: 4.0 },
+  { team: "Mobile", cycleTimeDays: 4.8, leadTimeDays: 8.2, deployFrequency: 2.0 },
+  { team: "Data", cycleTimeDays: 2.1, leadTimeDays: 4.5, deployFrequency: 6.0 },
+  { team: "Frontend", cycleTimeDays: 2.8, leadTimeDays: 5.1, deployFrequency: 5.0 },
+];
+
+export const mockProductQuality = [
+  { product: "Core Platform", bugs: 12, criticalBugs: 2, avgResolutionDays: 3.5, uptime: 99.8 },
+  { product: "Mobile App", bugs: 28, criticalBugs: 5, avgResolutionDays: 5.2, uptime: 99.2 },
+  { product: "Data Pipeline", bugs: 6, criticalBugs: 0, avgResolutionDays: 1.8, uptime: 99.9 },
+  { product: "Public API", bugs: 9, criticalBugs: 1, avgResolutionDays: 2.4, uptime: 99.7 },
+];
+
+export const mockRoadmapItems: MockRoadmapItem[] = [
+  { initiative: "Auth Service Rewrite", plannedFte: 4.0, actualFte: 4.2, status: "on-track" },
+  { initiative: "Mobile App v3.0", plannedFte: 6.0, actualFte: 3.8, status: "under-invested" },
+  { initiative: "Data Pipeline Migration", plannedFte: 2.0, actualFte: 2.1, status: "on-track" },
+  { initiative: "API Rate Limiting", plannedFte: 1.5, actualFte: 0.8, status: "under-invested" },
+  { initiative: "Platform Monitoring", plannedFte: 1.0, actualFte: 2.4, status: "over-invested" },
 ];
