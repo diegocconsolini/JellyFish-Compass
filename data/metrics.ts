@@ -31,7 +31,7 @@ export const metrics: MetricDefinition[] = [
   {
     id: "unlinked-prs",
     name: "Unlinked Pull Requests",
-    category: "Delivery Hygiene",
+    category: "Delivery",
     summary: "Highlights work merged without a linked tracked item, surfacing invisible work that distorts sprint reporting.",
     whyItMatters: "It reveals effort happening outside the delivery workflow, which can erode trust in sprint metrics.",
     scrumUse: "Review it weekly to coach better workflow hygiene and explain metric anomalies.",

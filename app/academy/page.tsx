@@ -9,6 +9,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { BookOpen, ClipboardList, Save, Sparkles } from "lucide-react";
 import { metrics } from "@/data/metrics";
 import { playbooks } from "@/data/playbooks";
+import { doraMetrics } from "@/data/dora-metrics";
 import { cn } from "@/lib/utils";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -23,33 +24,80 @@ const modules = [
     title: "Jellyfish fundamentals",
     description:
       "Understand what Jellyfish measures, how platform areas connect, and why Scrum Masters should read metrics as workflow signals rather than isolated dashboards.",
-    related: ["Reference", "Showcase"],
+    detail:
+      "Covers the 6 product areas: AI Impact, Operational Effectiveness, Planning & Delivery, Business Alignment, DevEx, and DevFinOps.",
+    related: ["Reference"],
+    color: "from-blue to-cyan",
   },
   {
     title: "Delivery and scope",
     description:
       "Learn deliverables, scope and effort history, sprint health, and how to spot bottlenecks or creeping scope in practice.",
+    detail:
+      "Includes Life Cycle Explorer for issue-level analysis and Workflow Analysis for tracing work from intake to deployment.",
     related: ["Sprint Health", "Delivery"],
+    color: "from-green to-emerald-300",
   },
   {
     title: "Allocations and FTE",
     description:
-      "Ground allocation concepts in focus, KTLO pressure, and realistic planning conversations.",
+      "Ground allocation concepts in focus, KTLO pressure, and realistic planning conversations using Jellyfish's patented Work Model.",
+    detail:
+      "Automatic FTE calculation from work items — no time tracking required. Includes Capacity Planner and Scenario Planner.",
     related: ["Allocation"],
+    color: "from-amber to-yellow-300",
   },
   {
     title: "DevEx and AI impact",
     description:
-      "See how experience, workflow friction, and AI tooling adoption fit into a broader operating model.",
+      "Two distinct platform products that together cover developer experience measurement and AI tooling ROI.",
+    detail:
+      "DevEx: research-backed surveys, DevEx Index, DORA/SPACE correlation, industry benchmarking, AI-driven recommendations. AI Impact: Adoption Insights, Multi-Tool Comparison, Impact Insights, AI Spend Insights, Auto Report Builder.",
     related: ["DevEx"],
+    color: "from-violet to-purple-300",
   },
 ];
+
+// ─── Metric category badge variants ──────────────────────────────────────────
 
 const categoryBadgeVariant: Record<string, BadgeVariant> = {
   DORA: "blue",
   "Developer Experience": "green",
   "Business Alignment": "amber",
-  "Delivery Hygiene": "red",
+  "Delivery": "red",
+};
+
+// ─── Metric card gradient colors ─────────────────────────────────────────────
+
+const metricCardColor: Record<string, string> = {
+  DORA: "from-blue to-cyan",
+  "Developer Experience": "from-green to-emerald-300",
+  "Business Alignment": "from-amber to-yellow-300",
+  "Delivery": "from-red to-red-300",
+};
+
+// ─── Playbook endpoint map ────────────────────────────────────────────────────
+
+const endpointMap: Record<string, Record<number, string>> = {
+  retro: {
+    0: "team_sprint_summary, team_metrics",
+    1: "unlinked_pull_requests",
+    2: "devex_insights_by_team",
+  },
+  capacity: {
+    1: "allocations_by_investment_category, allocations_by_person",
+  },
+  stakeholder: {
+    0: "company_metrics, team_metrics",
+  },
+};
+
+// ─── Playbook card gradient colors ───────────────────────────────────────────
+
+const playbookCardColor: Record<string, string> = {
+  retro: "from-blue to-cyan",
+  capacity: "from-green to-emerald-300",
+  stakeholder: "from-violet to-purple-300",
 };
 
 // ─── Workspace data ───────────────────────────────────────────────────────────
@@ -64,6 +112,15 @@ const ARTIFACT_TYPES = [
 ] as const;
 
 type ArtifactKey = (typeof ARTIFACT_TYPES)[number]["key"];
+
+const ARTIFACT_COLORS = [
+  "from-blue to-cyan",
+  "from-green to-emerald-300",
+  "from-amber to-yellow-300",
+  "from-violet to-purple-300",
+  "from-blue to-cyan",
+  "from-green to-emerald-300",
+];
 
 // ─── Showcase data ────────────────────────────────────────────────────────────
 
@@ -89,29 +146,29 @@ const audienceCards: AudienceCard[] = [
   {
     title: "For Engineering Leadership",
     description:
-      "Delivery trend understanding, business alignment, and team comparisons make outcome-oriented reporting credible and fast.",
+      "Delivery trend understanding, business alignment, investment decisions, and team comparisons make outcome-oriented reporting credible and fast.",
     accentFrom: "from-green",
     accentTo: "to-emerald-300",
     badgeVariant: "green",
-    badges: ["Delivery Trends", "Business Alignment", "Team Comparisons"],
+    badges: ["Delivery Trends", "Business Alignment", "Board Reporting", "Team Health"],
   },
   {
-    title: "For DevEx and AI Impact",
+    title: "For Platform Engineering",
     description:
-      "Show how workflow friction, survey insights, and AI tooling investment fit into a broader operating model — and prove the return.",
+      "Developer tooling impact measurement, DevEx surveys and index tracking, infrastructure ROI, and AI adoption insights across engineering teams.",
     accentFrom: "from-violet",
     accentTo: "to-purple-300",
     badgeVariant: "violet",
-    badges: ["Workflow Friction", "Survey Insights", "AI Tooling"],
+    badges: ["DevEx Measurement", "AI Impact", "Tooling ROI", "Benchmarks"],
   },
   {
-    title: "For Platform Breadth",
+    title: "For Product & Finance",
     description:
-      "Surface MCP, integrations, planning, and DevFinOps feature connections without losing users in system detail.",
+      "Delivery tracking, capacity planning, roadmap alignment for product leaders. Software capitalization and R&D financial reporting for finance teams.",
     accentFrom: "from-amber",
     accentTo: "to-yellow-300",
     badgeVariant: "amber",
-    badges: ["MCP", "Integrations", "Planning", "DevFinOps"],
+    badges: ["Capacity Planning", "Roadmap Alignment", "DevFinOps", "Software Capitalization"],
   },
 ];
 
@@ -223,11 +280,17 @@ export default function AcademyPage() {
               {modules.map((module) => (
                 <div
                   key={module.title}
-                  className="bg-surface rounded-xl border p-5"
+                  className="relative overflow-hidden bg-surface rounded-xl border border-border p-5"
                 >
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${module.color}`}
+                  />
                   <h3 className="font-bold mb-1.5">{module.title}</h3>
-                  <p className="text-sm text-text-dim leading-relaxed mb-3">
+                  <p className="text-sm text-text-dim leading-relaxed mb-2">
                     {module.description}
+                  </p>
+                  <p className="text-xs text-text-ghost leading-relaxed mb-3">
+                    {module.detail}
                   </p>
                   <div className="flex flex-wrap items-center gap-1.5">
                     <span className="text-xs text-text-ghost font-semibold uppercase tracking-wide mr-0.5">
@@ -245,6 +308,27 @@ export default function AcademyPage() {
           </SectionBlock>
 
           <SectionBlock
+            title="DORA Metrics"
+            copy="All 4 DORA metrics tracked by Jellyfish, verbatim from jellyfish.co/platform/devops-metrics/"
+          >
+            <div className="grid grid-cols-2 gap-3">
+              {doraMetrics.map((m) => (
+                <div
+                  key={m.name}
+                  className="relative overflow-hidden bg-surface rounded-xl border border-border p-5"
+                >
+                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue to-cyan" />
+                  <Badge variant="blue" className="mb-2">
+                    DORA
+                  </Badge>
+                  <h3 className="font-bold mb-1.5">{m.name}</h3>
+                  <p className="text-sm text-text-dim leading-relaxed">{m.desc}</p>
+                </div>
+              ))}
+            </div>
+          </SectionBlock>
+
+          <SectionBlock
             title="Core metrics"
             copy="These metric definitions cover the signals that matter most to Scrum Master workflows."
           >
@@ -252,8 +336,11 @@ export default function AcademyPage() {
               {metrics.map((metric) => (
                 <div
                   key={metric.id}
-                  className="bg-surface rounded-xl border p-5"
+                  className="relative overflow-hidden bg-surface rounded-xl border border-border p-5"
                 >
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${metricCardColor[metric.category] ?? "from-blue to-cyan"}`}
+                  />
                   <Badge
                     variant={categoryBadgeVariant[metric.category] ?? "blue"}
                     className="mb-2"
@@ -293,8 +380,11 @@ export default function AcademyPage() {
               {playbooks.map((playbook) => (
                 <div
                   key={playbook.id}
-                  className="bg-surface rounded-xl border p-5"
+                  className="relative overflow-hidden bg-surface rounded-xl border border-border p-5"
                 >
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${playbookCardColor[playbook.id] ?? "from-blue to-cyan"}`}
+                  />
                   <h3 className="font-bold text-base mb-2">{playbook.title}</h3>
                   <p className="text-text-dim text-sm mb-4">{playbook.goal}</p>
 
@@ -319,6 +409,11 @@ export default function AcademyPage() {
                       {playbook.steps.map((step, index) => (
                         <li key={index} className="mb-1.5">
                           {step}
+                          {endpointMap[playbook.id]?.[index] && (
+                            <code className="ml-1.5 font-mono text-[11px] bg-blue-dim text-blue px-1.5 py-0.5 rounded">
+                              {endpointMap[playbook.id][index]}
+                            </code>
+                          )}
                         </li>
                       ))}
                     </ol>
@@ -330,7 +425,8 @@ export default function AcademyPage() {
 
           <SectionBlock title="Implementation principles">
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-surface rounded-xl border p-5">
+              <div className="relative overflow-hidden bg-surface rounded-xl border border-border p-5">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue to-cyan" />
                 <h3 className="font-bold text-base mb-2">Structured and calm</h3>
                 <p className="text-text-dim text-sm">
                   Users should move through a guided sequence, see what matters,
@@ -338,7 +434,8 @@ export default function AcademyPage() {
                   disconnected tips.
                 </p>
               </div>
-              <div className="bg-surface rounded-xl border p-5">
+              <div className="relative overflow-hidden bg-surface rounded-xl border border-border p-5">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green to-emerald-300" />
                 <h3 className="font-bold text-base mb-2">Action-oriented</h3>
                 <p className="text-text-dim text-sm">
                   Every playbook connects a Jellyfish concept to a real
@@ -356,22 +453,27 @@ export default function AcademyPage() {
         <>
           <GuideBox title="How Workspace works">
             Your workspace stores summaries, notes, templates, and artifacts
-            collected from other pages. Use <code>Academy</code>,{" "}
-            <code>Playbooks</code>, or <code>Examples</code> to save items here
-            — they persist locally so your work is always ready when you return.
+            collected from other pages. Use items from the{" "}
+            <code>Modules</code> and <code>Playbooks</code> tabs to save items
+            here — they persist locally so your work is always ready when you
+            return.
           </GuideBox>
 
           <div className="grid grid-cols-3 gap-3">
-            {ARTIFACT_TYPES.map(({ label, key }) => {
+            {ARTIFACT_TYPES.map(({ label, key }, artifactIndex) => {
               const typeItems = items[key] ?? [];
               const inputValue = inputs[key] ?? "";
               const hasItems = typeItems.length > 0;
+              const color = ARTIFACT_COLORS[artifactIndex] ?? "from-blue to-cyan";
 
               return (
                 <div
                   key={key}
-                  className="bg-surface rounded-xl border p-5 flex flex-col gap-4"
+                  className="relative overflow-hidden bg-surface rounded-xl border border-border p-5 flex flex-col gap-4"
                 >
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${color}`}
+                  />
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="text-sm font-semibold">{label}</h3>
                     {hasItems ? (
@@ -405,7 +507,7 @@ export default function AcademyPage() {
                       </ul>
                     ) : (
                       <p className="text-xs text-text-ghost leading-relaxed">
-                        No items yet. Add from Academy, Playbooks, or Examples.
+                        No items yet. Add from the Modules and Playbooks tabs.
                       </p>
                     )}
                   </div>
@@ -500,30 +602,43 @@ export default function AcademyPage() {
           >
             <div className="grid grid-cols-4 gap-3">
               <StatCard
-                label="Improvement"
+                label="Revenue Focus"
                 value="32%"
                 color="blue"
-                note="in engineering alignment"
+                note="More focus on revenue-maximizing work"
+                trend="jellyfish.co/tour"
+                trendDirection="up"
               />
               <StatCard
-                label="Time Saved"
+                label="Cycle Time"
                 value="2.6d"
                 color="green"
-                note="per sprint on average"
+                note="Reduction in cycle time"
+                trend="jellyfish.co/tour"
+                trendDirection="up"
               />
               <StatCard
-                label="Efficiency Gain"
+                label="Time to Market"
                 value="21%"
                 color="amber"
-                note="in delivery throughput"
+                note="Faster time to market"
+                trend="jellyfish.co/tour"
+                trendDirection="up"
               />
               <StatCard
-                label="Delivery Boost"
+                label="Collaboration"
                 value="25%"
                 color="violet"
-                note="faster time to market"
+                note="More team collaboration"
+                trend="jellyfish.co/tour"
+                trendDirection="up"
               />
             </div>
+            <p className="text-xs text-text-ghost mt-4">
+              Customer-reported DevEx outcomes: Kaleris achieved 21% more
+              productive and 19% more efficient engineering teams. Platform rated
+              4.5/5 on G2 (357 reviews) and 4.8/5 on Gartner.
+            </p>
           </SectionBlock>
         </>
       )}
