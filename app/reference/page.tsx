@@ -23,7 +23,12 @@ type SectionId =
   | "features"
   | "integrations"
   | "urls"
-  | "infra";
+  | "infra"
+  | "agent_config"
+  | "personas"
+  | "resources"
+  | "library"
+  | "limitations";
 
 const SECTIONS: { id: SectionId; label: string }[] = [
   { id: "endpoints", label: "All 25 Endpoints" },
@@ -37,6 +42,11 @@ const SECTIONS: { id: SectionId; label: string }[] = [
   { id: "integrations", label: "Integrations" },
   { id: "urls", label: "Key URLs" },
   { id: "infra", label: "Infrastructure" },
+  { id: "agent_config", label: "Agent Config" },
+  { id: "personas", label: "Personas" },
+  { id: "resources", label: "Resources" },
+  { id: "library", label: "Knowledge Library" },
+  { id: "limitations", label: "Limitations" },
 ];
 
 const agentEndpoints = [
@@ -166,6 +176,114 @@ const additionalMetrics = [
   "Sprint Summaries",
   "FTE Allocations",
   "Work Effort Distribution",
+];
+
+const agentConfig = {
+  global: ["no_verify_ssl", "send_agent_config"],
+  jira: [
+    { name: "url", desc: "Jira instance URL" },
+    { name: "gdpr_active", desc: "Enable GDPR compliance mode" },
+    { name: "earliest_issue_dt", desc: "Earliest issue date to fetch" },
+    { name: "issue_download_concurrent_threads", desc: "Concurrent download threads (default: 10)" },
+    { name: "issue_batch_size", desc: "Issues per batch (default: 100)" },
+    { name: "download_worklogs", desc: "Download worklogs (default: True)" },
+    { name: "download_sprints", desc: "Download sprints (default: True)" },
+    { name: "filter_boards_by_projects", desc: "Filter boards by project (default: False)" },
+    { name: "recursively_download_parents", desc: "Download parent issues recursively (default: False)" },
+    { name: "include_projects / exclude_projects", desc: "Filter by Jira project key" },
+    { name: "include_project_categories / exclude_project_categories", desc: "Filter by project category" },
+    { name: "issue_jql", desc: "Custom JQL filter" },
+    { name: "exclude_fields", desc: "Fields to exclude (e.g., description, comment)" },
+    { name: "required_email_domains", desc: "Only include users from these domains" },
+    { name: "is_email_required", desc: "Require email for user matching" },
+    { name: "skip_saving_data_locally", desc: "Skip local file storage" },
+  ],
+  git: [
+    { name: "provider", desc: "One of: bitbucket_server, bitbucket_cloud, gitlab, github, ado" },
+    { name: "url", desc: "Git provider URL" },
+    { name: "include_projects / exclude_projects", desc: "Filter by project/group" },
+    { name: "include_repos / exclude_repos", desc: "Filter by repository name" },
+    { name: "include_branches", desc: "Branch filter with wildcard support (*, ?)" },
+    { name: "strip_text_content", desc: "Redact commit messages and PR text" },
+    { name: "redact_names_and_urls", desc: "Redact personal names and URLs" },
+    { name: "verbose", desc: "Enable verbose logging" },
+    { name: "ado_api_version", desc: "Azure DevOps API version (default: 7.0)" },
+    { name: "instance_slug / creds_envvar_prefix", desc: "Multi-instance support for multiple git providers" },
+  ],
+  cli: [
+    { flag: "--mode / -m", desc: "Run mode (default: download_and_send)" },
+    { flag: "--config-file / -c", desc: "Path to YAML config file" },
+    { flag: "--output-basedir / -ob", desc: "Base directory for output files" },
+    { flag: "--prev-output-dir / -od", desc: "Previous output directory for incremental runs" },
+    { flag: "--jellyfish-api-base", desc: "Override API base URL" },
+    { flag: "--jellyfish-webhook-base", desc: "Override webhook base URL" },
+    { flag: "--env-file / -e", desc: "Path to environment file" },
+    { flag: "--debug-requests / -db", desc: "Enable HTTP request debugging" },
+    { flag: "--from-failure / -f", desc: "Resume from last failure point" },
+  ],
+  dataTypes: {
+    jira: ["Issues (key, status, assignee, reporter, creator, resolution, dates, subtasks, parent, issuelinks, project, issuetype)", "Worklogs", "Sprints and boards", "Project metadata"],
+    git: ["Repositories", "Commits", "Branches", "Pull requests", "Users/contributors", "Projects/groups/organizations"],
+  },
+};
+
+const buildkiteConfig = [
+  { param: "webhook-url", required: true, defaultVal: "—", desc: "Jellyfish deployment webhook URL" },
+  { param: "api-token", required: true, defaultVal: "—", desc: "Jellyfish API token" },
+  { param: "reference-id", required: false, defaultVal: "$BUILDKITE_BUILD_ID", desc: "Unique deployment identifier" },
+  { param: "name", required: false, defaultVal: "$BUILDKITE_PIPELINE_SLUG", desc: "Deployment name" },
+  { param: "repo-name", required: false, defaultVal: "Extracted from $BUILDKITE_REPO", desc: "Repository name (org/repo format)" },
+  { param: "labels", required: false, defaultVal: "[]", desc: "Array of key:value labels for categorization" },
+  { param: "source-url", required: false, defaultVal: "$BUILDKITE_BUILD_URL", desc: "URL to build source" },
+];
+
+const personas = [
+  { role: "Engineering Executives", useCases: "Strategic alignment, investment decisions, board reporting" },
+  { role: "Engineering Managers", useCases: "Team health, operational effectiveness, people management" },
+  { role: "Product Leaders", useCases: "Delivery tracking, capacity planning, roadmap alignment" },
+  { role: "PMO & Engineering Operations", useCases: "Workflow analysis, process optimization, metrics" },
+  { role: "Platform Engineering", useCases: "Developer tooling impact, DevEx measurement, infrastructure ROI" },
+  { role: "Finance Teams", useCases: "Software capitalization, R&D financial reporting" },
+  { role: "Software Developers", useCases: "DevEx surveys, productivity feedback" },
+];
+
+const publishedResources = {
+  ebooks: [
+    "Why Platform Engineering Teams are Essential in the AI-Native Era (Feb 2026)",
+    "The Engineering Leader's Guide to the AI Software Development Stack (Jan 2026)",
+    "AI in Engineering: Moving Beyond Hype Into Reality (Nov 2025)",
+    "7 AI KPIs Every Engineering Leader Should Track (Oct 2025)",
+    "The AI Impact Framework (Sep 2025)",
+    "Bridging Finance and R&D: Efficient Software Capitalization (May 2025)",
+    "The 5 Elements of Software Engineering Management",
+    "The Jellyfish Guide to Engineering Metrics",
+    "5 Jira Best Practices for Improving Engineering Operations",
+  ],
+  reports: [
+    "2025 State of Engineering Management Report (Jul 2025)",
+    "GenAI: Perception vs Reality (May 2025)",
+  ],
+};
+
+const libraryCategories = [
+  "Software Engineering Management", "DevOps", "Metrics & KPIs",
+  "Developer Productivity", "Developer Experience", "Code Quality",
+  "SDLC", "Value Stream", "Software Capitalization",
+  "Platform Engineering", "AI in Software Development",
+  "Delivery & Planning", "Product & Operations", "Engineering Roles",
+  "Analytics", "Transformation", "Strategic Planning",
+];
+
+const limitations = [
+  "API Documentation is behind authentication. The full OpenAPI/Swagger schema requires a Jellyfish API token.",
+  "Help Center (help.jellyfish.co) requires authenticated access.",
+  "Resources and Webinar archives span 7 pages; only page 1 was fully enumerable.",
+  "The 7 agent endpoints in Section 1.3 are internal to jf_agent and are not part of the customer-facing Export API.",
+  "Integration source provenance varies: some are from the integrations page, others from the homepage or product pages.",
+  "DORA metric descriptions are verbatim from jellyfish.co/platform/devops-metrics/. Exactly 4 metrics.",
+  "MCP tool descriptions are from manifest.json, lightly paraphrased for conciseness.",
+  "REQUESTS_CA_BUNDLE is a standard Python requests library variable, not Jellyfish-specific.",
+  "All data in this reference is sourced from official Jellyfish materials. No fabrications.",
 ];
 
 export default function ReferencePage() {
@@ -399,6 +517,19 @@ export default function ReferencePage() {
               </div>
             </div>
           ))}
+          <div className="mt-6 space-y-3">
+            <h2 className="font-semibold text-[15px]">Additional Platform Features</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-xl border border-border bg-surface p-5 space-y-2">
+                <h3 className="text-sm font-bold">Jellyfish Assistant</h3>
+                <p className="text-[13px] text-text-dim">AI-powered assistant for natural language queries against engineering data.</p>
+              </div>
+              <div className="rounded-xl border border-border bg-surface p-5 space-y-2">
+                <h3 className="text-sm font-bold">Jellyfish Academy</h3>
+                <p className="text-[13px] text-text-dim">Training platform at <a href="https://academy.jellyfish.co/app" target="_blank" rel="noopener noreferrer" className="text-blue hover:underline">academy.jellyfish.co</a></p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
@@ -442,6 +573,138 @@ export default function ReferencePage() {
               <span key="purpose" className="text-[13px] text-text-dim">{u.purpose}</span>,
             ])}
           />
+        </div>
+      )}
+
+      {/* ── Agent Config ── */}
+      {section === "agent_config" && (
+        <div className="space-y-8">
+          <p className="text-sm text-text-dim">
+            Configuration for the <code className="font-mono text-[12px]">jf_agent</code> on-premises data collection agent.
+            Version 0.1.3 | Python | MIT License | Docker: <code className="font-mono text-[12px]">jellyfishco/jf_agent:stable</code>
+          </p>
+
+          <div className="space-y-3">
+            <h2 className="font-semibold text-[15px]">Data Types Collected</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-xl border border-border bg-surface p-5 space-y-2">
+                <h3 className="text-sm font-bold">Jira Data</h3>
+                <ul className="space-y-1">{agentConfig.dataTypes.jira.map((d) => <li key={d} className="text-[13px] text-text-dim">• {d}</li>)}</ul>
+              </div>
+              <div className="rounded-xl border border-border bg-surface p-5 space-y-2">
+                <h3 className="text-sm font-bold">Git Data (per provider)</h3>
+                <ul className="space-y-1">{agentConfig.dataTypes.git.map((d) => <li key={d} className="text-[13px] text-text-dim">• {d}</li>)}</ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="font-semibold text-[15px]">Jira Configuration (example.yml)</h2>
+            <DataTable
+              headers={["Option", "Description"]}
+              rows={agentConfig.jira.map((j) => [
+                <code key="name" className="font-mono text-[12px] text-blue">{j.name}</code>,
+                <span key="desc" className="text-[13px] text-text-dim">{j.desc}</span>,
+              ])}
+            />
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="font-semibold text-[15px]">Git Configuration (example.yml)</h2>
+            <DataTable
+              headers={["Option", "Description"]}
+              rows={agentConfig.git.map((g) => [
+                <code key="name" className="font-mono text-[12px] text-blue">{g.name}</code>,
+                <span key="desc" className="text-[13px] text-text-dim">{g.desc}</span>,
+              ])}
+            />
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="font-semibold text-[15px]">CLI Arguments</h2>
+            <DataTable
+              headers={["Flag", "Description"]}
+              rows={agentConfig.cli.map((c) => [
+                <code key="flag" className="font-mono text-[12px] text-blue">{c.flag}</code>,
+                <span key="desc" className="text-[13px] text-text-dim">{c.desc}</span>,
+              ])}
+            />
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="font-semibold text-[15px]">Buildkite Plugin Configuration (pipeline.yml)</h2>
+            <DataTable
+              headers={["Parameter", "Required", "Default", "Description"]}
+              rows={buildkiteConfig.map((b) => [
+                <code key="param" className="font-mono text-[12px] text-blue">{b.param}</code>,
+                <Badge key="req" variant={b.required ? "amber" : "ghost"}>{b.required ? "Required" : "Optional"}</Badge>,
+                <code key="def" className="font-mono text-[12px] text-text-dim">{b.defaultVal}</code>,
+                <span key="desc" className="text-[13px] text-text-dim">{b.desc}</span>,
+              ])}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ── Personas ── */}
+      {section === "personas" && (
+        <div className="space-y-4">
+          <p className="text-sm text-text-dim">Jellyfish serves 7 target personas across engineering, product, finance, and operations.</p>
+          <DataTable
+            headers={["Persona", "Use Cases"]}
+            rows={personas.map((p) => [
+              <span key="role" className="text-[13px] font-medium">{p.role}</span>,
+              <span key="use" className="text-[13px] text-text-dim">{p.useCases}</span>,
+            ])}
+          />
+        </div>
+      )}
+
+      {/* ── Resources ── */}
+      {section === "resources" && (
+        <div className="space-y-8">
+          <div className="space-y-3">
+            <h2 className="font-semibold text-[15px]">eBooks & Guides <Badge variant="ghost">{publishedResources.ebooks.length}</Badge></h2>
+            <ul className="space-y-2">
+              {publishedResources.ebooks.map((e) => <li key={e} className="text-[13px] text-text-dim">• {e}</li>)}
+            </ul>
+          </div>
+          <div className="space-y-3">
+            <h2 className="font-semibold text-[15px]">Reports <Badge variant="ghost">{publishedResources.reports.length}</Badge></h2>
+            <ul className="space-y-2">
+              {publishedResources.reports.map((r) => <li key={r} className="text-[13px] text-text-dim">• {r}</li>)}
+            </ul>
+          </div>
+          <p className="text-[11px] text-text-ghost">Note: Webinar archive spans 7 pages with 9+ on-demand sessions. See jellyfish.co/webinars/ for the full list.</p>
+        </div>
+      )}
+
+      {/* ── Knowledge Library ── */}
+      {section === "library" && (
+        <div className="space-y-4">
+          <p className="text-sm text-text-dim">
+            The Jellyfish Knowledge Library at <a href="https://jellyfish.co/library/index/" target="_blank" rel="noopener noreferrer" className="text-blue hover:underline">jellyfish.co/library</a> contains 80+ articles across {libraryCategories.length} categories.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {libraryCategories.map((cat, i) => (
+              <Badge key={cat} variant={i % 2 === 0 ? "blue" : "violet"}>{cat}</Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Limitations ── */}
+      {section === "limitations" && (
+        <div className="space-y-4">
+          <p className="text-sm text-text-dim">Known limitations and notes about data sources in this reference.</p>
+          <ol className="space-y-3">
+            {limitations.map((l, i) => (
+              <li key={i} className="flex gap-3 text-[13px]">
+                <span className="text-text-ghost font-mono text-[11px] mt-0.5 shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-text-dim">{l}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       )}
 
