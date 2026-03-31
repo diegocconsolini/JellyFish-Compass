@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSidebar } from "@/components/layout/sidebar-context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -93,7 +94,7 @@ function DesktopSidebar() {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const { expanded, setExpanded } = useSidebar();
 
   useEffect(() => setMounted(true), []);
 
