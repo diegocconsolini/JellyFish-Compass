@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4f8ff7"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#bg)"/>
+  <!-- Jellyfish bell/dome -->
+  <path d="M16 6C11 6 7 9.5 7 13.5C7 15 7.5 16 8.5 16.5C9 16.8 10 17 11 17H21C22 17 23 16.8 23.5 16.5C24.5 16 25 15 25 13.5C25 9.5 21 6 16 6Z" fill="white" opacity="0.95"/>
+  <!-- Tentacles -->
+  <path d="M10 17C10 17 9 20 9.5 23C9.7 24 10 25 10.5 25.5" stroke="white" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M13 17C13 17 12.5 21 13 24C13.2 25 13.5 26 13.5 26" stroke="white" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M16 17C16 17 16 21 16 24C16 25.5 16 26.5 16 26.5" stroke="white" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <path d="M19 17C19 17 19.5 21 19 24C18.8 25 18.5 26 18.5 26" stroke="white" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M22 17C22 17 23 20 22.5 23C22.3 24 22 25 21.5 25.5" stroke="white" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <!-- Eyes -->
+  <circle cx="13" cy="12" r="1.2" fill="#4f8ff7"/>
+  <circle cx="19" cy="12" r="1.2" fill="#4f8ff7"/>
+</svg>
