@@ -10,6 +10,9 @@ export type SectionId =
   | "capacity"
   | "ai-impact"
   | "scenarios"
+  | "delivery-forecast"
+  | "product-metrics"
+  | "roadmap"
   | "metrics"
   | "reference"
   | "academy";

@@ -16,6 +16,8 @@ const navGroups = [
     items: [
       { href: "/sprint-health", label: "Sprint Health" },
       { href: "/delivery", label: "Delivery" },
+      { href: "/delivery-forecast", label: "Forecasting" },
+      { href: "/product-metrics", label: "Product Metrics" },
       { href: "/devex", label: "DevEx" },
       { href: "/life-cycle", label: "Life Cycle" },
     ],
@@ -38,6 +40,7 @@ const navGroups = [
     items: [
       { href: "/capacity", label: "Capacity" },
       { href: "/scenarios", label: "Scenarios" },
+      { href: "/roadmap", label: "Roadmap" },
       { href: "/ai-impact", label: "AI Impact" },
     ],
   },

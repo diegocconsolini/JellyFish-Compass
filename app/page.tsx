@@ -14,6 +14,9 @@ import {
   Bot,
   Shuffle,
   Presentation,
+  TrendingUp,
+  PieChart,
+  Map,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -54,6 +57,9 @@ const sectionIcons: Record<string, React.ReactNode> = {
   "/capacity": <Gauge className="w-5 h-5 text-blue" />,
   "/ai-impact": <Bot className="w-5 h-5 text-cyan" />,
   "/scenarios": <Shuffle className="w-5 h-5 text-amber" />,
+  "/delivery-forecast": <TrendingUp className="w-5 h-5 text-blue" />,
+  "/product-metrics": <PieChart className="w-5 h-5 text-green" />,
+  "/roadmap": <Map className="w-5 h-5 text-violet" />,
   "/metrics": <Presentation className="w-5 h-5 text-amber" />,
   "/reference": <BookOpen className="w-5 h-5 text-blue" />,
   "/academy": <GraduationCap className="w-5 h-5 text-green" />,
@@ -66,6 +72,8 @@ const sectionGroups = [
     items: [
       { href: "/sprint-health", label: "Sprint Health", desc: "Velocity, completion, carry-over trends", primary: true },
       { href: "/delivery", label: "Delivery", desc: "Scope, effort, deliverable tracking" },
+      { href: "/delivery-forecast", label: "Forecasting", desc: "Ship dates, burndown, timeline estimates" },
+      { href: "/product-metrics", label: "Product Metrics", desc: "Investment, flow, quality for product decisions" },
       { href: "/devex", label: "DevEx", desc: "Developer experience & unlinked PRs" },
       { href: "/life-cycle", label: "Life Cycle", desc: "Issue-level cycle time & bottlenecks" },
     ],
@@ -86,6 +94,7 @@ const sectionGroups = [
     items: [
       { href: "/capacity", label: "Capacity", desc: "FTE forecasting & workload planning" },
       { href: "/scenarios", label: "Scenarios", desc: "What-if allocation modeling" },
+      { href: "/roadmap", label: "Roadmap", desc: "Investment vs plan, initiative health" },
       { href: "/ai-impact", label: "AI Impact", desc: "Tool adoption & ROI measurement" },
     ],
   },
@@ -128,7 +137,7 @@ export default function HomePage() {
       {/* Hero */}
       <section className="text-center py-12 mb-10">
         <Badge variant="blue" className="mb-5 text-xs px-3.5 py-1">
-          For Scrum Masters & Engineering Teams
+          For Scrum Masters, Product Owners & Engineering Teams
         </Badge>
         <h1 className="font-serif text-5xl font-normal tracking-tight mb-4">
           Your Jellyfish companion{" "}

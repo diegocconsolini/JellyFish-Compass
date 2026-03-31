@@ -54,4 +54,7 @@ export const templates: TemplateDefinition[] = [
   { id: "for-leadership", label: "For Leadership", group: "audience", slides: ["title", "sprint-kpis", "delivery-status", "allocation-fte", "capacity-gaps"] },
   { id: "for-product", label: "For Product", group: "audience", slides: ["title", "delivery-status", "allocation-fte", "capacity-gaps"] },
   { id: "for-finance", label: "For Finance", group: "audience", slides: ["title", "allocation-fte", "team-allocation"] },
+  { id: "product-review", label: "Product Review", group: "ceremony", slides: ["title", "delivery-status", "allocation-fte", "capacity-gaps", "benchmarks"] },
+  { id: "roadmap-update", label: "Roadmap Update", group: "audience", slides: ["title", "delivery-status", "allocation-fte", "capacity-gaps"] },
+  { id: "investment-review", label: "Investment Review", group: "audience", slides: ["title", "allocation-fte", "team-allocation", "benchmarks"] },
 ];
