@@ -314,8 +314,8 @@ MIT
 
 <div align="center">
 
-Built with [Claude Code](https://claude.ai/code)
-
 All data sourced from official [Jellyfish](https://jellyfish.co) documentation and [Jellyfish-AI](https://github.com/Jellyfish-AI) public repositories.
+
+**Contact:** [diego@orizon.sh](mailto:diego@orizon.sh)
 
 </div>
