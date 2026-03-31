@@ -15,9 +15,8 @@ function ShellInner({ children }: { children: ReactNode }) {
         className={[
           "flex flex-col min-h-screen",
           "transition-[padding-left] duration-200 ease-in-out",
-          // Mobile: top padding offsets the sticky 48px MobileNav header; no left padding
+          // Mobile: no left padding (MobileNav renders a sticky top bar, same as before refactor)
           // Desktop: shift right by sidebar width
-          "pt-12 md:pt-0",
           expanded ? "md:pl-[220px]" : "md:pl-12",
         ].join(" ")}
       >
