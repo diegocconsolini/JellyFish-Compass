@@ -118,7 +118,7 @@ export function SiteHeader() {
           <button
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
             aria-label={mounted ? `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
-            className="w-7 h-7 rounded-lg border border-border-vivid bg-transparent text-text-dim flex items-center justify-center text-xs cursor-pointer hover:border-text-ghost transition-colors"
+            className="w-8 h-8 rounded-lg border border-border-vivid bg-transparent text-text-dim flex items-center justify-center text-xs cursor-pointer hover:border-text-ghost transition-colors"
           >
             <span aria-hidden="true">{mounted ? (resolvedTheme === "dark" ? "☀" : "☾") : "○"}</span>
           </button>
