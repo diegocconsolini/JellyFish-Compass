@@ -45,27 +45,17 @@ graph LR
 
 14 pages organized into 4 categories, each with Scrum Master guides, mock data visualizations, and API Explorer integration.
 
-```mermaid
-mindmap
-  root((Compass))
-    Metrics & Health
-      Sprint Health
-      Delivery
-      DevEx
-      Life Cycle
-    Teams & Operations
-      Allocation
-      People & Teams
-      Workflow
-      Benchmarks
-    Planning & Intelligence
-      Capacity
-      Scenarios
-      AI Impact
-    Knowledge
-      Deck Builder
-      Reference
-      Academy
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        JELLYFISH COMPASS                            │
+├──────────────────┬──────────────────┬────────────────┬──────────────┤
+│ Metrics & Health │ Teams & Ops      │ Planning       │ Knowledge    │
+│                  │                  │                │              │
+│  Sprint Health   │  Allocation      │  Capacity      │  Deck Builder│
+│  Delivery        │  People & Teams  │  Scenarios     │  Reference   │
+│  DevEx           │  Workflow        │  AI Impact     │  Academy     │
+│  Life Cycle      │  Benchmarks      │                │              │
+└──────────────────┴──────────────────┴────────────────┴──────────────┘
 ```
 
 ### Metrics & Health
