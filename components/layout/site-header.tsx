@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -57,7 +57,6 @@ function findActiveGroup(pathname: string): string {
       return group.id;
     }
   }
-  // Check secondary nav
   if (secondaryNav.some((item) => item.href === pathname)) {
     return "knowledge";
   }
@@ -72,7 +71,6 @@ export function SiteHeader() {
 
   useEffect(() => setMounted(true), []);
 
-  // Sync active group when navigating
   useEffect(() => {
     setActiveGroup(findActiveGroup(pathname));
   }, [pathname]);
@@ -82,9 +80,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/70 backdrop-blur-2xl backdrop-saturate-[1.6]">
       {/* Row 1: Logo + Group tabs + Theme toggle */}
-      <div className="max-w-[1440px] mx-auto px-7 h-12 flex items-center gap-5">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-7 h-12 flex items-center gap-5">
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue to-violet flex items-center justify-center text-xs">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue to-violet flex items-center justify-center text-xs" aria-hidden="true">
             🪼
           </div>
           <span className="text-[14px] font-bold tracking-tight">
@@ -92,36 +90,51 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1 ml-4">
-          {navGroups.map((group) => (
-            <button
-              key={group.id}
-              onClick={() => setActiveGroup(group.id)}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all cursor-pointer",
-                activeGroup === group.id
-                  ? "text-text-primary bg-surface-raised"
-                  : "text-text-ghost hover:text-text-dim hover:bg-white/[0.04]"
-              )}
-            >
-              <span className={cn("w-1.5 h-1.5 rounded-full", group.color)} />
-              {group.label}
-            </button>
-          ))}
+        <nav aria-label="Section groups" className="flex items-center gap-1 ml-4 overflow-x-auto">
+          <div role="tablist" className="flex items-center gap-1">
+            {navGroups.map((group) => (
+              <button
+                key={group.id}
+                role="tab"
+                id={`tab-${group.id}`}
+                aria-selected={activeGroup === group.id}
+                aria-controls={`subnav-${group.id}`}
+                onClick={() => setActiveGroup(group.id)}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all cursor-pointer whitespace-nowrap",
+                  activeGroup === group.id
+                    ? "text-text-primary bg-surface-raised"
+                    : "text-text-ghost hover:text-text-dim hover:bg-white/[0.04]"
+                )}
+              >
+                <span className={cn("w-1.5 h-1.5 rounded-full", group.color)} aria-hidden="true" />
+                {group.label}
+              </button>
+            ))}
+          </div>
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
           <button
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            aria-label={mounted ? `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
             className="w-7 h-7 rounded-lg border border-border-vivid bg-transparent text-text-dim flex items-center justify-center text-xs cursor-pointer hover:border-text-ghost transition-colors"
           >
-            {mounted ? (resolvedTheme === "dark" ? "\u2600" : "\u263E") : "\u25CB"}
+            <span aria-hidden="true">
+              {mounted ? (resolvedTheme === "dark" ? "\u2600" : "\u263E") : "\u25CB"}
+            </span>
           </button>
         </div>
       </div>
 
       {/* Row 2: Sub-navigation items for active group */}
-      <div className="max-w-[1440px] mx-auto px-7 h-9 flex items-center gap-0.5 border-t border-border/50">
+      <nav
+        role="tabpanel"
+        id={`subnav-${currentGroup.id}`}
+        aria-labelledby={`tab-${currentGroup.id}`}
+        aria-label={`${currentGroup.label} pages`}
+        className="max-w-[1440px] mx-auto px-4 sm:px-7 h-9 flex items-center gap-0.5 border-t border-border/50 overflow-x-auto"
+      >
         {currentGroup.items.map((item) => (
           <Link
             key={item.href}
@@ -136,7 +149,7 @@ export function SiteHeader() {
             {item.label}
           </Link>
         ))}
-      </div>
+      </nav>
     </header>
   );
 }

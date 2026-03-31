@@ -34,8 +34,8 @@ export function ApiExplorer({ token, endpoints, getParams, mockResponses }: ApiE
         <h3 className="text-sm font-bold">API Explorer</h3>
         <div className="flex items-center gap-2 text-[11.5px] text-text-ghost">
           <span>Mock</span>
-          <button onClick={() => setUseMock(!useMock)} className={`w-9 h-5 rounded-full relative cursor-pointer transition-colors ${useMock ? "bg-blue" : "bg-green shadow-[0_0_8px_rgba(52,211,153,.25)]"}`}>
-            <div className={`w-3.5 h-3.5 bg-white rounded-full absolute top-[3px] transition-all shadow ${useMock ? "left-[3px]" : "right-[3px]"}`} />
+          <button role="switch" aria-checked={!useMock} aria-label="Toggle between mock and live API mode" onClick={() => setUseMock(!useMock)} className={`w-9 h-5 rounded-full relative cursor-pointer transition-colors ${useMock ? "bg-blue" : "bg-green shadow-[0_0_8px_rgba(52,211,153,.25)]"}`}>
+            <span aria-hidden="true"><div className={`w-3.5 h-3.5 bg-white rounded-full absolute top-[3px] transition-all shadow ${useMock ? "left-[3px]" : "right-[3px]"}`} /></span>
           </button>
           <span className={useMock ? "text-blue font-semibold" : "text-green font-semibold"}>{useMock ? "Mock" : "Live"}</span>
         </div>
@@ -54,12 +54,12 @@ export function ApiExplorer({ token, endpoints, getParams, mockResponses }: ApiE
           {Object.entries(params).map(([k, v]) => (
             <div key={k} className="flex gap-2.5 mb-1.5">
               <span className="font-mono text-[11.5px] font-semibold text-text-ghost w-24 pt-2 text-right">{k}</span>
-              <input value={v} onChange={(e) => setParams((p) => ({ ...p, [k]: e.target.value }))} className="flex-1 px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue" />
+              <input aria-label={`Parameter: ${k}`} value={v} onChange={(e) => setParams((p) => ({ ...p, [k]: e.target.value }))} className="flex-1 px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue" />
             </div>
           ))}
           <button onClick={handleExecute} disabled={loading} className="mt-2.5 px-5 py-2 rounded-lg bg-blue text-white text-sm font-semibold disabled:opacity-50 cursor-pointer">{loading ? "Calling..." : "\u25B6 Execute"}</button>
           {error && <div className="mt-3 p-3 rounded-lg bg-red-dim text-red text-sm">{error}</div>}
-          {result !== null && result !== undefined && <pre className="mt-3 bg-bg-deep border border-border rounded-lg p-4 max-h-[200px] overflow-auto font-mono text-[11.5px] text-[#c9d1d9] leading-relaxed">{JSON.stringify(result, null, 2) as string}</pre>}
+          {result !== null && result !== undefined && <pre className="mt-3 bg-bg-deep border border-border rounded-lg p-4 max-h-[200px] overflow-auto font-mono text-[11.5px] text-[#24292e] dark:text-[#c9d1d9] leading-relaxed" tabIndex={0} aria-label="API response JSON">{JSON.stringify(result, null, 2) as string}</pre>}
         </div>
       )}
     </div>

@@ -4,7 +4,7 @@ export function ProgressBar({ label, value, percent, color, valueColor }: Progre
   return (
     <div className="mb-2.5">
       <div className="flex justify-between text-sm mb-1"><span className="text-text-dim">{label}</span><span className={`font-semibold font-mono text-xs ${valueColor || "text-text-primary"}`}>{value}</span></div>
-      <div className="h-1.5 bg-surface-overlay rounded-full overflow-hidden"><div className={`h-full rounded-full bg-gradient-to-r ${gradients[color] || gradients.blue}`} style={{ width: `${percent}%` }} /></div>
+      <div className="h-1.5 bg-surface-overlay rounded-full overflow-hidden"><div role="progressbar" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100} aria-label={`${label}: ${value}`} className={`h-full rounded-full bg-gradient-to-r ${gradients[color] || gradients.blue}`} style={{ width: `${percent}%` }} /></div>
     </div>
   );
 }
