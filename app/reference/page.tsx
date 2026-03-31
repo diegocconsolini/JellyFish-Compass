@@ -40,126 +40,132 @@ const SECTIONS: { id: SectionId; label: string }[] = [
 ];
 
 const agentEndpoints = [
-  { endpoint: "/health", method: "GET", desc: "Health check for the agent service" },
-  { endpoint: "/git_init", method: "POST", desc: "Initialize git repository connection" },
-  { endpoint: "/git_data", method: "POST", desc: "Pull git commit and PR data" },
-  { endpoint: "/jira_init", method: "POST", desc: "Initialize Jira project connection" },
-  { endpoint: "/jira_data", method: "POST", desc: "Pull Jira issue and sprint data" },
-  { endpoint: "/run_all", method: "POST", desc: "Run full data collection pipeline" },
-  { endpoint: "/status", method: "GET", desc: "Current status and last run summary" },
+  { endpoint: "/endpoints/agent/pull-state", method: "GET", desc: "Agent configuration retrieval" },
+  { endpoint: "/endpoints/agent/jira-issue-metadata", method: "GET", desc: "Paginated Jira issue metadata" },
+  { endpoint: "/endpoints/agent/company", method: "GET", desc: "Company information retrieval" },
+  { endpoint: "/endpoints/agent/unlinked-dev-issues", method: "GET", desc: "Orphaned/unlinked development issues" },
+  { endpoint: "/endpoints/agent/healthcheck/signed-url", method: "GET", desc: "Health check upload via S3 signed URL" },
+  { endpoint: "/endpoints/agent/upload_manifest", method: "POST", desc: "Data manifest upload" },
+  { endpoint: "/endpoints/ingest/signed-url", method: "GET", desc: "S3 pre-signed URL for data ingestion" },
 ];
 
 const webhookEndpoints = [
-  { method: "POST", path: "/deployment", desc: "Record a deployment event" },
-  { method: "POST", path: "/incident", desc: "Record an incident event" },
-  { method: "POST", path: "/change_request", desc: "Record a change request event" },
+  { method: "POST", path: "https://webhooks.jellyfish.co/deployment", auth: "X-jf-api-token: {token}", desc: "Deployment event ingestion (used by Buildkite plugin)" },
+  { method: "POST", path: "https://app.jellyfish.co/ingest-webhooks/ado/", auth: "Authorization: Bearer {token}", desc: "Azure DevOps webhook ingestion (workitem.created/deleted/restored/updated)" },
 ];
 
 const deploymentPayload = `{
-  "version": "string",           // required
-  "deploy_time": "ISO8601",      // required
-  "service": "string",           // required
-  "environment": "string",       // e.g. "production"
-  "repository": "string",        // optional
-  "commit_sha": "string",        // optional
-  "status": "success | failure"  // optional, default "success"
+  "reference_id": "string",        // unique deployment identifier
+  "is_successful": true,           // boolean
+  "name": "string",                // deployment name
+  "deployed_at": "ISO8601 UTC",    // e.g. "2026-03-31T12:00:00Z"
+  "repo_name": "org/repo",         // org/repo format
+  "commit_shas": ["sha1", "sha2"], // array of commit SHAs
+  "labels": ["key:value"],         // array of label strings
+  "source_url": "https://..."      // URL to build/deployment source
 }`;
 
 const mcpConfigVars = [
-  { name: "JELLYFISH_API_TOKEN", required: "Required", defaultVal: "—", desc: "Your Jellyfish API token" },
-  { name: "HUGGINGFACE_API_TOKEN", required: "Optional", defaultVal: "—", desc: "HuggingFace token for embeddings" },
-  { name: "MODEL_AVAILABILITY", required: "Optional", defaultVal: "auto", desc: "Controls model selection strategy" },
-  { name: "MODEL_TIMEOUT", required: "Optional", defaultVal: "30", desc: "Timeout in seconds for model inference" },
+  { name: "JELLYFISH_API_TOKEN", required: "Required", defaultVal: "—", desc: "Authentication credential from Jellyfish API Export settings (requires Admin User Role)" },
+  { name: "HUGGINGFACE_API_TOKEN", required: "Optional", defaultVal: '""', desc: "For PromptGuard 2 prompt injection mitigation (Meta Llama)" },
+  { name: "MODEL_AVAILABILITY", required: "Optional", defaultVal: "false", desc: "Allow requests if Hugging Face model unavailable. Set true to allow data if PromptGuard cannot be reached." },
+  { name: "MODEL_TIMEOUT", required: "Optional", defaultVal: "10", desc: "How long to wait for the PromptGuard model to respond, in seconds" },
 ];
 
 const gitProviders = [
-  { name: "GitHub", notes: "Cloud and Enterprise Server" },
-  { name: "GitLab", notes: "Cloud and self-hosted" },
-  { name: "Bitbucket Cloud", notes: "Atlassian cloud offering" },
-  { name: "Bitbucket Server", notes: "Self-hosted (Data Center)" },
-  { name: "Azure DevOps", notes: "Repos and Pipelines" },
+  { name: "GitHub (Cloud & Enterprise)", constant: "GH_PROVIDER", url: "https://api.github.com or https://github.yourcompany.com/api/v3" },
+  { name: "GitLab", constant: "GL_PROVIDER", url: "https://gitlab.yourcompany.com" },
+  { name: "Bitbucket Cloud", constant: "BBC_PROVIDER", url: "https://api.bitbucket.org" },
+  { name: "Bitbucket Server", constant: "BBS_PROVIDER", url: "https://bitbucket.yourcompany.com" },
+  { name: "Azure DevOps", constant: "ADO_PROVIDER", url: "https://dev.azure.com" },
 ];
 
 const runModes = [
-  { mode: "full", desc: "Run all collectors: git + jira + metrics" },
-  { mode: "git_only", desc: "Collect only git data" },
-  { mode: "jira_only", desc: "Collect only Jira data" },
-  { mode: "health", desc: "Check connectivity to all configured sources" },
-  { mode: "test", desc: "Dry-run with no data written" },
-  { mode: "status", desc: "Report last run status and timestamps" },
+  { mode: "download_and_send", desc: "Default: download all data and send to Jellyfish" },
+  { mode: "download_only", desc: "Download data locally without sending" },
+  { mode: "send_only", desc: "Send previously downloaded data" },
+  { mode: "validate", desc: "Run health check validation" },
+  { mode: "print_all_jira_fields", desc: "Print available Jira fields for configuration" },
+  { mode: "print_apparently_missing_git_repos", desc: "Identify repos referenced in Jira but not in Git config" },
 ];
 
 const jfAgentEnvVars = [
-  "JF_API_TOKEN",
-  "JF_AGENT_URL",
-  "GIT_PROVIDER",
-  "GIT_TOKEN",
-  "JIRA_URL",
-  "JIRA_USER",
-  "JIRA_TOKEN",
-  "JF_TENANT",
-  "LOG_LEVEL",
-  "PROXY_URL",
-  "SSL_VERIFY",
-  "WORKER_COUNT",
+  "JELLYFISH_API_TOKEN",
+  "JIRA_USERNAME",
+  "JIRA_PASSWORD",
+  "JIRA_BEARER_TOKEN",
+  "GITHUB_TOKEN",
+  "GITLAB_TOKEN",
+  "ADO_TOKEN",
+  "BITBUCKET_CLOUD_USERNAME",
+  "BITBUCKET_CLOUD_APP_PASSWORD",
+  "BITBUCKET_USERNAME",
+  "BITBUCKET_PASSWORD",
+  "REQUESTS_CA_BUNDLE",
 ];
 
 const keyUrls = [
-  { name: "App", url: "https://app.jellyfish.co", purpose: "Main application dashboard" },
-  { name: "Marketing site", url: "https://jellyfish.co", purpose: "Company homepage" },
-  { name: "Platform overview", url: "https://jellyfish.co/platform", purpose: "Product feature overview" },
-  { name: "Interactive tour", url: "https://jellyfish.co/tour", purpose: "Guided product walkthrough" },
-  { name: "Integrations page", url: "https://jellyfish.co/integrations", purpose: "Full integrations catalog" },
-  { name: "Documentation", url: "https://jellyfish.co/docs", purpose: "Official product documentation" },
-  { name: "API reference docs", url: "https://jellyfish.co/docs/api", purpose: "API usage and endpoint docs" },
-  { name: "API base URL", url: "https://app.jellyfish.co/endpoints/export/v0", purpose: "Root path for all export API calls" },
-  { name: "App settings", url: "https://app.jellyfish.co/settings", purpose: "Account and integration settings" },
-  { name: "Support email", url: "mailto:support@jellyfish.co", purpose: "Customer support contact" },
-  { name: "Changelog", url: "https://jellyfish.co/changelog", purpose: "Product release notes" },
-  { name: "Blog", url: "https://jellyfish.co/blog", purpose: "Engineering leadership articles" },
-  { name: "Resources", url: "https://jellyfish.co/resources", purpose: "Ebooks, guides, and reports" },
-  { name: "Customers", url: "https://jellyfish.co/customers", purpose: "Customer stories and case studies" },
-  { name: "Pricing", url: "https://jellyfish.co/pricing", purpose: "Pricing tiers and plan comparison" },
-  { name: "Security", url: "https://jellyfish.co/security", purpose: "Security posture and compliance" },
-  { name: "Status page", url: "https://status.jellyfish.co", purpose: "Platform uptime and incident reports" },
+  { name: "Main Site", url: "https://jellyfish.co/", purpose: "Company homepage" },
+  { name: "Product Overview", url: "https://jellyfish.co/product/", purpose: "Product feature overview" },
+  { name: "Platform Tour", url: "https://jellyfish.co/tour/", purpose: "Guided product walkthrough" },
+  { name: "Integrations", url: "https://jellyfish.co/platform/integrations/", purpose: "Full integrations catalog" },
+  { name: "DevOps Metrics", url: "https://jellyfish.co/platform/devops-metrics/", purpose: "DORA metrics detail page" },
+  { name: "Life Cycle Explorer", url: "https://jellyfish.co/platform/life-cycle-explorer/", purpose: "Issue-level operational analysis" },
+  { name: "DevEx", url: "https://jellyfish.co/platform/devex/", purpose: "Developer experience insights" },
+  { name: "Resource Allocations", url: "https://jellyfish.co/platform/resource-allocations/", purpose: "FTE-based allocation model" },
+  { name: "Capacity Planner", url: "https://jellyfish.co/solutions/capacity-planner/", purpose: "Workload capacity prediction" },
+  { name: "Platform Engineering", url: "https://jellyfish.co/solutions/platform-engineering/", purpose: "Platform engineering solution" },
+  { name: "Eng & Product Ops", url: "https://jellyfish.co/solutions/engineering-product-operations/", purpose: "Engineering operations solution" },
+  { name: "Knowledge Library", url: "https://jellyfish.co/library/index/", purpose: "80+ articles across 17 categories" },
+  { name: "Resources", url: "https://jellyfish.co/resources/", purpose: "eBooks, guides, and reports" },
+  { name: "Webinars", url: "https://jellyfish.co/webinars/", purpose: "On-demand webinars (7 pages)" },
+  { name: "Help Center", url: "https://help.jellyfish.co/hc/en-us", purpose: "Product documentation (login required)" },
+  { name: "Academy", url: "https://academy.jellyfish.co/app", purpose: "Training platform" },
+  { name: "Trust Center", url: "https://jellyfish.co/learn/trust-center/", purpose: "Security and compliance" },
+  { name: "Request Demo", url: "https://jellyfish.co/request-a-demo/", purpose: "Demo request form" },
+  { name: "API Token Setup", url: "https://app.jellyfish.co/settings/data-connections/api-export", purpose: "API token configuration (login required)" },
+  { name: "API Schema", url: "https://app.jellyfish.co/endpoints/export/v0/schema", purpose: "OpenAPI schema (auth required)" },
+  { name: "API Contact", url: "mailto:api@jellyfish.co", purpose: "API support email" },
+  { name: "AI Contact", url: "mailto:ai@jellyfish.co", purpose: "AI-related inquiries" },
+  { name: "GitHub Organization", url: "https://github.com/Jellyfish-AI", purpose: "Open source repositories" },
 ];
 
 const infraLayers = [
-  { layer: "Database", tech: "PostgreSQL", evidence: "Django ORM models, migration files" },
-  { layer: "Orchestration", tech: "Prefect / Airflow", evidence: "Flow definitions in collector pipeline" },
-  { layer: "Compute", tech: "Dask / Spark", evidence: "Distributed data processing workers" },
-  { layer: "Queue", tech: "Celery / Redis", evidence: "Task queue for async collection jobs" },
-  { layer: "Cloud", tech: "AWS", evidence: "S3 storage, ECS deployment configs" },
-  { layer: "GitHub API", tech: "PyGithub", evidence: "github3.py wrapper in connector layer" },
-  { layer: "Rate Limiting", tech: "Custom middleware", evidence: "Per-token throttle in export API" },
-  { layer: "Backend", tech: "Django", evidence: "settings.py, urls.py, WSGI config" },
-  { layer: "Frontend", tech: "React", evidence: "package.json, component tree" },
+  { layer: "Database", tech: "PostgreSQL + Citus (distributed)", evidence: "pgmetrics fork with Citus 11 support commit" },
+  { layer: "Workflow Orchestration", tech: "Prefect", evidence: "prefect fork with Jellyfish-specific bug fixes and dependency pins" },
+  { layer: "Distributed Computing", tech: "Dask", evidence: "dask-cloudprovider fork with AWS ECS throttle fix" },
+  { layer: "Task Queue", tech: "Celery", evidence: "celery fork in Jellyfish-AI organization" },
+  { layer: "Cloud Infrastructure", tech: "AWS (ECS, S3, Secrets Manager)", evidence: "prefect-aws fork; dask-cloudprovider ECS commits" },
+  { layer: "GitHub API Client", tech: "PyGithub (customized)", evidence: "PyGithub fork with retry logic and session support for jf_agent" },
+  { layer: "Rate Limiting", tech: "Custom (replaced ratelimit fork)", evidence: "Multi-realm, thread-safe implementation in jf_agent/ratelimit.py" },
+  { layer: "Backend Framework", tech: "Django + Django REST Framework", evidence: "rec-resources interview repo" },
+  { layer: "Frontend", tech: "React + TypeScript", evidence: "rec-resources interview repo" },
 ];
 
 const repos = [
-  { name: "jellyfish", forked: false, desc: "Core Django backend and data pipeline" },
-  { name: "jellyfish-frontend", forked: false, desc: "React frontend application" },
-  { name: "jellyfish-mcp", forked: false, desc: "Model Context Protocol server" },
-  { name: "jf-agent", forked: false, desc: "On-premise data collection agent" },
-  { name: "jellyfish-docs", forked: false, desc: "Public documentation site" },
-  { name: "jellyfish-integrations", forked: false, desc: "Integration connector library" },
-  { name: "prefect", forked: true, desc: "Orchestration framework (forked)" },
-  { name: "dask", forked: true, desc: "Parallel computing library (forked)" },
-  { name: "PyGithub", forked: true, desc: "GitHub API client (forked)" },
-  { name: "django-rest-framework", forked: true, desc: "REST framework for Django (forked)" },
-  { name: "celery", forked: true, desc: "Distributed task queue (forked)" },
-  { name: "redis-py", forked: true, desc: "Redis Python client (forked)" },
-  { name: "airflow", forked: true, desc: "Workflow orchestration (forked)" },
+  { name: "jellyfish-mcp", forked: false, desc: "MCP server for querying Jellyfish data via AI assistants (25 tools)" },
+  { name: "jf_agent", forked: false, desc: "On-premises agent for collecting and sending data to Jellyfish" },
+  { name: "Jellyfish-Integration-Resources", forked: false, desc: "Azure DevOps setup scripts (webhooks + user extraction)" },
+  { name: "jellyfish-buildkite-plugin", forked: false, desc: "Buildkite CI/CD plugin for deployment event reporting" },
+  { name: "twistedtentacles", forked: false, desc: "Interview assessment: order processing system" },
+  { name: "rec-resources", forked: false, desc: "Interview assessment: Jira issue list mock app (Django + React)" },
+  { name: "ratelimit", forked: true, desc: "API Rate Limit Decorator (superseded by custom implementation)" },
+  { name: "PyGithub", forked: true, desc: "GitHub API v3 client with retry logic and session support" },
+  { name: "pgmetrics", forked: true, desc: "PostgreSQL stats collector with Citus 11 support" },
+  { name: "prefect", forked: true, desc: "Workflow orchestration with Jellyfish-specific bug fixes" },
+  { name: "prefect-aws", forked: true, desc: "Prefect AWS integrations (ECS, S3, Secrets Manager)" },
+  { name: "dask-cloudprovider", forked: true, desc: "Cloud cluster management with AWS ECS throttle fix" },
+  { name: "celery", forked: true, desc: "Distributed task queue (fork based on v4.3.0)" },
 ];
 
 const additionalMetrics = [
-  "Cycle Time",
-  "Throughput",
-  "WIP Limits",
-  "Code Review Time",
-  "PR Size",
-  "Build Time",
-  "Incident Rate",
+  "Issue Cycle Time",
+  "Flow Metrics",
+  "Code Churn",
+  "Unlinked Pull Requests",
+  "Sprint Summaries",
+  "FTE Allocations",
+  "Work Effort Distribution",
 ];
 
 export default function ReferencePage() {
@@ -229,7 +235,7 @@ export default function ReferencePage() {
       {/* ── Agent Endpoints ── */}
       {section === "agent" && (
         <div className="space-y-4">
-          <p className="text-sm text-text-dim">Internal HTTP endpoints exposed by the <code className="font-mono text-[12px]">jf-agent</code> service when running.</p>
+          <p className="text-sm text-text-dim">Internal API endpoints used by the <code className="font-mono text-[12px]">jf_agent</code> for data ingestion. These are not part of the public Export API.</p>
           <DataTable
             headers={["Endpoint", "Method", "Description"]}
             rows={agentEndpoints.map((ep) => [
@@ -248,10 +254,11 @@ export default function ReferencePage() {
       {section === "webhooks" && (
         <div className="space-y-6">
           <DataTable
-            headers={["Method", "Path", "Description"]}
+            headers={["Method", "Endpoint", "Auth Header", "Description"]}
             rows={webhookEndpoints.map((wh) => [
               <span key="method" className="inline-block px-2 py-0.5 rounded text-[10.5px] font-bold bg-violet-dim text-violet">{wh.method}</span>,
               <code key="path" className="font-mono text-[12px] text-blue">{wh.path}</code>,
+              <code key="auth" className="font-mono text-[11px] text-text-dim">{wh.auth}</code>,
               <span key="desc" className="text-[13px] text-text-dim">{wh.desc}</span>,
             ])}
           />
@@ -302,10 +309,11 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Supported Git Providers</h2>
             <DataTable
-              headers={["Provider", "Notes"]}
+              headers={["Provider", "Constant", "URL Format"]}
               rows={gitProviders.map((p) => [
                 <span key="name" className="text-[13px] font-medium">{p.name}</span>,
-                <span key="notes" className="text-[13px] text-text-dim">{p.notes}</span>,
+                <code key="constant" className="font-mono text-[12px] text-blue">{p.constant}</code>,
+                <code key="url" className="font-mono text-[12px] text-text-dim">{p.url}</code>,
               ])}
             />
           </div>
@@ -369,10 +377,10 @@ export default function ReferencePage() {
           <div className="space-y-3">
             <h2 className="font-semibold text-[15px]">Platform Outcomes</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <StatCard label="Delivery Improvement" value="32%" note="Faster software delivery" color="blue" trend="Validated" trendDirection="up" />
-              <StatCard label="Time Saved" value="2.6d" note="Per sprint per engineer" color="green" trend="Per sprint" trendDirection="up" />
-              <StatCard label="Efficiency Gain" value="21%" note="Engineering efficiency" color="violet" trend="Ongoing" trendDirection="up" />
-              <StatCard label="Delivery Improvement" value="25%" note="Consistent delivery cadence" color="amber" trend="Measured" trendDirection="up" />
+              <StatCard label="Revenue Focus" value="32%" note="More focus on revenue-maximizing work" color="blue" trend="jellyfish.co/tour" trendDirection="up" />
+              <StatCard label="Cycle Time" value="2.6d" note="Reduction in cycle time" color="green" trend="jellyfish.co/tour" trendDirection="up" />
+              <StatCard label="Time to Market" value="21%" note="Faster time to market" color="violet" trend="jellyfish.co/tour" trendDirection="up" />
+              <StatCard label="Collaboration" value="25%" note="More team collaboration" color="amber" trend="jellyfish.co/tour" trendDirection="up" />
             </div>
           </div>
         </div>
