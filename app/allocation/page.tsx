@@ -144,10 +144,11 @@ export default function AllocationPage() {
 
       {/* Token input */}
       <div className="mb-4">
-        <label className="block text-xs font-semibold text-text-ghost mb-1.5 uppercase tracking-wider">
+        <label htmlFor="api-token" className="block text-xs font-semibold text-text-ghost mb-1.5 uppercase tracking-wider">
           Jellyfish API Token (optional — for live mode)
         </label>
         <input
+          id="api-token"
           type="password"
           value={token}
           onChange={(e) => setToken(e.target.value)}

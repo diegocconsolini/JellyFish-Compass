@@ -173,10 +173,11 @@ export default function DeliveryPage() {
       </div>
 
       <div className="mb-5">
-        <label className="block text-[11px] font-semibold uppercase tracking-widest text-text-ghost mb-1.5">
+        <label htmlFor="api-token" className="block text-[11px] font-semibold uppercase tracking-widest text-text-ghost mb-1.5">
           Jellyfish API Token
         </label>
         <input
+          id="api-token"
           type="password"
           value={token}
           onChange={(e) => setToken(e.target.value)}

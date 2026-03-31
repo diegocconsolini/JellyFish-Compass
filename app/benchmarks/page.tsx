@@ -203,27 +203,27 @@ export default function BenchmarksPage() {
                     <td
                       className={`px-5 py-3 text-right font-mono text-xs ${team.velocity === bestVelocity ? "text-green font-bold" : "text-text-dim"}`}
                     >
-                      {team.velocity} pts
+                      {team.velocity === bestVelocity ? "★ " : ""}{team.velocity} pts
                     </td>
                     <td
                       className={`px-5 py-3 text-right font-mono text-xs ${team.cycleTimeDays === bestCycleTime ? "text-green font-bold" : "text-text-dim"}`}
                     >
-                      {team.cycleTimeDays} d
+                      {team.cycleTimeDays === bestCycleTime ? "★ " : ""}{team.cycleTimeDays} d
                     </td>
                     <td
                       className={`px-5 py-3 text-right font-mono text-xs ${team.prReviewHours === bestPrReview ? "text-green font-bold" : "text-text-dim"}`}
                     >
-                      {team.prReviewHours} h
+                      {team.prReviewHours === bestPrReview ? "★ " : ""}{team.prReviewHours} h
                     </td>
                     <td
                       className={`px-5 py-3 text-right font-mono text-xs ${team.deploymentsPerWeek === bestDeploys ? "text-green font-bold" : "text-text-dim"}`}
                     >
-                      {team.deploymentsPerWeek}
+                      {team.deploymentsPerWeek === bestDeploys ? "★ " : ""}{team.deploymentsPerWeek}
                     </td>
                     <td
                       className={`px-5 py-3 text-right font-mono text-xs ${team.devexScore === bestDevEx ? "text-green font-bold" : "text-text-dim"}`}
                     >
-                      {team.devexScore}
+                      {team.devexScore === bestDevEx ? "★ " : ""}{team.devexScore}
                     </td>
                   </tr>
                 );
@@ -233,17 +233,18 @@ export default function BenchmarksPage() {
         </div>
         <div className="px-5 py-2.5 border-t border-border bg-surface-raised/30">
           <span className="text-[11px] text-text-ghost">
-            Green values = best in class. Lower is better for Cycle Time and PR Review.
+            ★ = best in class. Green values = best in class. Lower is better for Cycle Time and PR Review.
           </span>
         </div>
       </div>
 
       {/* API Token input */}
       <div className="mb-3">
-        <label className="block text-[11.5px] font-semibold text-text-ghost mb-1.5">
+        <label htmlFor="api-token" className="block text-[11.5px] font-semibold text-text-ghost mb-1.5">
           Jellyfish API Token (optional — for live mode)
         </label>
         <input
+          id="api-token"
           type="password"
           value={token}
           onChange={(e) => setToken(e.target.value)}

@@ -135,10 +135,11 @@ export default function AiImpactPage() {
 
       {/* Token input kept for page pattern consistency, no API Explorer */}
       <div className="mb-3">
-        <label className="block text-[11.5px] font-semibold text-text-ghost mb-1.5">
+        <label htmlFor="api-token" className="block text-[11.5px] font-semibold text-text-ghost mb-1.5">
           Jellyfish API Token (optional — for live mode)
         </label>
         <input
+          id="api-token"
           type="password"
           value={token}
           onChange={(e) => setToken(e.target.value)}
