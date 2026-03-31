@@ -1,207 +1,194 @@
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { SectionBlock } from "@/components/ui/section-block";
-import { StatCard } from "@/components/ui/stat-card";
-import { mockSprintKpis } from "@/data/mock-data";
-import { metrics } from "@/data/metrics";
-import { playbooks } from "@/data/playbooks";
 
-const highlightCards = [
+const steps = [
   {
-    title: "Sprint Health",
-    description:
-      "Monitor velocity, carry-over, and completion rate trends across sprints with Jellyfish data.",
-    href: "/sprint-health",
-    tags: ["Velocity", "Carry-over"],
+    num: "01",
+    phase: "LEARN",
+    title: "Understand the platform",
+    desc: "Academy modules explain DORA, DevEx, allocations, and delivery concepts in Scrum Master language. No jargon overload.",
+    color: "from-blue to-cyan",
   },
   {
-    title: "Allocation",
-    description:
-      "Understand how engineering effort is split across features, KTLO, and tech debt by team and person.",
-    href: "/allocation",
-    tags: ["FTE", "Investment mix"],
+    num: "02",
+    phase: "APPLY",
+    title: "Run guided workflows",
+    desc: "Playbooks walk you through retros, capacity reviews, and stakeholder updates step by step — with real outputs you can save.",
+    color: "from-green to-emerald-300",
   },
   {
-    title: "Playbooks",
-    description:
-      "Run guided retros, capacity reviews, and stakeholder updates using structured Jellyfish workflows.",
-    href: "/playbooks",
-    tags: ["Ceremonies", "Outputs"],
+    num: "03",
+    phase: "EXPLORE",
+    title: "Query live data",
+    desc: "The API Explorer lets you call any of 25 Jellyfish endpoints with your token, or preview mock data to learn the shape of responses.",
+    color: "from-violet to-purple-300",
   },
 ];
 
+const sections = [
+  { href: "/sprint-health", icon: "📊", label: "Sprint Health", desc: "Velocity, completion, carry-over trends", primary: true },
+  { href: "/delivery", icon: "🚀", label: "Delivery", desc: "Scope, effort, deliverable tracking" },
+  { href: "/allocation", icon: "⚖️", label: "Allocation", desc: "FTE by investment, team, person" },
+  { href: "/devex", icon: "🧑‍💻", label: "DevEx", desc: "Developer experience & unlinked PRs" },
+  { href: "/people-teams", icon: "👥", label: "People & Teams", desc: "Roster, hierarchy, search" },
+  { href: "/reference", icon: "📖", label: "Reference", desc: "25 endpoints, MCP, DORA, integrations" },
+  { href: "/academy", icon: "🎓", label: "Academy", desc: "Learning modules & core metrics" },
+  { href: "/playbooks", icon: "📋", label: "Playbooks", desc: "Guided retros, capacity, stakeholder" },
+  { href: "/workspace", icon: "💾", label: "Workspace", desc: "Save notes, summaries, templates" },
+  { href: "/showcase", icon: "✨", label: "Showcase", desc: "Platform capabilities by audience" },
+];
+
+const dataFeatures = [
+  { color: "blue", text: "25 API endpoints", detail: "across 6 domains — allocations, delivery, devex, metrics, people, teams" },
+  { color: "green", text: "4 DORA metrics", detail: "with verbatim descriptions from jellyfish.co" },
+  { color: "amber", text: "Mock + Live API", detail: "toggle between sample data and real Jellyfish calls with your token" },
+  { color: "violet", text: "33 integrations", detail: "across AI coding, issue tracking, CI/CD, monitoring, and collaboration" },
+];
+
+const workflowFeatures = [
+  { color: "blue", text: "3 playbooks", detail: "Sprint Retro, Capacity Review, Stakeholder Summary with step-by-step guides" },
+  { color: "green", text: "4 learning modules", detail: "covering fundamentals, delivery, allocations, and DevEx" },
+  { color: "amber", text: "Scrum Master guides", detail: "on every data page mapping metrics to ceremonies" },
+  { color: "violet", text: "Workspace", detail: "to save notes, summaries, and templates across sessions" },
+];
+
+const dotColors: Record<string, string> = {
+  blue: "bg-blue",
+  green: "bg-green",
+  amber: "bg-amber",
+  violet: "bg-violet",
+};
+
 export default function HomePage() {
   return (
-    <>
+    <div className="max-w-[1100px] mx-auto px-7 py-10">
+
       {/* Hero */}
-      <section className="mb-10 rounded-xl border border-border bg-surface p-8">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-text-ghost mb-3">
-          Scrum Master Dashboard
-        </p>
-        <h1 className="font-serif text-4xl font-bold tracking-tight text-text-primary mb-3">
-          Jellyfish Compass
+      <section className="text-center py-12 mb-10">
+        <Badge variant="blue" className="mb-5 text-xs px-3.5 py-1">
+          🪼 For Scrum Masters & Engineering Teams
+        </Badge>
+        <h1 className="font-serif text-5xl font-normal tracking-tight mb-4">
+          Your Jellyfish companion{" "}
+          <em className="text-text-dim italic">for real ceremonies</em>
         </h1>
-        <p className="max-w-2xl text-sm text-text-dim leading-relaxed mb-6">
-          A modern dashboard for Scrum Masters. Translate Jellyfish signals into sprint ceremonies,
-          stakeholder updates, and continuous improvement — with guided playbooks, featured metrics,
-          and real allocation data.
+        <p className="text-text-dim text-[17px] max-w-2xl mx-auto leading-relaxed mb-7">
+          Jellyfish Compass translates platform signals into actionable insights
+          for sprint retros, capacity planning, stakeholder updates, and delivery
+          reviews. Learn the metrics, run guided workflows, and explore live API
+          data — all in one place.
         </p>
-        <div className="flex gap-3">
+        <div className="flex justify-center gap-3">
           <Link
             href="/sprint-health"
-            className="inline-flex items-center rounded-lg bg-blue px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+            className="inline-flex items-center rounded-xl bg-blue px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
           >
-            Sprint Health
+            Get Started
           </Link>
           <Link
-            href="/playbooks"
-            className="inline-flex items-center rounded-lg border border-border bg-surface-raised px-4 py-2 text-sm font-semibold text-text-primary hover:bg-surface transition-colors"
+            href="/reference"
+            className="inline-flex items-center rounded-xl border border-border-vivid bg-transparent px-5 py-2.5 text-sm font-semibold text-text-primary hover:bg-surface transition-colors"
           >
-            Explore Playbooks
+            Browse Reference
           </Link>
         </div>
       </section>
 
-      {/* KPI Stat Cards */}
-      <SectionBlock
-        title="Sprint KPIs"
-        copy="Key performance indicators from the current sprint cycle."
-      >
-        <div className="grid grid-cols-4 gap-3">
-          <StatCard
-            label="Avg Velocity"
-            value={mockSprintKpis.avgVelocity.value}
-            note={mockSprintKpis.avgVelocity.unit}
-            trend={mockSprintKpis.avgVelocity.trend}
-            trendDirection={mockSprintKpis.avgVelocity.direction}
-            color="blue"
-          />
-          <StatCard
-            label="Completion Rate"
-            value={mockSprintKpis.completionRate.value}
-            note={mockSprintKpis.completionRate.unit}
-            trend={mockSprintKpis.completionRate.trend}
-            trendDirection={mockSprintKpis.completionRate.direction}
-            color="green"
-          />
-          <StatCard
-            label="Carry-Over"
-            value={mockSprintKpis.carryOver.value}
-            note={mockSprintKpis.carryOver.unit}
-            trend={mockSprintKpis.carryOver.trend}
-            trendDirection={mockSprintKpis.carryOver.direction}
-            color="amber"
-          />
-          <StatCard
-            label="Sprint Cadence"
-            value={mockSprintKpis.sprintCadence.value}
-            note={mockSprintKpis.sprintCadence.unit}
-            trend={mockSprintKpis.sprintCadence.trend}
-            trendDirection={mockSprintKpis.sprintCadence.direction}
-            color="violet"
-          />
-        </div>
-      </SectionBlock>
-
-      {/* Highlight Cards */}
-      <SectionBlock
-        title="Explore sections"
-        copy="Jump into the key areas of the dashboard."
-      >
-        <div className="grid grid-cols-3 gap-3">
-          {highlightCards.map((card) => (
-            <article
-              key={card.href}
-              className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-3"
-            >
-              <div>
-                <h3 className="text-sm font-bold text-text-primary mb-1">{card.title}</h3>
-                <p className="text-xs text-text-dim leading-relaxed">{card.description}</p>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {card.tags.map((tag) => (
-                  <Badge key={tag} variant="ghost">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              <div className="mt-auto pt-1">
-                <Link
-                  href={card.href}
-                  className="inline-flex items-center rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-xs font-semibold text-text-primary hover:bg-surface transition-colors"
-                >
-                  Open
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </SectionBlock>
-
-      {/* Featured Metrics */}
-      <SectionBlock
-        title="Featured metrics"
-        copy="Core Jellyfish metrics every Scrum Master should know."
-      >
-        <div className="grid grid-cols-4 gap-3">
-          {metrics.map((metric) => (
+      {/* How it works */}
+      <section className="mb-12">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
+          How it works
+        </p>
+        <h2 className="text-xl font-bold mb-1">Three ways to use Compass</h2>
+        <p className="text-sm text-text-dim mb-5">
+          Whether you&apos;re learning Jellyfish, running ceremonies, or exploring the API.
+        </p>
+        <div className="grid grid-cols-3 gap-4">
+          {steps.map((s) => (
             <div
-              key={metric.id}
-              className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-2"
+              key={s.num}
+              className="relative overflow-hidden rounded-xl border border-border bg-surface p-6"
             >
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="text-sm font-bold text-text-primary leading-snug">{metric.name}</h3>
-                <Badge variant="blue">{metric.category}</Badge>
-              </div>
-              <p className="text-xs text-text-dim leading-relaxed">{metric.summary}</p>
-              <p className="text-[11px] text-text-ghost leading-relaxed mt-auto pt-1">
-                {metric.scrumUse}
+              <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.color}`} />
+              <p className="text-[11px] font-bold text-text-ghost mb-2.5">
+                {s.num} — {s.phase}
               </p>
+              <h3 className="text-[15px] font-bold mb-1.5">{s.title}</h3>
+              <p className="text-[13px] text-text-dim leading-relaxed">{s.desc}</p>
             </div>
           ))}
         </div>
-      </SectionBlock>
+      </section>
 
-      {/* Featured Playbooks */}
-      <SectionBlock
-        title="Featured playbooks"
-        copy="Guided workflows for your most important ceremonies."
-      >
-        <div className="grid grid-cols-3 gap-3">
-          {playbooks.slice(0, 3).map((playbook) => (
-            <div
-              key={playbook.id}
-              className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-3"
+      {/* All 10 sections */}
+      <section className="mb-12">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
+          Explore
+        </p>
+        <h2 className="text-xl font-bold mb-1">All 10 sections</h2>
+        <p className="text-sm text-text-dim mb-5">
+          Each section is built for a specific workflow or learning goal.
+        </p>
+        <div className="grid grid-cols-5 gap-2.5">
+          {sections.map((s) => (
+            <Link
+              key={s.href}
+              href={s.href}
+              className={`rounded-xl border p-4 transition-colors hover:border-border-vivid ${
+                s.primary
+                  ? "border-blue/25 bg-blue-glow"
+                  : "border-border bg-surface"
+              }`}
             >
-              <div>
-                <h3 className="text-sm font-bold text-text-primary mb-1">{playbook.title}</h3>
-                <p className="text-xs text-text-dim leading-relaxed">{playbook.goal}</p>
-              </div>
-              <div>
-                <p className="text-[10.5px] font-semibold uppercase tracking-wider text-text-ghost mb-1.5">
-                  Outputs
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {playbook.outputs.map((output) => (
-                    <Badge key={output} variant="ghost">
-                      {output}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-auto pt-1">
-                <Link
-                  href={`/playbooks#${playbook.id}`}
-                  className="inline-flex items-center rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-xs font-semibold text-text-primary hover:bg-surface transition-colors"
-                >
-                  Run playbook
-                </Link>
-              </div>
-            </div>
+              <div className="text-xl mb-2">{s.icon}</div>
+              <div className="text-[13px] font-bold mb-0.5">{s.label}</div>
+              <div className="text-[11px] text-text-ghost leading-snug">{s.desc}</div>
+            </Link>
           ))}
         </div>
-      </SectionBlock>
-    </>
+      </section>
+
+      {/* Divider */}
+      <div className="h-px bg-border mb-10" />
+
+      {/* What's inside */}
+      <section className="mb-12">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
+          What&apos;s inside
+        </p>
+        <h2 className="text-xl font-bold mb-1">Built from verified Jellyfish data</h2>
+        <p className="text-sm text-text-dim mb-5">
+          Every endpoint, metric, and integration is sourced from official
+          Jellyfish documentation and source code.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="rounded-xl border border-border bg-surface p-6">
+            <h3 className="text-sm font-bold mb-4">Data & Metrics</h3>
+            {dataFeatures.map((f) => (
+              <div key={f.text} className="flex items-start gap-2.5 mb-2.5">
+                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${dotColors[f.color]}`} />
+                <p className="text-[13px] text-text-dim leading-relaxed">
+                  <strong className="text-text-primary font-semibold">{f.text}</strong>{" "}
+                  {f.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-xl border border-border bg-surface p-6">
+            <h3 className="text-sm font-bold mb-4">Workflows & Learning</h3>
+            {workflowFeatures.map((f) => (
+              <div key={f.text} className="flex items-start gap-2.5 mb-2.5">
+                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${dotColors[f.color]}`} />
+                <p className="text-[13px] text-text-dim leading-relaxed">
+                  <strong className="text-text-primary font-semibold">{f.text}</strong>{" "}
+                  {f.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
