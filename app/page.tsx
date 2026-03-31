@@ -7,9 +7,6 @@ import {
   Users,
   BookOpen,
   GraduationCap,
-  ClipboardList,
-  Save,
-  Sparkles,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -46,9 +43,6 @@ const sectionIcons: Record<string, React.ReactNode> = {
   "/people-teams": <Users className="w-5 h-5 text-cyan" />,
   "/reference": <BookOpen className="w-5 h-5 text-blue" />,
   "/academy": <GraduationCap className="w-5 h-5 text-green" />,
-  "/playbooks": <ClipboardList className="w-5 h-5 text-amber" />,
-  "/workspace": <Save className="w-5 h-5 text-violet" />,
-  "/showcase": <Sparkles className="w-5 h-5 text-cyan" />,
 };
 
 const sections = [
@@ -58,10 +52,7 @@ const sections = [
   { href: "/devex", label: "DevEx", desc: "Developer experience & unlinked PRs" },
   { href: "/people-teams", label: "People & Teams", desc: "Roster, hierarchy, search" },
   { href: "/reference", label: "Reference", desc: "25 endpoints, MCP, DORA, integrations" },
-  { href: "/academy", label: "Academy", desc: "Learning modules & core metrics" },
-  { href: "/playbooks", label: "Playbooks", desc: "Guided retros, capacity, stakeholder" },
-  { href: "/workspace", label: "Workspace", desc: "Save notes, summaries, templates" },
-  { href: "/showcase", label: "Showcase", desc: "Platform capabilities by audience" },
+  { href: "/academy", label: "Academy", desc: "Learning hub — modules, playbooks, workspace, showcase" },
 ];
 
 const dataFeatures = [
@@ -151,11 +142,11 @@ export default function HomePage() {
         <p className="text-[11px] font-bold uppercase tracking-widest text-text-ghost mb-2">
           Explore
         </p>
-        <h2 className="text-xl font-bold mb-1">All 10 sections</h2>
+        <h2 className="text-xl font-bold mb-1">All sections</h2>
         <p className="text-sm text-text-dim mb-5">
-          Each section is built for a specific workflow or learning goal.
+          Six data dashboards plus a learning hub with playbooks, workspace, and showcase.
         </p>
-        <div className="grid grid-cols-5 gap-2.5">
+        <div className="grid grid-cols-4 gap-2.5">
           {sections.map((s) => (
             <Link
               key={s.href}
