@@ -168,7 +168,7 @@ export default function HomePage() {
               key={s.num}
               className="relative overflow-hidden rounded-xl border border-border bg-surface p-6"
             >
-              <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.color}`} />
+              <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.color}`} aria-hidden="true" />
               <p className="text-[11px] font-bold text-text-ghost mb-2.5">
                 {s.num} — {s.phase}
               </p>
@@ -192,7 +192,7 @@ export default function HomePage() {
           {sectionGroups.map((group) => (
             <div key={group.title}>
               <div className="flex items-center gap-2.5 mb-3">
-                <div className={`w-8 h-0.5 rounded-full bg-gradient-to-r ${group.color}`} />
+                <div className={`w-8 h-0.5 rounded-full bg-gradient-to-r ${group.color}`} aria-hidden="true" />
                 <span className="text-[11px] font-bold uppercase tracking-widest text-text-ghost">{group.title}</span>
               </div>
               <div className={`grid gap-2.5 ${group.items.length === 2 ? "grid-cols-1 sm:grid-cols-2" : group.items.length === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}>
@@ -206,8 +206,8 @@ export default function HomePage() {
                         : "border-border bg-surface"
                     }`}
                   >
-                    <div className="mb-2">{sectionIcons[s.href]}</div>
-                    <div className="text-[13px] font-bold mb-0.5">{s.label}</div>
+                    <div className="mb-2" aria-hidden="true">{sectionIcons[s.href]}</div>
+                    <h3 className="text-[13px] font-bold mb-0.5">{s.label}</h3>
                     <div className="text-[11px] text-text-ghost leading-snug">{s.desc}</div>
                   </Link>
                 ))}
@@ -235,7 +235,7 @@ export default function HomePage() {
             <h3 className="text-sm font-bold mb-4">Data & Metrics</h3>
             {dataFeatures.map((f) => (
               <div key={f.text} className="flex items-start gap-2.5 mb-2.5">
-                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${dotColors[f.color]}`} />
+                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${dotColors[f.color]}`} aria-hidden="true" />
                 <p className="text-[13px] text-text-dim leading-relaxed">
                   <strong className="text-text-primary font-semibold">{f.text}</strong>{" "}
                   {f.detail}
@@ -247,7 +247,7 @@ export default function HomePage() {
             <h3 className="text-sm font-bold mb-4">Workflows & Learning</h3>
             {workflowFeatures.map((f) => (
               <div key={f.text} className="flex items-start gap-2.5 mb-2.5">
-                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${dotColors[f.color]}`} />
+                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${dotColors[f.color]}`} aria-hidden="true" />
                 <p className="text-[13px] text-text-dim leading-relaxed">
                   <strong className="text-text-primary font-semibold">{f.text}</strong>{" "}
                   {f.detail}
