@@ -49,17 +49,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Custom app colors — MUST come after shadcn to override */
-  --color-bg-deep: #06080d;
-  --color-bg: #0b0f18;
-  --color-surface: #111825;
-  --color-surface-raised: #161f2e;
-  --color-surface-overlay: #1b2638;
-  --color-border: rgba(255,255,255,0.06);
-  --color-border-vivid: rgba(255,255,255,0.1);
-  --color-text-primary: #e8ecf4;
-  --color-text-dim: #8b95a8;
-  --color-text-ghost: #556275;
+  /* Accent colors — same in both themes */
   --color-blue: #4f8ff7;
   --color-blue-dim: rgba(79,143,247,0.12);
   --color-blue-glow: rgba(79,143,247,0.06);
@@ -72,6 +62,18 @@
   --color-violet: #a78bfa;
   --color-violet-dim: rgba(167,139,250,0.1);
   --color-cyan: #22d3ee;
+
+  /* Surface colors — overridden by :root and .dark below */
+  --color-bg-deep: var(--app-bg-deep);
+  --color-bg: var(--app-bg);
+  --color-surface: var(--app-surface);
+  --color-surface-raised: var(--app-surface-raised);
+  --color-surface-overlay: var(--app-surface-overlay);
+  --color-border: var(--app-border);
+  --color-border-vivid: var(--app-border-vivid);
+  --color-text-primary: var(--app-text-primary);
+  --color-text-dim: var(--app-text-dim);
+  --color-text-ghost: var(--app-text-ghost);
 }
 
 @layer base {
@@ -81,6 +83,18 @@
 }
 
 :root {
+  /* Light mode app surfaces */
+  --app-bg-deep: #f0f2f5;
+  --app-bg: #f5f7fb;
+  --app-surface: #ffffff;
+  --app-surface-raised: #f0f2f7;
+  --app-surface-overlay: #e8ecf4;
+  --app-border: rgba(0,0,0,0.08);
+  --app-border-vivid: rgba(0,0,0,0.12);
+  --app-text-primary: #112033;
+  --app-text-dim: #4f6078;
+  --app-text-ghost: #6d8098;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -115,6 +129,18 @@
 }
 
 .dark {
+  /* Dark mode app surfaces */
+  --app-bg-deep: #06080d;
+  --app-bg: #0b0f18;
+  --app-surface: #111825;
+  --app-surface-raised: #161f2e;
+  --app-surface-overlay: #1b2638;
+  --app-border: rgba(255,255,255,0.06);
+  --app-border-vivid: rgba(255,255,255,0.1);
+  --app-text-primary: #e8ecf4;
+  --app-text-dim: #8b95a8;
+  --app-text-ghost: #556275;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

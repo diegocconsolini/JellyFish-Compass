@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -66,8 +66,11 @@ function findActiveGroup(pathname: string): string {
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [activeGroup, setActiveGroup] = useState(() => findActiveGroup(pathname));
+
+  useEffect(() => setMounted(true), []);
 
   // Sync active group when navigating
   useEffect(() => {
@@ -109,10 +112,10 @@ export function SiteHeader() {
 
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
             className="w-7 h-7 rounded-lg border border-border-vivid bg-transparent text-text-dim flex items-center justify-center text-xs cursor-pointer hover:border-text-ghost transition-colors"
           >
-            {theme === "dark" ? "\u2600" : "\u263E"}
+            {mounted ? (resolvedTheme === "dark" ? "\u2600" : "\u263E") : "\u25CB"}
           </button>
         </div>
       </div>
