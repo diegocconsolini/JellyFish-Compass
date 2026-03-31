@@ -85,6 +85,7 @@ export function SiteHeader() {
   const currentGroup = navGroups.find((g) => g.id === activeGroup) || navGroups[0];
 
   return (
+    <>
     <header className="sticky top-0 z-50 border-b border-border bg-bg/70 backdrop-blur-2xl backdrop-saturate-[1.6]">
 
       {/* ── DESKTOP (md+) ── */}
@@ -184,38 +185,40 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Mobile menu overlay */}
-      {menuOpen && (
-        <div className="md:hidden fixed inset-0 top-12 z-40 bg-bg/95 backdrop-blur-xl overflow-y-auto">
-          <nav aria-label="Mobile navigation" className="max-w-md mx-auto px-6 py-6 space-y-6">
-            {navGroups.map((group) => (
-              <div key={group.id}>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className={cn("w-2 h-2 rounded-full", group.color)} aria-hidden="true" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-text-ghost">{group.label}</span>
-                </div>
-                <div className="space-y-1 pl-4">
-                  {group.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      className={cn(
-                        "block px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
-                        pathname === item.href
-                          ? "text-text-primary bg-surface-raised"
-                          : "text-text-dim hover:text-text-primary hover:bg-surface-raised/50"
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
-        </div>
-      )}
     </header>
+
+    {/* Mobile menu overlay — OUTSIDE header to avoid backdrop-filter stacking context */}
+    {menuOpen && (
+      <div className="md:hidden fixed inset-0 top-12 z-[60] bg-bg/95 backdrop-blur-xl overflow-y-auto">
+        <nav aria-label="Mobile navigation" className="max-w-md mx-auto px-6 py-6 space-y-6">
+          {navGroups.map((group) => (
+            <div key={group.id}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className={cn("w-2 h-2 rounded-full", group.color)} aria-hidden="true" />
+                <span className="text-xs font-bold uppercase tracking-widest text-text-ghost">{group.label}</span>
+              </div>
+              <div className="space-y-1 pl-4">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={cn(
+                      "block px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
+                      pathname === item.href
+                        ? "text-text-primary bg-surface-raised"
+                        : "text-text-dim hover:text-text-primary hover:bg-surface-raised/50"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
+      </div>
+    )}
+    </>
   );
 }

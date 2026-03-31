@@ -306,7 +306,7 @@ export default function ReferencePage() {
             key={id}
             onClick={() => setSection(id)}
             className={cn(
-              "px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors",
+              "px-3 py-2 rounded-full text-xs font-semibold border transition-colors",
               section === id
                 ? "bg-blue-dim text-blue border-blue/30"
                 : "bg-surface-raised border-border text-text-ghost hover:text-text-dim"
