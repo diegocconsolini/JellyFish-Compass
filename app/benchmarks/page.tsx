@@ -221,77 +221,164 @@ export default function BenchmarksPage() {
       <BottomPanel
         guidesContent={
           <GuidePanel
-            scrumMaster={
-              <div className="space-y-4">
-                <p>
-                  Team Benchmarks provide performance comparison data across teams. The purpose is
-                  learning, not competition — a team with lower velocity but higher code quality and
-                  fewer incidents may be healthier than a team shipping fast with high failure rates.
-                  Use benchmarks to start conversations about what&apos;s working and identify where
-                  teams can learn from each other.
-                </p>
-                <div className="grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-3">
-                  <div>
-                    <div className="font-semibold text-text-primary mb-0.5 text-sm">Retrospective</div>
+            tabs={[
+              {
+                key: "sm",
+                label: "Scrum Master",
+                content: (
+                  <div className="space-y-4">
                     <p>
-                      Share one benchmark comparison per retro. Ask:{" "}
-                      <em>
-                        &apos;Data team deploys 6x/week while Mobile deploys 2x — what can we learn
-                        from their process?&apos;
-                      </em>{" "}
-                      Avoid framing as &apos;Mobile needs to catch up.&apos;
+                      Team Benchmarks provide performance comparison data across teams. The purpose is
+                      learning, not competition — a team with lower velocity but higher code quality and
+                      fewer incidents may be healthier than a team shipping fast with high failure rates.
+                      Use benchmarks to start conversations about what&apos;s working and identify where
+                      teams can learn from each other.
+                    </p>
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-3">
+                      <div>
+                        <div className="font-semibold text-text-primary mb-0.5 text-sm">Retrospective</div>
+                        <p>
+                          Share one benchmark comparison per retro. Ask:{" "}
+                          <em>
+                            &apos;Data team deploys 6x/week while Mobile deploys 2x — what can we learn
+                            from their process?&apos;
+                          </em>{" "}
+                          Avoid framing as &apos;Mobile needs to catch up.&apos;
+                        </p>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-text-primary mb-0.5 text-sm">Leadership review</div>
+                        <p>
+                          Present benchmarks alongside context. High velocity with high cycle time may
+                          mean large batches — not necessarily a problem, but worth understanding.
+                        </p>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-text-primary mb-0.5 text-sm">Cross-team sync</div>
+                        <p>
+                          Use benchmarks to identify mentoring opportunities. A team excelling in PR
+                          review time can share their approach with teams where reviews are a bottleneck.
+                        </p>
+                      </div>
+                    </div>
+                    <p>
+                      Relevant endpoints:{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        team_metrics
+                      </code>{" "}
+                      and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        company_metrics
+                      </code>
+                      .
                     </p>
                   </div>
-                  <div>
-                    <div className="font-semibold text-text-primary mb-0.5 text-sm">Leadership review</div>
+                ),
+              },
+              {
+                key: "po",
+                label: "Product Owner",
+                content: (
+                  <div className="space-y-3">
                     <p>
-                      Present benchmarks alongside context. High velocity with high cycle time may
-                      mean large batches — not necessarily a problem, but worth understanding.
+                      Use benchmarks to <strong>set realistic expectations per team</strong> when
+                      planning. A team with a 4.8-day cycle time needs more roadmap buffer than one with a
+                      2.1-day cycle time.
+                    </p>
+                    <p>
+                      Compare deployment frequency across teams to understand which teams can deliver{" "}
+                      <strong>faster iterations</strong> — useful for deciding where to place
+                      time-sensitive features.
+                    </p>
+                    <p>
+                      Benchmarks help product leaders have informed conversations about timelines without
+                      guessing or pressuring teams into unrealistic commitments. Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        company_metrics
+                      </code>{" "}
+                      to see org-wide averages alongside individual team data.
                     </p>
                   </div>
-                  <div>
-                    <div className="font-semibold text-text-primary mb-0.5 text-sm">Cross-team sync</div>
+                ),
+              },
+              {
+                key: "em",
+                label: "Eng Manager",
+                content: (
+                  <div className="space-y-3">
                     <p>
-                      Use benchmarks to identify mentoring opportunities. A team excelling in PR
-                      review time can share their approach with teams where reviews are a bottleneck.
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        team_metrics
+                      </code>{" "}
+                      and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        company_metrics
+                      </code>{" "}
+                      to compare your teams against industry peers. Benchmarking depersonalizes
+                      performance conversations — instead of &quot;your team is slow,&quot; you can say
+                      &quot;we&apos;re at 30th percentile for cycle time — here&apos;s what 70th percentile
+                      teams do differently.&quot;
+                    </p>
+                    <p className="font-semibold text-text-dim">1. Improvement Targets</p>
+                    <p>
+                      Use benchmark percentiles to set realistic goals. &quot;Our 8-day cycle time is 50th
+                      percentile; targeting 60th percentile means reducing to 6 days. Here&apos;s a
+                      plan.&quot;
+                    </p>
+                    <p className="font-semibold text-text-dim">2. Cross-Team Learning</p>
+                    <p>
+                      Identify your best-performing teams on each metric, then facilitate knowledge
+                      sharing. Teams at different percentiles for the same metric likely have process
+                      differences worth surfacing.
+                    </p>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/blog/2025-engineering-benchmarks/ — based on 78,000 engineers
+                      and 11,000 teams.
                     </p>
                   </div>
-                </div>
-                <p>
-                  Relevant endpoints:{" "}
-                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
-                    team_metrics
-                  </code>{" "}
-                  and{" "}
-                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
-                    company_metrics
-                  </code>
-                  .
-                </p>
-              </div>
-            }
-            productOwner={
-              <div className="space-y-3">
-                <p>
-                  Use benchmarks to <strong>set realistic expectations per team</strong> when
-                  planning. A team with a 4.8-day cycle time needs more roadmap buffer than one with a
-                  2.1-day cycle time.
-                </p>
-                <p>
-                  Compare deployment frequency across teams to understand which teams can deliver{" "}
-                  <strong>faster iterations</strong> — useful for deciding where to place
-                  time-sensitive features.
-                </p>
-                <p>
-                  Benchmarks help product leaders have informed conversations about timelines without
-                  guessing or pressuring teams into unrealistic commitments. Use{" "}
-                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
-                    company_metrics
-                  </code>{" "}
-                  to see org-wide averages alongside individual team data.
-                </p>
-              </div>
-            }
+                ),
+              },
+              {
+                key: "pm",
+                label: "Prog Manager",
+                content: (
+                  <div className="space-y-3">
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        team_metrics
+                      </code>{" "}
+                      and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        company_metrics
+                      </code>{" "}
+                      benchmarks to validate delivery expectations with leadership. When the board asks
+                      &quot;why can&apos;t we ship faster?&quot;, benchmark data provides an objective answer.
+                    </p>
+                    <p className="font-semibold text-text-dim">1. Expectation Setting</p>
+                    <p>
+                      Pull{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        company_metrics
+                      </code>{" "}
+                      benchmarks to show leadership: &quot;Our 12-day cycle time is aligned with peer SaaS
+                      companies our size.&quot; This depersonalizes the conversation and grounds expectations
+                      in industry reality.
+                    </p>
+                    <p className="font-semibold text-text-dim">2. Investment Case</p>
+                    <p>
+                      When cycle time or deployment frequency lags peers, use benchmark gaps to justify
+                      investment in process improvements or headcount.
+                    </p>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/case-studies/precisely/ — used benchmarks to clearly
+                      communicate capacity and set realistic expectations.
+                    </p>
+                  </div>
+                ),
+              },
+            ]}
           />
         }
         apiExplorerContent={
