@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/ui/page-hero";
-import { GuideBox } from "@/components/ui/guide-box";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { BottomPanel } from "@/components/ui/bottom-panel";
+import { GuidePanel } from "@/components/ui/guide-panel";
+import { ApiDrawer } from "@/components/ui/api-drawer";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { DataTable } from "@/components/ui/data-table";
 import { Badge } from "@/components/ui/badge";
-import { ApiExplorer } from "@/components/ui/api-explorer";
 import { mockRoadmapItems, mockDeliverables } from "@/data/mock-data";
 import { endpointGroups } from "@/data/endpoints-full";
 import { JellyfishEndpoint } from "@/lib/types";
@@ -208,16 +210,7 @@ export default function RoadmapPage() {
         subtitle="& initiative health"
       />
 
-      <GuideBox title="Product Owner Guide: Roadmap Alignment">
-        <p>
-          Compare what you planned to invest in each initiative with what&apos;s
-          actually happening. The &apos;Actual FTE&apos; comes from Jellyfish allocation
-          data. The &apos;Planned FTE&apos; is what you enter based on your roadmap. The
-          gap tells you where engineering effort diverges from product strategy.
-          Jellyfish integrates with Productboard, Aha!, and ProductPlan — use the
-          platform for automatic alignment.
-        </p>
-      </GuideBox>
+      <SectionDivider />
 
       {/* Section 1: Planned vs Actual */}
       <section className="mb-5" aria-labelledby="planned-vs-actual-heading">
@@ -236,7 +229,7 @@ export default function RoadmapPage() {
             <h3 className="text-sm font-bold mb-0.5">
               Actual Effort (from Jellyfish)
             </h3>
-            <p className="text-[12px] text-text-ghost mb-4">
+            <p className="text-xs text-text-ghost mb-4">
               FTE allocated per initiative — pulled from Jellyfish
             </p>
             {mockRoadmapItems.map((item) => (
@@ -255,7 +248,7 @@ export default function RoadmapPage() {
             <h3 className="text-sm font-bold mb-0.5">
               Planned Effort (your input)
             </h3>
-            <p className="text-[12px] text-text-ghost mb-4">
+            <p className="text-xs text-text-ghost mb-4">
               Enter your planned FTE per initiative from your roadmap
             </p>
             {mockRoadmapItems.map((item) => {
@@ -304,6 +297,8 @@ export default function RoadmapPage() {
         </div>
       </section>
 
+      <SectionDivider variant="minor" />
+
       {/* Section 2: Gap Analysis */}
       <section className="mb-5" aria-labelledby="gap-analysis-heading">
         <div className="mb-4">
@@ -324,6 +319,8 @@ export default function RoadmapPage() {
         </div>
       </section>
 
+      <SectionDivider variant="minor" />
+
       {/* Section 3: Initiative Health */}
       <section className="mb-5" aria-labelledby="initiative-health-heading">
         <div className="mb-4">
@@ -342,6 +339,8 @@ export default function RoadmapPage() {
           />
         </div>
       </section>
+
+      <SectionDivider variant="minor" />
 
       {/* Section 4: Product Tool Integrations */}
       <section className="mb-5" aria-labelledby="integrations-heading">
@@ -370,41 +369,50 @@ export default function RoadmapPage() {
         </div>
       </section>
 
-      <GuideBox title="Scrum Master Guide: Supporting Roadmap Health">
-        <p>
-          When you see under-invested initiatives, discuss in planning — is the
-          team pulled toward unplanned work? When over-invested, check if scope
-          expanded without the Product Owner&apos;s knowledge. Use this data to
-          facilitate alignment conversations between product and engineering.
-        </p>
-      </GuideBox>
-
-      {/* API Token */}
-      <div className="mb-5">
-        <label
-          htmlFor="api-token"
-          className="block text-[11px] font-semibold uppercase tracking-widest text-text-ghost mb-1.5"
-        >
-          Jellyfish API Token
-        </label>
-        <input
-          id="api-token"
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="Paste your token to enable live mode"
-          className="w-full max-w-md px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue placeholder:text-text-ghost"
-        />
-      </div>
-
-      <ApiExplorer
-        token={token}
-        endpoints={explorerEndpoints}
-        getParams={getParams}
-        mockResponses={{
-          allocations_by_work_category: mockAllocByWorkCategory,
-          allocations_by_investment_category: mockAllocByInvestmentCategory,
-        }}
+      <BottomPanel
+        guidesContent={
+          <GuidePanel
+            scrumMaster={
+              <p>
+                When you see under-invested initiatives, discuss in planning — is
+                the team pulled toward unplanned work? When over-invested, check
+                if scope expanded without the Product Owner&apos;s knowledge. Use
+                this data to facilitate alignment conversations between product
+                and engineering. Look for patterns in the{" "}
+                <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                  allocations_by_work_category
+                </code>{" "}
+                endpoint to surface recurring misalignment.
+              </p>
+            }
+            productOwner={
+              <p>
+                Compare what you planned to invest in each initiative with
+                what&apos;s actually happening. The &apos;Actual FTE&apos; comes
+                from Jellyfish allocation data. The &apos;Planned FTE&apos; is
+                what you enter based on your roadmap. The gap tells you where
+                engineering effort diverges from product strategy. Jellyfish
+                integrates with Productboard, Aha!, and ProductPlan — use the{" "}
+                <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                  allocations_by_investment_category
+                </code>{" "}
+                endpoint for automatic alignment.
+              </p>
+            }
+          />
+        }
+        apiExplorerContent={
+          <ApiDrawer
+            token={token}
+            setToken={setToken}
+            endpoints={explorerEndpoints}
+            getParams={getParams}
+            mockResponses={{
+              allocations_by_work_category: mockAllocByWorkCategory,
+              allocations_by_investment_category: mockAllocByInvestmentCategory,
+            }}
+          />
+        }
       />
     </div>
   );
