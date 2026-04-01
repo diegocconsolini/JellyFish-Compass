@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/ui/page-hero";
-import { GuideBox } from "@/components/ui/guide-box";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { BottomPanel } from "@/components/ui/bottom-panel";
+import { GuidePanel } from "@/components/ui/guide-panel";
+import { ApiDrawer } from "@/components/ui/api-drawer";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { DataTable } from "@/components/ui/data-table";
-import { ApiExplorer } from "@/components/ui/api-explorer";
 import { Badge } from "@/components/ui/badge";
 import { mockInvestmentAllocation, mockTeamAllocations, mockPersonAllocations } from "@/data/mock-data";
 import { endpointGroups } from "@/data/endpoints-full";
@@ -51,6 +53,69 @@ export default function AllocationPage() {
     ),
   ]);
 
+  const smGuideContent = (
+    <div className="space-y-3">
+      <p>
+        <strong>FTE (Full-Time Equivalent)</strong> measures how much of a person&apos;s time is allocated to a given area.
+        An FTE of <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">1.0</code> means one full-time person;{" "}
+        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">0.5</code> means half their time.
+      </p>
+      <p>
+        Jellyfish computes FTE by analyzing where engineers spend time across investment categories:{" "}
+        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">Feature Development</code>,{" "}
+        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">Keep the Lights On (KTLO)</code>,{" "}
+        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">Tech Debt</code>, and{" "}
+        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">Growth / Scaling</code>.
+        Use these views to identify imbalances and realign capacity with strategic priorities.
+      </p>
+      <p>
+        There is no universal split — the right balance depends on your team&apos;s context, product maturity,
+        and business priorities. Review your team&apos;s allocation trends over time and discuss significant
+        shifts in your next planning session. Jellyfish&apos;s <strong>patented Work Model</strong> automatically
+        calculates these allocations from work items — no manual time tracking required.
+      </p>
+      <p className="font-semibold text-text-primary pt-1">Three topics every SM should track:</p>
+      <ol className="list-decimal list-inside space-y-2">
+        <li>
+          <strong>FTE drift</strong> — Compare planned vs. actual FTE each sprint.
+          Use{" "}
+          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">allocations_by_team</code>{" "}
+          to detect teams silently absorbing KTLO at the cost of features.
+        </li>
+        <li>
+          <strong>High spread individuals</strong> — Engineers working across 4+ categories lose context-switching efficiency.
+          Flag them in{" "}
+          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">allocations_by_person</code>{" "}
+          and discuss focus in 1:1s.
+        </li>
+        <li>
+          <strong>Unallocated capacity</strong> — Any FTE not mapped to a category is invisible to planning.
+          Run{" "}
+          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">allocations_by_investment_category</code>{" "}
+          regularly and drive unallocated to zero before quarter close.
+        </li>
+      </ol>
+    </div>
+  );
+
+  const poGuideContent = (
+    <div className="space-y-3">
+      <p>
+        Use allocation data to verify that <strong>engineering investment matches roadmap priorities</strong>.
+        If your top product initiative has 10% of planned effort but 40% goes to KTLO, that&apos;s a misalignment to raise in planning.
+      </p>
+      <p>
+        Jellyfish&apos;s <strong>patented Work Model</strong> automatically calculates how effort distributes across product lines,
+        initiatives, and deliverables — no manual tracking required. Use{" "}
+        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">allocations_by_work_category</code>{" "}
+        to see effort by initiative.
+      </p>
+      <p>
+        Compare effort across teams to identify where investment concentrates and whether it matches your product strategy.
+      </p>
+    </div>
+  );
+
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-7 py-7">
       <PageHero
@@ -59,24 +124,7 @@ export default function AllocationPage() {
         subtitle="& capacity"
       />
 
-      <GuideBox title="Scrum Master Guide: Team Allocation & Capacity">
-        <p>
-          <strong>FTE (Full-Time Equivalent)</strong> measures how much of a person&apos;s time is allocated to a given area.
-          An FTE of <code>1.0</code> means one full-time person; <code>0.5</code> means half their time.
-        </p>
-        <p className="mt-2">
-          Jellyfish computes FTE by analyzing where engineers spend time across investment categories:{" "}
-          <code>Feature Development</code>, <code>Keep the Lights On (KTLO)</code>,{" "}
-          <code>Tech Debt</code>, and <code>Growth / Scaling</code>.
-          Use these views to identify imbalances and realign capacity with strategic priorities.
-        </p>
-        <p className="mt-2">
-          There is no universal split — the right balance depends on your team&apos;s context, product maturity,
-          and business priorities. Review your team&apos;s allocation trends over time and discuss significant
-          shifts in your next planning session. Jellyfish&apos;s <strong>patented Work Model</strong> automatically
-          calculates these allocations from work items — no manual time tracking required.
-        </p>
-      </GuideBox>
+      <SectionDivider />
 
       {/* View mode toggle */}
       <div className="flex gap-2 mb-5">
@@ -103,7 +151,7 @@ export default function AllocationPage() {
         })}
       </div>
 
-      {/* Conditional content */}
+      {/* Conditional content panel */}
       <div className="rounded-xl border border-border bg-surface p-5 mb-5">
         {viewMode === "investment" && (
           <div>
@@ -142,60 +190,33 @@ export default function AllocationPage() {
         )}
       </div>
 
-      {/* Token input */}
-      <div className="mb-4">
-        <label htmlFor="api-token" className="block text-xs font-semibold text-text-ghost mb-1.5 uppercase tracking-wider">
-          Jellyfish API Token (optional — for live mode)
-        </label>
-        <input
-          id="api-token"
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="jf_..."
-          className="w-full max-w-sm px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue"
-        />
-      </div>
-
-      {/* API Explorer */}
-      <ApiExplorer
-        token={token}
-        endpoints={allocationEndpoints}
-        getParams={() => ({
-          hierarchy_level: "1",
-          start: "2026-01-01",
-          end: "2026-03-31",
-        })}
+      <BottomPanel
+        guidesContent={
+          <GuidePanel
+            scrumMaster={smGuideContent}
+            productOwner={poGuideContent}
+          />
+        }
+        apiExplorerContent={
+          <div className="space-y-3">
+            <ApiDrawer
+              token={token}
+              setToken={setToken}
+              endpoints={allocationEndpoints}
+              getParams={() => ({
+                hierarchy_level: "1",
+                start: "2026-01-01",
+                end: "2026-03-31",
+              })}
+            />
+            {remainingCount > 0 && (
+              <p className="text-xs text-text-ghost">
+                +{remainingCount} more allocation endpoints available in the full API reference.
+              </p>
+            )}
+          </div>
+        }
       />
-      {remainingCount > 0 && (
-        <p className="text-xs text-text-ghost mb-5">
-          +{remainingCount} more allocation endpoints available in the full API reference.
-        </p>
-      )}
-
-      <GuideBox title="Scrum Master Playbook: Capacity Management">
-        <p className="font-semibold text-text-primary mb-2">Three topics every SM should track:</p>
-        <ol className="list-decimal list-inside space-y-2">
-          <li>
-            <strong>FTE drift</strong> — Compare planned vs. actual FTE each sprint.
-            Use <code>allocations_by_team</code> to detect teams silently absorbing KTLO at the cost of features.
-          </li>
-          <li>
-            <strong>High spread individuals</strong> — Engineers working across 4+ categories lose context-switching efficiency.
-            Flag them in <code>allocations_by_person</code> and discuss focus in 1:1s.
-          </li>
-          <li>
-            <strong>Unallocated capacity</strong> — Any FTE not mapped to a category is invisible to planning.
-            Run <code>allocations_by_investment_category</code> regularly and drive unallocated to zero before quarter close.
-          </li>
-        </ol>
-      </GuideBox>
-
-      <GuideBox title="Product Owner Guide: Investment Alignment">
-        <p>Use allocation data to verify that <strong>engineering investment matches roadmap priorities</strong>. If your top product initiative has 10% of planned effort but 40% goes to KTLO, that&apos;s a misalignment to raise in planning.</p>
-        <p className="mt-2">Jellyfish&apos;s <strong>patented Work Model</strong> automatically calculates how effort distributes across product lines, initiatives, and deliverables — no manual tracking required. Use <code>allocations_by_work_category</code> to see effort by initiative.</p>
-        <p className="mt-2">Compare effort across teams to identify where investment concentrates and whether it matches your product strategy.</p>
-      </GuideBox>
     </div>
   );
 }
