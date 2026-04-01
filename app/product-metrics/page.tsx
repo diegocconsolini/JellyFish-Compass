@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/ui/page-hero";
-import { GuideBox } from "@/components/ui/guide-box";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { BottomPanel } from "@/components/ui/bottom-panel";
+import { GuidePanel } from "@/components/ui/guide-panel";
+import { ApiDrawer } from "@/components/ui/api-drawer";
 import { Badge } from "@/components/ui/badge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { StatCard } from "@/components/ui/stat-card";
 import { DataTable } from "@/components/ui/data-table";
-import { ApiExplorer } from "@/components/ui/api-explorer";
 import {
   mockInvestmentAllocation,
   mockTeamAllocations,
@@ -183,6 +185,8 @@ export default function ProductMetricsPage() {
         subtitle="for product decisions"
       />
 
+      <SectionDivider />
+
       {/* Tab bar */}
       <div role="tablist" aria-label="Product Metrics sections" className="flex gap-2 mb-8">
         <button
@@ -227,34 +231,6 @@ export default function ProductMetricsPage() {
           aria-labelledby="tab-metrics"
           tabIndex={0}
         >
-          {/* PO Guide */}
-          <GuideBox title="Product Owner Guide: Reading Product Metrics">
-            <p>
-              These metrics help you understand engineering health from a product perspective. Focus on{" "}
-              <strong className="text-text-primary">investment alignment</strong> (is effort going where
-              the roadmap says it should?),{" "}
-              <strong className="text-text-primary">flow efficiency</strong> (how fast can teams
-              deliver?), and <strong className="text-text-primary">quality signals</strong> (are we
-              shipping reliable software?).
-            </p>
-            <p className="mt-2">
-              Metrics labeled <Badge variant="green">API Available</Badge> can be pulled live via the
-              Jellyfish Export API. Metrics labeled{" "}
-              <Badge variant="amber">Platform Only</Badge> require the full Jellyfish platform.
-            </p>
-            <p className="mt-1.5 text-[11.5px] text-text-ghost">
-              Source:{" "}
-              <a
-                href="https://jellyfish.co/library/product-metrics/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-blue transition-colors"
-              >
-                jellyfish.co/library/product-metrics/
-              </a>
-            </p>
-          </GuideBox>
-
           {/* ── Section 1: Investment Metrics ──────────────────────────────────── */}
           <section className="mb-5" aria-labelledby="section-investment">
             <div className="mb-3 flex items-center gap-3 flex-wrap">
@@ -273,7 +249,7 @@ export default function ProductMetricsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-1">
                 {/* Progress bars */}
                 <div>
-                  <p className="text-[11.5px] text-text-ghost mb-3 font-semibold uppercase tracking-wider">
+                  <p className="text-xs text-text-ghost mb-3 font-semibold uppercase tracking-wider">
                     FTE by Investment Category
                   </p>
                   {mockInvestmentAllocation.map((item) => (
@@ -289,7 +265,7 @@ export default function ProductMetricsPage() {
 
                 {/* Team allocation table */}
                 <div>
-                  <p className="text-[11.5px] text-text-ghost mb-3 font-semibold uppercase tracking-wider">
+                  <p className="text-xs text-text-ghost mb-3 font-semibold uppercase tracking-wider">
                     Allocation by Team
                   </p>
                   <DataTable
@@ -317,6 +293,8 @@ export default function ProductMetricsPage() {
               </div>
             </SectionCard>
           </section>
+
+          <SectionDivider variant="minor" />
 
           {/* ── Section 2: Flow Metrics ─────────────────────────────────────────── */}
           <section className="mb-5" aria-labelledby="section-flow">
@@ -397,12 +375,14 @@ export default function ProductMetricsPage() {
                   </span>,
                 ])}
               />
-              <p className="mt-3 text-[11px] text-text-ghost">
+              <p className="mt-3 text-xs text-text-ghost">
                 ★ = best in class. Lower is better for Cycle Time and Lead Time. Higher is better for
                 Deploy Frequency.
               </p>
             </SectionCard>
           </section>
+
+          <SectionDivider variant="minor" />
 
           {/* ── Section 3: Quality Metrics ──────────────────────────────────────── */}
           <section className="mb-5" aria-labelledby="section-quality">
@@ -419,7 +399,7 @@ export default function ProductMetricsPage() {
                 <SectionHeading>Quality by Product</SectionHeading>
               }
             >
-              <div className="mb-3 rounded-lg border border-amber-dim bg-amber-dim/30 px-4 py-3 text-[12.5px] text-amber">
+              <div className="mb-3 rounded-lg border border-amber-dim bg-amber-dim/30 px-4 py-3 text-xs text-amber">
                 Quality metrics are tracked in the Jellyfish platform and your monitoring tools. The
                 data below is sample data for illustration.
               </div>
@@ -464,13 +444,15 @@ export default function ProductMetricsPage() {
             </SectionCard>
           </section>
 
+          <SectionDivider variant="minor" />
+
           {/* ── Section 4: Progress Metrics ─────────────────────────────────────── */}
           <section className="mb-5" aria-labelledby="section-progress">
             <div className="mb-3 flex items-center gap-3 flex-wrap">
               <h2 id="section-progress" className="text-base font-bold">
                 Progress Metrics
               </h2>
-              <span className="text-[11.5px] text-text-ghost italic">Mixed — some API, some platform</span>
+              <span className="text-xs text-text-ghost italic">Mixed — some API, some platform</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -487,15 +469,19 @@ export default function ProductMetricsPage() {
                 <div className="text-4xl font-extrabold text-green tracking-tight mb-1">
                   {mockSprintKpis.completionRate.value}
                 </div>
-                <p className="text-[12.5px] text-text-dim mb-1">
+                <p className="text-xs text-text-dim mb-1">
                   {mockSprintKpis.completionRate.unit}
                 </p>
                 <div className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded bg-green-dim text-green">
                   <span aria-hidden="true">↑</span>{" "}
                   {mockSprintKpis.completionRate.trend}
                 </div>
-                <p className="mt-3 text-[11.5px] text-text-ghost">
-                  Pulled via <code className="font-mono text-[10.5px] bg-surface-raised px-1.5 py-0.5 rounded">team_sprint_summary</code> endpoint.
+                <p className="mt-3 text-xs text-text-ghost">
+                  Pulled via{" "}
+                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                    team_sprint_summary
+                  </code>{" "}
+                  endpoint.
                 </p>
               </div>
 
@@ -509,12 +495,12 @@ export default function ProductMetricsPage() {
                   <h3 className="text-sm font-bold">Predicted Ship Dates</h3>
                   <Badge variant="amber">Platform Only</Badge>
                 </div>
-                <p className="text-[13px] text-text-dim leading-relaxed">
+                <p className="text-sm text-text-dim leading-relaxed">
                   Ship date predictions are calculated by the Jellyfish Capacity Planner using velocity
                   history, remaining scope, and team availability. They update automatically as scope
                   changes.
                 </p>
-                <p className="mt-3 text-[12px] text-text-dim">
+                <p className="mt-3 text-xs text-text-dim">
                   Access predictions in the{" "}
                   <span className="font-semibold text-text-primary">Capacity Planner</span> module of
                   the Jellyfish platform, or on the{" "}
@@ -530,46 +516,66 @@ export default function ProductMetricsPage() {
             </div>
           </section>
 
-          {/* SM Guide */}
-          <GuideBox title="Scrum Master Guide: Supporting Product Metrics">
-            <p>
-              As a Scrum Master, you influence many of these metrics through ceremony quality and
-              process health.{" "}
-              <strong className="text-text-primary">Cycle time improves</strong> when reviews are
-              timely. <strong className="text-text-primary">Deployment frequency rises</strong> when
-              release processes are streamlined.
-            </p>
-            <p className="mt-2">
-              Help your Product Owner interpret these numbers in context. A spike in bugs after a
-              large release is different from a steady upward trend. A low completion rate during
-              onboarding weeks tells a different story than one during a stable sprint.
-            </p>
-          </GuideBox>
-
-          {/* API Token */}
-          <div className="mb-3">
-            <label
-              htmlFor="api-token-product-metrics"
-              className="block text-[11.5px] font-semibold text-text-ghost mb-1.5"
-            >
-              Jellyfish API Token (optional — for live mode)
-            </label>
-            <input
-              id="api-token-product-metrics"
-              type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder="jf_..."
-              className="w-full max-w-sm px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue"
-            />
-          </div>
-
-          {/* API Explorer */}
-          <ApiExplorer
-            token={token}
-            endpoints={explorerEndpoints}
-            getParams={getParams}
-            mockResponses={mockResponses}
+          {/* ── Bottom Panel ───────────────────────────────────────────────────── */}
+          <BottomPanel
+            guidesContent={
+              <GuidePanel
+                scrumMaster={
+                  <>
+                    <p>
+                      As a Scrum Master, you influence many of these metrics through ceremony quality and
+                      process health.{" "}
+                      <strong className="text-text-primary">Cycle time improves</strong> when reviews are
+                      timely. <strong className="text-text-primary">Deployment frequency rises</strong>{" "}
+                      when release processes are streamlined.
+                    </p>
+                    <p className="mt-2">
+                      Help your Product Owner interpret these numbers in context. A spike in bugs after a
+                      large release is different from a steady upward trend. A low completion rate during
+                      onboarding weeks tells a different story than one during a stable sprint.
+                    </p>
+                  </>
+                }
+                productOwner={
+                  <>
+                    <p>
+                      These metrics help you understand engineering health from a product perspective.
+                      Focus on{" "}
+                      <strong className="text-text-primary">investment alignment</strong> (is effort going
+                      where the roadmap says it should?),{" "}
+                      <strong className="text-text-primary">flow efficiency</strong> (how fast can teams
+                      deliver?), and <strong className="text-text-primary">quality signals</strong> (are
+                      we shipping reliable software?).
+                    </p>
+                    <p className="mt-2">
+                      Metrics labeled <Badge variant="green">API Available</Badge> can be pulled live via
+                      the Jellyfish Export API. Metrics labeled{" "}
+                      <Badge variant="amber">Platform Only</Badge> require the full Jellyfish platform.
+                    </p>
+                    <p className="mt-2 text-xs text-text-ghost">
+                      Source:{" "}
+                      <a
+                        href="https://jellyfish.co/library/product-metrics/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-blue transition-colors"
+                      >
+                        jellyfish.co/library/product-metrics/
+                      </a>
+                    </p>
+                  </>
+                }
+              />
+            }
+            apiExplorerContent={
+              <ApiDrawer
+                token={token}
+                setToken={setToken}
+                endpoints={explorerEndpoints}
+                getParams={getParams}
+                mockResponses={mockResponses}
+              />
+            }
           />
         </div>
       )}
@@ -582,18 +588,6 @@ export default function ProductMetricsPage() {
           aria-labelledby="tab-ai-impact"
           tabIndex={0}
         >
-          <GuideBox title="Scrum Master Guide: Measuring AI Impact">
-            <p>
-              AI Impact measurement answers three questions: Are teams actually
-              using AI tools? Which tools deliver measurable results? And where
-              should the organization invest next? Jellyfish automatically detects
-              AI usage patterns across GitHub Copilot, Cursor, Claude Code, and
-              other tools — then links adoption data to delivery signals like
-              throughput, cycle time, and code review speed. The goal is objective
-              measurement, not advocacy for any specific tool.
-            </p>
-          </GuideBox>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
             {/* Left card: AI Tool Adoption by Team */}
             <div className="rounded-xl border border-border bg-surface p-5">
@@ -642,6 +636,8 @@ export default function ProductMetricsPage() {
             </div>
           </div>
 
+          <SectionDivider variant="minor" />
+
           {/* Supported AI Coding Tools */}
           <div className="mb-5">
             <h2 className="text-sm font-bold mb-3">Supported AI Coding Tools</h2>
@@ -656,6 +652,8 @@ export default function ProductMetricsPage() {
             </div>
           </div>
 
+          <SectionDivider variant="minor" />
+
           {/* API Note */}
           <div className="rounded-xl border border-border bg-surface p-5 mb-5">
             <p className="text-sm text-text-dim">
@@ -666,62 +664,73 @@ export default function ProductMetricsPage() {
             </p>
           </div>
 
-          {/* Token input kept for page pattern consistency, no API Explorer */}
-          <div className="mb-3">
-            <label htmlFor="api-token-ai" className="block text-[11.5px] font-semibold text-text-ghost mb-1.5">
-              Jellyfish API Token (optional — for live mode)
-            </label>
-            <input
-              id="api-token-ai"
-              type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder="jf_..."
-              className="w-full max-w-sm px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue"
-            />
-          </div>
-
-          <GuideBox title="Using AI Data in Ceremonies">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-1">
-              <div>
-                <div className="font-semibold text-text-primary mb-0.5">
-                  Retrospective
-                </div>
-                <p>
-                  If a team adopted an AI tool 2–3 months ago, pull their
-                  before/after delivery metrics. If cycle time hasn&apos;t improved,
-                  investigate whether the tool is being used effectively, whether
-                  other bottlenecks dominate, or whether the team needs enablement
-                  support.
-                </p>
-              </div>
-              <div>
-                <div className="font-semibold text-text-primary mb-0.5">
-                  Planning
-                </div>
-                <p>
-                  Factor AI tool impact into capacity assumptions. A team with high
-                  Copilot adoption may have higher throughput than historical
-                  baselines suggest — adjust commitments accordingly.
-                </p>
-              </div>
-              <div>
-                <div className="font-semibold text-text-primary mb-0.5">
-                  Leadership review
-                </div>
-                <p>
-                  Present adoption rates alongside impact data. High adoption with
-                  no measurable improvement is a signal to investigate — not to roll
-                  back the tool.
-                </p>
-              </div>
-            </div>
-          </GuideBox>
-
-          <p className="text-xs text-text-ghost mt-6">
+          <p className="text-xs text-text-ghost mt-2 mb-6">
             Customer outcome: TaskRabbit — teams shipping code faster and delivering
             twice the value in half the time (jellyfish.co/platform/jellyfish-ai-impact/).
           </p>
+
+          {/* ── Bottom Panel ─────────────────────────────────────────────────── */}
+          <BottomPanel
+            guidesContent={
+              <GuidePanel
+                scrumMaster={
+                  <>
+                    <p>
+                      AI Impact measurement answers three questions: Are teams actually
+                      using AI tools? Which tools deliver measurable results? And where
+                      should the organization invest next? Jellyfish automatically detects
+                      AI usage patterns across GitHub Copilot, Cursor, Claude Code, and
+                      other tools — then links adoption data to delivery signals like
+                      throughput, cycle time, and code review speed. The goal is objective
+                      measurement, not advocacy for any specific tool.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+                      <div>
+                        <div className="font-semibold text-text-primary mb-1">
+                          Retrospective
+                        </div>
+                        <p>
+                          If a team adopted an AI tool 2–3 months ago, pull their
+                          before/after delivery metrics. If cycle time hasn&apos;t improved,
+                          investigate whether the tool is being used effectively, whether
+                          other bottlenecks dominate, or whether the team needs enablement
+                          support.
+                        </p>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-text-primary mb-1">
+                          Planning
+                        </div>
+                        <p>
+                          Factor AI tool impact into capacity assumptions. A team with high
+                          Copilot adoption may have higher throughput than historical
+                          baselines suggest — adjust commitments accordingly.
+                        </p>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-text-primary mb-1">
+                          Leadership review
+                        </div>
+                        <p>
+                          Present adoption rates alongside impact data. High adoption with
+                          no measurable improvement is a signal to investigate — not to roll
+                          back the tool.
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                }
+              />
+            }
+            apiExplorerContent={
+              <div className="text-sm text-text-dim">
+                <strong className="text-text-primary">No API Explorer available for this tab.</strong>{" "}
+                AI Impact data is generated at the platform level by Jellyfish. The Export API v0 does
+                not include AI-specific endpoints — use the Jellyfish dashboard for adoption and impact
+                analytics.
+              </div>
+            }
+          />
         </div>
       )}
     </div>
