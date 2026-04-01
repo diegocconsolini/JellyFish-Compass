@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/ui/page-hero";
-import { GuideBox } from "@/components/ui/guide-box";
 import { DataTable } from "@/components/ui/data-table";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { Badge } from "@/components/ui/badge";
-import { ApiExplorer } from "@/components/ui/api-explorer";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { BottomPanel } from "@/components/ui/bottom-panel";
+import { GuidePanel } from "@/components/ui/guide-panel";
+import { ApiDrawer } from "@/components/ui/api-drawer";
 import {
   mockBurndown,
   mockShipEstimates,
@@ -139,14 +141,7 @@ export default function DeliveryForecastPage() {
         subtitle="& completion tracking"
       />
 
-      <GuideBox title="Scrum Master Guide: Delivery Forecasting">
-        <p>
-          Track deliverable completion over time to identify trajectory shifts
-          early. Use sprint velocity and remaining work to estimate when
-          deliverables will complete. Share burndown data in sprint reviews to
-          set stakeholder expectations.
-        </p>
-      </GuideBox>
+      <SectionDivider />
 
       {/* Section 1: Completion Burndown */}
       <section aria-labelledby="burndown-heading" className="mb-5">
@@ -156,7 +151,7 @@ export default function DeliveryForecastPage() {
         >
           Completion Burndown
         </h2>
-        <p className="text-[12px] text-text-ghost mb-4">
+        <p className="text-xs text-text-ghost mb-4">
           Weekly % completion per deliverable — last 7 weeks
         </p>
 
@@ -189,7 +184,7 @@ export default function DeliveryForecastPage() {
                 <h3 className="text-[13px] font-semibold text-text-primary mb-0.5 leading-snug">
                   {delivName}
                 </h3>
-                <p className="text-[11px] text-text-ghost mb-3">
+                <p className="text-xs text-text-ghost mb-3">
                   {delta >= 0 ? "+" : ""}
                   {delta}pp over 7 weeks
                 </p>
@@ -230,6 +225,8 @@ export default function DeliveryForecastPage() {
         </div>
       </section>
 
+      <SectionDivider variant="minor" />
+
       {/* Section 2: Compass Ship Estimates */}
       <section aria-labelledby="estimates-heading" className="mb-5">
         <h2
@@ -238,11 +235,19 @@ export default function DeliveryForecastPage() {
         >
           Compass Ship Estimates
         </h2>
-        <p className="text-[12px] text-text-ghost mb-4">
+        <p className="text-xs text-text-ghost mb-4">
           Calculated from current velocity and remaining work
         </p>
 
-        <div className="relative overflow-hidden rounded-xl border border-amber-dim bg-amber-dim/30 p-5 mb-5">
+        <div className="rounded-xl border border-border bg-surface p-5">
+          <DataTable
+            headers={tableHeaders}
+            rows={tableRows}
+            caption="Compass ship date estimates by deliverable"
+          />
+        </div>
+
+        <div className="relative overflow-hidden rounded-xl border border-amber-dim bg-amber-dim/30 p-5 mt-4">
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber to-yellow-300" />
           <p className="text-xs font-bold text-amber mb-1">Compass Estimate</p>
           <p className="text-sm text-text-dim">
@@ -253,51 +258,41 @@ export default function DeliveryForecastPage() {
             <strong>Jellyfish Capacity Planner</strong> at app.jellyfish.co.
           </p>
         </div>
-
-        <div className="rounded-xl border border-border bg-surface p-5">
-          <DataTable
-            headers={tableHeaders}
-            rows={tableRows}
-            caption="Compass ship date estimates by deliverable"
-          />
-        </div>
       </section>
 
-      <GuideBox title="Product Owner Guide: Timeline Communication">
-        <p>
-          Use the ship estimates to set stakeholder expectations. Present
-          &lsquo;high confidence&rsquo; deliverables as firm commitments and
-          &lsquo;medium/low confidence&rsquo; ones with caveats. When estimates
-          slip week-over-week, raise the risk immediately rather than waiting
-          for the sprint to close.
-        </p>
-      </GuideBox>
-
-      {/* API Explorer */}
-      <div className="mb-5">
-        <label
-          htmlFor="api-token"
-          className="block text-[11px] font-semibold uppercase tracking-widest text-text-ghost mb-1.5"
-        >
-          Jellyfish API Token
-        </label>
-        <input
-          id="api-token"
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="Paste your token to enable live mode"
-          className="w-full max-w-md px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue placeholder:text-text-ghost"
-        />
-      </div>
-
-      <ApiExplorer
-        token={token}
-        endpoints={forecastEndpoints}
-        getParams={getParams}
-        mockResponses={{
-          work_category_contents: mockShipEstimatesResponse,
-        }}
+      <BottomPanel
+        guidesContent={
+          <GuidePanel
+            scrumMaster={
+              <p>
+                Track deliverable completion over time to identify trajectory shifts
+                early. Use sprint velocity and remaining work to estimate when
+                deliverables will complete. Share burndown data in sprint reviews to
+                set stakeholder expectations.
+              </p>
+            }
+            productOwner={
+              <p>
+                Use the ship estimates to set stakeholder expectations. Present
+                &lsquo;high confidence&rsquo; deliverables as firm commitments and
+                &lsquo;medium/low confidence&rsquo; ones with caveats. When estimates
+                slip week-over-week, raise the risk immediately rather than waiting
+                for the sprint to close.
+              </p>
+            }
+          />
+        }
+        apiExplorerContent={
+          <ApiDrawer
+            token={token}
+            setToken={setToken}
+            endpoints={forecastEndpoints}
+            getParams={getParams}
+            mockResponses={{
+              work_category_contents: mockShipEstimatesResponse,
+            }}
+          />
+        }
       />
     </div>
   );
