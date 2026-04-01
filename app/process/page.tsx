@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/ui/page-hero";
-import { GuideBox } from "@/components/ui/guide-box";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { DataTable } from "@/components/ui/data-table";
-import { ApiExplorer } from "@/components/ui/api-explorer";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { BottomPanel } from "@/components/ui/bottom-panel";
+import { GuidePanel } from "@/components/ui/guide-panel";
+import { ApiDrawer } from "@/components/ui/api-drawer";
 import { mockIssueLifecycle, mockStageAverages, mockWorkflowStages } from "@/data/mock-data";
 import { endpointGroups } from "@/data/endpoints-full";
 import { JellyfishEndpoint } from "@/lib/types";
@@ -180,6 +182,8 @@ export default function ProcessPage() {
         subtitle="& handoff efficiency"
       />
 
+      <SectionDivider />
+
       {/* Tab bar */}
       <div role="tablist" aria-label="Process sections" className="flex gap-2 mb-8">
         <button
@@ -224,16 +228,6 @@ export default function ProcessPage() {
           aria-labelledby="tab-cycle"
           tabIndex={0}
         >
-          <GuideBox title="Scrum Master Guide: Life Cycle Analysis">
-            <p>
-              The Life Cycle Explorer analyzes operational processes and trends at the issue level.
-              Unlike sprint-level metrics, it shows how individual issues move through stages —
-              revealing where work gets stuck, where handoffs create idle time, and which stages
-              consistently slow delivery. Use this view to identify recurring bottleneck patterns
-              and drive process improvements.
-            </p>
-          </GuideBox>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
             <div className="rounded-xl border border-border bg-surface p-5">
               <h2 className="text-sm font-bold mb-4">Stage Averages</h2>
@@ -257,61 +251,64 @@ export default function ProcessPage() {
             </div>
           </div>
 
-          <div className="mb-3">
-            <label
-              htmlFor="api-token-cycle"
-              className="block text-[11.5px] font-semibold text-text-ghost mb-1.5"
-            >
-              Jellyfish API Token (optional — for live mode)
-            </label>
-            <input
-              id="api-token-cycle"
-              type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder="jf_..."
-              className="w-full max-w-sm px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue"
-            />
-          </div>
+          <SectionDivider variant="minor" />
 
-          <ApiExplorer
-            token={token}
-            endpoints={lifecycleEndpoints}
-            getParams={getCycleParams}
-            mockResponses={{}}
+          <BottomPanel
+            guidesContent={
+              <GuidePanel
+                scrumMaster={
+                  <div className="space-y-4">
+                    <p>
+                      The Life Cycle Explorer analyzes operational processes and trends at the issue level.
+                      Unlike sprint-level metrics, it shows how individual issues move through stages —
+                      revealing where work gets stuck, where handoffs create idle time, and which stages
+                      consistently slow delivery. Use this view to identify recurring bottleneck patterns
+                      and drive process improvements.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 mt-1">
+                      <div>
+                        <div className="font-semibold text-text-primary mb-0.5">Retrospective</div>
+                        <p>
+                          Pull the stage averages at sprint close. If <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Review</code> consistently takes
+                          longer than <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Progress</code>, your team has a review bottleneck — discuss
+                          whether it&apos;s capacity, complexity, or process.
+                        </p>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-text-primary mb-0.5">Sprint Planning</div>
+                        <p>
+                          Use the issue-level data to identify outliers from the previous sprint. Issues that
+                          spent disproportionate time in <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">To Do</code> may indicate backlog grooming gaps.
+                        </p>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-text-primary mb-0.5">Standup</div>
+                        <p>
+                          Surface any issue currently in a stage for longer than the team average. Early
+                          detection prevents carry-over.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                }
+                productOwner={
+                  <div className="space-y-2">
+                    <p>Identify which development stages consistently slow delivery. If <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Review</code> takes 3x longer than <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Progress</code>, <strong>budget accordingly in your roadmap</strong> — the bottleneck is real regardless of story point estimates.</p>
+                    <p>Use stage timing data to set <strong>accurate feature timelines</strong>. Tell stakeholders: &quot;Based on cycle time data, features of this size typically take 5-7 business days from start to deploy.&quot;</p>
+                  </div>
+                }
+              />
+            }
+            apiExplorerContent={
+              <ApiDrawer
+                token={token}
+                setToken={setToken}
+                endpoints={lifecycleEndpoints}
+                getParams={getCycleParams}
+                mockResponses={{}}
+              />
+            }
           />
-
-          <GuideBox title="Using Cycle Time in Ceremonies">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 mt-1">
-              <div>
-                <div className="font-semibold text-text-primary mb-0.5">Retrospective</div>
-                <p>
-                  Pull the stage averages at sprint close. If &apos;In Review&apos; consistently takes
-                  longer than &apos;In Progress&apos;, your team has a review bottleneck — discuss
-                  whether it&apos;s capacity, complexity, or process.
-                </p>
-              </div>
-              <div>
-                <div className="font-semibold text-text-primary mb-0.5">Sprint Planning</div>
-                <p>
-                  Use the issue-level data to identify outliers from the previous sprint. Issues that
-                  spent disproportionate time in &apos;To Do&apos; may indicate backlog grooming gaps.
-                </p>
-              </div>
-              <div>
-                <div className="font-semibold text-text-primary mb-0.5">Standup</div>
-                <p>
-                  Surface any issue currently in a stage for longer than the team average. Early
-                  detection prevents carry-over.
-                </p>
-              </div>
-            </div>
-          </GuideBox>
-
-          <GuideBox title="Product Owner Guide: Bottleneck Visibility">
-            <p>Identify which development stages consistently slow delivery. If &apos;In Review&apos; takes 3x longer than &apos;In Progress&apos;, <strong>budget accordingly in your roadmap</strong> — the bottleneck is real regardless of story point estimates.</p>
-            <p className="mt-2">Use stage timing data to set <strong>accurate feature timelines</strong>. Tell stakeholders: &quot;Based on cycle time data, features of this size typically take 5-7 business days from start to deploy.&quot;</p>
-          </GuideBox>
         </div>
       )}
 
@@ -323,22 +320,11 @@ export default function ProcessPage() {
           aria-labelledby="tab-handoffs"
           tabIndex={0}
         >
-          <GuideBox title="Scrum Master Guide: Workflow Analysis">
-            <p>
-              Workflow Analysis traces work from intake to deployment, uncovering
-              bottlenecks, handoffs, and delays that sprint-level metrics miss. Each
-              transition between stages has two components: active work time and
-              handoff delay (idle time waiting for the next stage to pick up). High
-              handoff delays often point to capacity gaps, unclear ownership, or
-              missing automation.
-            </p>
-          </GuideBox>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
             {/* Flow visualization */}
             <div className="rounded-xl border border-border bg-surface p-5">
               <h2 className="text-sm font-bold mb-1">Workflow Stage Flow</h2>
-              <p className="text-[12px] text-text-ghost mb-4">
+              <p className="text-xs text-text-ghost mb-4">
                 Active time (blue) + handoff delay (amber) per transition
               </p>
 
@@ -346,11 +332,11 @@ export default function ProcessPage() {
               <div className="flex items-center gap-1 mb-5 overflow-x-auto pb-1">
                 {FLOW_STAGES.map((stage, i) => (
                   <div key={stage} className="flex items-center gap-1 shrink-0">
-                    <span className="px-2 py-0.5 rounded-md bg-surface-raised border border-border text-[11px] font-semibold text-text-dim whitespace-nowrap">
+                    <span className="px-2 py-0.5 rounded-md bg-surface-raised border border-border text-xs font-semibold text-text-dim whitespace-nowrap">
                       {stage}
                     </span>
                     {i < FLOW_STAGES.length - 1 && (
-                      <span className="text-text-ghost text-[10px]">→</span>
+                      <span className="text-text-ghost text-xs">→</span>
                     )}
                   </div>
                 ))}
@@ -366,10 +352,10 @@ export default function ProcessPage() {
                   return (
                     <div key={`${stage.from}-${stage.to}`}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[11px] font-medium text-text-dim">
+                        <span className="text-xs font-medium text-text-dim">
                           {stage.from} → {stage.to}
                         </span>
-                        <span className="text-[11px] font-mono text-text-ghost">
+                        <span className="text-xs font-mono text-text-ghost">
                           {total}h total
                         </span>
                       </div>
@@ -386,10 +372,10 @@ export default function ProcessPage() {
                         />
                       </div>
                       <div className="flex gap-3 mt-0.5">
-                        <span className="text-[10px] text-text-ghost">
+                        <span className="text-xs text-text-ghost">
                           Active: {stage.avgHours}h
                         </span>
-                        <span className="text-[10px] text-text-ghost">
+                        <span className="text-xs text-text-ghost">
                           Delay: {stage.handoffDelay}h
                         </span>
                       </div>
@@ -402,11 +388,11 @@ export default function ProcessPage() {
               <div className="flex gap-4 mt-4">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-sm bg-blue/70" />
-                  <span className="text-[11px] text-text-ghost">Active time</span>
+                  <span className="text-xs text-text-ghost">Active time</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-sm bg-amber-400/70" />
-                  <span className="text-[11px] text-text-ghost">Handoff delay</span>
+                  <span className="text-xs text-text-ghost">Handoff delay</span>
                 </div>
               </div>
             </div>
@@ -414,72 +400,75 @@ export default function ProcessPage() {
             {/* Data table */}
             <div className="rounded-xl border border-border bg-surface p-5">
               <h2 className="text-sm font-bold mb-1">Transition Breakdown</h2>
-              <p className="text-[12px] text-text-ghost mb-4">
+              <p className="text-xs text-text-ghost mb-4">
                 Idle % &gt; 30% highlighted in red
               </p>
               <DataTable headers={tableHeaders} rows={tableRows} />
             </div>
           </div>
 
-          <div className="mb-5">
-            <label
-              htmlFor="api-token-handoffs"
-              className="block text-[11px] font-semibold uppercase tracking-widest text-text-ghost mb-1.5"
-            >
-              Jellyfish API Token
-            </label>
-            <input
-              id="api-token-handoffs"
-              type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder="Paste your token to enable live mode"
-              className="w-full max-w-md px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue placeholder:text-text-ghost"
-            />
-          </div>
+          <SectionDivider variant="minor" />
 
-          <ApiExplorer
-            token={token}
-            endpoints={deliveryEndpoints}
-            getParams={getHandoffParams}
-            mockResponses={{ work_category_contents: mockWorkCategoryContents }}
+          <BottomPanel
+            guidesContent={
+              <GuidePanel
+                scrumMaster={
+                  <div className="space-y-4">
+                    <p>
+                      Workflow Analysis traces work from intake to deployment, uncovering
+                      bottlenecks, handoffs, and delays that sprint-level metrics miss. Each
+                      transition between stages has two components: active work time and
+                      handoff delay (idle time waiting for the next stage to pick up). High
+                      handoff delays often point to capacity gaps, unclear ownership, or
+                      missing automation.
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-semibold text-text-primary">Retrospective</p>
+                        <p>
+                          Present the handoff delay data. Ask:{" "}
+                          <em>&apos;Where does work sit waiting?&apos;</em> The <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">Review→QA</code> transition
+                          often has the highest idle time — is it a reviewer capacity issue or an unclear QA handoff process?
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-text-primary">Planning</p>
+                        <p>
+                          Set WIP limits per stage based on where idle time concentrates. If
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded mx-1">Development→Review</code> has a 6-hour delay, the team may need to
+                          prioritize reviews before starting new work.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-text-primary">Process improvement</p>
+                        <p>
+                          Target the single worst handoff each quarter. Reducing one
+                          transition&apos;s idle time by 50% has more impact than small
+                          improvements across all stages.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                }
+                productOwner={
+                  <div className="space-y-2">
+                    <p>Understand handoff delays that <strong>impact your delivery timeline</strong>. The transitions with highest idle time are where your features sit waiting — not being worked on.</p>
+                    <p>Focus improvement efforts on the <strong>single worst handoff</strong>. Reducing one transition&apos;s idle time by 50% has more roadmap impact than small improvements across all stages.</p>
+                    <p>Use workflow data to explain delivery timelines to stakeholders with specifics: &quot;Features spend an average of 16 hours waiting between Review and QA — we&apos;re working to reduce that.&quot;</p>
+                  </div>
+                }
+              />
+            }
+            apiExplorerContent={
+              <ApiDrawer
+                token={token}
+                setToken={setToken}
+                endpoints={deliveryEndpoints}
+                getParams={getHandoffParams}
+                mockResponses={{ work_category_contents: mockWorkCategoryContents }}
+              />
+            }
           />
-
-          <GuideBox title="Reducing Handoff Friction">
-            <div className="space-y-3">
-              <div>
-                <p className="font-semibold text-text-dim">Retrospective</p>
-                <p>
-                  Present the handoff delay data. Ask:{" "}
-                  <em>&apos;Where does work sit waiting?&apos;</em> The Review→QA
-                  transition often has the highest idle time — is it a reviewer
-                  capacity issue or an unclear QA handoff process?
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-text-dim">Planning</p>
-                <p>
-                  Set WIP limits per stage based on where idle time concentrates. If
-                  Development→Review has a 6-hour delay, the team may need to
-                  prioritize reviews before starting new work.
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-text-dim">Process improvement</p>
-                <p>
-                  Target the single worst handoff each quarter. Reducing one
-                  transition&apos;s idle time by 50% has more impact than small
-                  improvements across all stages.
-                </p>
-              </div>
-            </div>
-          </GuideBox>
-
-          <GuideBox title="Product Owner Guide: Process Efficiency">
-            <p>Understand handoff delays that <strong>impact your delivery timeline</strong>. The transitions with highest idle time are where your features sit waiting — not being worked on.</p>
-            <p className="mt-2">Focus improvement efforts on the <strong>single worst handoff</strong>. Reducing one transition&apos;s idle time by 50% has more roadmap impact than small improvements across all stages.</p>
-            <p className="mt-2">Use workflow data to explain delivery timelines to stakeholders with specifics: &quot;Features spend an average of 16 hours waiting between Review and QA — we&apos;re working to reduce that.&quot;</p>
-          </GuideBox>
         </div>
       )}
     </div>
