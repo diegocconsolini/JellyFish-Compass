@@ -86,17 +86,19 @@ export default function DeliveryPage() {
       {
         height: Math.round((d.scope / 70) * 100),
         className: "bg-gradient-to-t from-blue to-blue/60",
+        label: `${d.scope}`,
       },
       {
         height: Math.round((d.effort / 70) * 100),
-        className: "bg-gradient-to-t from-violet to-violet/60",
+        className: "bg-gradient-to-t from-amber to-amber/60",
+        label: `${d.effort}`,
       },
     ],
   }));
 
   const barChartLegend = [
     { label: "Scope", className: "bg-blue" },
-    { label: "Effort", className: "bg-violet" },
+    { label: "Effort", className: "bg-amber" },
   ];
 
   const tableHeaders = ["Deliverable", "Category", "Issues", "Complete", "Status"];
@@ -162,7 +164,7 @@ export default function DeliveryPage() {
         <div className="rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-bold mb-1">Scope &amp; Effort Trend</h2>
           <p className="text-[12px] text-text-ghost mb-4">8-week view — story points per week</p>
-          <BarChart data={barChartData} legend={barChartLegend} />
+          <BarChart data={barChartData} legend={barChartLegend} title="Scope and effort trend — 8-week view" />
         </div>
 
         <div className="rounded-xl border border-border bg-surface p-5">

@@ -66,17 +66,19 @@ export default function SprintHealthPage() {
       {
         height: (d.scope / 70) * 100,
         className: "bg-gradient-to-t from-blue/40 to-blue/90",
+        label: `${d.scope}`,
       },
       {
         height: (d.effort / 70) * 100,
-        className: "bg-gradient-to-t from-violet/40 to-violet/90",
+        className: "bg-gradient-to-t from-amber/40 to-amber/90",
+        label: `${d.effort}`,
       },
     ],
   }));
 
   const barChartLegend = [
     { label: "Scope", className: "bg-blue" },
-    { label: "Effort", className: "bg-violet" },
+    { label: "Effort", className: "bg-amber" },
   ];
 
   return (
@@ -146,7 +148,7 @@ export default function SprintHealthPage() {
 
         <div className="rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-bold mb-4">Velocity Trend — Scope vs Effort</h2>
-          <BarChart data={barChartData} legend={barChartLegend} />
+          <BarChart data={barChartData} legend={barChartLegend} title="Velocity trend — scope vs effort over 8 weeks" />
         </div>
       </div>
 
