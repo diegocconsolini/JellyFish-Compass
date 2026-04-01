@@ -263,23 +263,129 @@ export default function DeliveryForecastPage() {
       <BottomPanel
         guidesContent={
           <GuidePanel
-            scrumMaster={
-              <p>
-                Track deliverable completion over time to identify trajectory shifts
-                early. Use sprint velocity and remaining work to estimate when
-                deliverables will complete. Share burndown data in sprint reviews to
-                set stakeholder expectations.
-              </p>
-            }
-            productOwner={
-              <p>
-                Use the ship estimates to set stakeholder expectations. Present
-                &lsquo;high confidence&rsquo; deliverables as firm commitments and
-                &lsquo;medium/low confidence&rsquo; ones with caveats. When estimates
-                slip week-over-week, raise the risk immediately rather than waiting
-                for the sprint to close.
-              </p>
-            }
+            tabs={[
+              {
+                key: "sm",
+                label: "Scrum Master",
+                content: (
+                  <p>
+                    Track deliverable completion over time to identify trajectory shifts
+                    early. Use sprint velocity and remaining work to estimate when
+                    deliverables will complete. Share burndown data in sprint reviews to
+                    set stakeholder expectations.
+                  </p>
+                ),
+              },
+              {
+                key: "po",
+                label: "Product Owner",
+                content: (
+                  <p>
+                    Use the ship estimates to set stakeholder expectations. Present
+                    &lsquo;high confidence&rsquo; deliverables as firm commitments and
+                    &lsquo;medium/low confidence&rsquo; ones with caveats. When estimates
+                    slip week-over-week, raise the risk immediately rather than waiting
+                    for the sprint to close.
+                  </p>
+                ),
+              },
+              {
+                key: "em",
+                label: "Eng Manager",
+                content: (
+                  <div className="space-y-3 text-sm text-text-dim">
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        deliverable_details
+                      </code>{" "}
+                      with{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_team
+                      </code>{" "}
+                      to model how capacity changes impact delivery timelines. Scenario
+                      modeling lets Engineering Managers quantify the opportunity cost of
+                      reprioritization — instead of saying &ldquo;we need more
+                      engineers,&rdquo; model &ldquo;reducing scope by 2 features ships 3
+                      weeks earlier.&rdquo;
+                    </p>
+                    <p className="font-semibold text-text-dim">
+                      1. Capacity-Based Forecasting
+                    </p>
+                    <p>
+                      Pull{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_team
+                      </code>{" "}
+                      to see actual available capacity, then compare against{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        deliverable_details
+                      </code>{" "}
+                      remaining scope. The gap between available FTEs and required FTEs is
+                      your timeline risk.
+                    </p>
+                    <p className="font-semibold text-text-dim">
+                      2. Reallocation Impact
+                    </p>
+                    <p>
+                      Before moving engineers between teams, model the delivery impact on
+                      both the source and destination projects using allocation and
+                      deliverable data. The net impact is rarely zero — make the trade-off
+                      explicit with data.
+                    </p>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/solutions/scenario-planner/
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                key: "pm",
+                label: "Prog Manager",
+                content: (
+                  <div className="space-y-3 text-sm text-text-dim">
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        deliverable_details
+                      </code>{" "}
+                      to forecast ship dates and communicate realistic timelines to
+                      leadership. The gap between optimistic estimates and data-driven
+                      forecasts is where stakeholder trust breaks down — close it with
+                      evidence.
+                    </p>
+                    <p className="font-semibold text-text-dim">
+                      1. Trade-Off Modeling
+                    </p>
+                    <p>
+                      When leadership asks &ldquo;can we add feature X?&rdquo;, pull
+                      current{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_team
+                      </code>{" "}
+                      and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        deliverable_details
+                      </code>{" "}
+                      to model three options: (A) add headcount, (B) defer lower-priority
+                      features, (C) accept a slip. Present all three with data.
+                    </p>
+                    <p className="font-semibold text-text-dim">
+                      2. Confidence Communication
+                    </p>
+                    <p>
+                      Use historical completion rates from sprint data alongside
+                      deliverable progress to communicate ship dates with confidence
+                      ranges, not point estimates. This sets realistic expectations and
+                      builds stakeholder trust.
+                    </p>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/solutions/capacity-planner/
+                    </p>
+                  </div>
+                ),
+              },
+            ]}
           />
         }
         apiExplorerContent={
