@@ -520,51 +520,140 @@ export default function ProductMetricsPage() {
           <BottomPanel
             guidesContent={
               <GuidePanel
-                scrumMaster={
-                  <>
-                    <p>
-                      As a Scrum Master, you influence many of these metrics through ceremony quality and
-                      process health.{" "}
-                      <strong className="text-text-primary">Cycle time improves</strong> when reviews are
-                      timely. <strong className="text-text-primary">Deployment frequency rises</strong>{" "}
-                      when release processes are streamlined.
-                    </p>
-                    <p className="mt-2">
-                      Help your Product Owner interpret these numbers in context. A spike in bugs after a
-                      large release is different from a steady upward trend. A low completion rate during
-                      onboarding weeks tells a different story than one during a stable sprint.
-                    </p>
-                  </>
-                }
-                productOwner={
-                  <>
-                    <p>
-                      These metrics help you understand engineering health from a product perspective.
-                      Focus on{" "}
-                      <strong className="text-text-primary">investment alignment</strong> (is effort going
-                      where the roadmap says it should?),{" "}
-                      <strong className="text-text-primary">flow efficiency</strong> (how fast can teams
-                      deliver?), and <strong className="text-text-primary">quality signals</strong> (are
-                      we shipping reliable software?).
-                    </p>
-                    <p className="mt-2">
-                      Metrics labeled <Badge variant="green">API Available</Badge> can be pulled live via
-                      the Jellyfish Export API. Metrics labeled{" "}
-                      <Badge variant="amber">Platform Only</Badge> require the full Jellyfish platform.
-                    </p>
-                    <p className="mt-2 text-xs text-text-ghost">
-                      Source:{" "}
-                      <a
-                        href="https://jellyfish.co/library/product-metrics/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline hover:text-blue transition-colors"
-                      >
-                        jellyfish.co/library/product-metrics/
-                      </a>
-                    </p>
-                  </>
-                }
+                tabs={[
+                  {
+                    key: "sm",
+                    label: "Scrum Master",
+                    content: (
+                      <>
+                        <p>
+                          As a Scrum Master, you influence many of these metrics through ceremony quality and
+                          process health.{" "}
+                          <strong className="text-text-primary">Cycle time improves</strong> when reviews are
+                          timely. <strong className="text-text-primary">Deployment frequency rises</strong>{" "}
+                          when release processes are streamlined.
+                        </p>
+                        <p className="mt-2">
+                          Help your Product Owner interpret these numbers in context. A spike in bugs after a
+                          large release is different from a steady upward trend. A low completion rate during
+                          onboarding weeks tells a different story than one during a stable sprint.
+                        </p>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "po",
+                    label: "Product Owner",
+                    content: (
+                      <>
+                        <p>
+                          These metrics help you understand engineering health from a product perspective.
+                          Focus on{" "}
+                          <strong className="text-text-primary">investment alignment</strong> (is effort going
+                          where the roadmap says it should?),{" "}
+                          <strong className="text-text-primary">flow efficiency</strong> (how fast can teams
+                          deliver?), and <strong className="text-text-primary">quality signals</strong> (are
+                          we shipping reliable software?).
+                        </p>
+                        <p className="mt-2">
+                          Metrics labeled <Badge variant="green">API Available</Badge> can be pulled live via
+                          the Jellyfish Export API. Metrics labeled{" "}
+                          <Badge variant="amber">Platform Only</Badge> require the full Jellyfish platform.
+                        </p>
+                        <p className="mt-2 text-xs text-text-ghost">
+                          Source:{" "}
+                          <a
+                            href="https://jellyfish.co/library/product-metrics/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline hover:text-blue transition-colors"
+                          >
+                            jellyfish.co/library/product-metrics/
+                          </a>
+                        </p>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "em",
+                    label: "Eng Manager",
+                    content: (
+                      <>
+                        <p>
+                          Use{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            allocations_by_investment_category
+                          </code>{" "}
+                          to understand how your team&apos;s effort distributes across investment categories
+                          (features, tech debt, infrastructure, support). Allocation balance is a leading
+                          indicator of team health — teams over-indexed on maintenance have less capacity for
+                          strategic work.
+                        </p>
+                        <p className="font-semibold text-text-dim mt-3">1. Investment Balance</p>
+                        <p className="mt-1">
+                          Compare your team&apos;s allocation split against organizational targets. If
+                          leadership expects 60% innovation but{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            allocations_by_investment_category
+                          </code>{" "}
+                          shows 40%, surface this gap with data rather than anecdotes.
+                        </p>
+                        <p className="font-semibold text-text-dim mt-3">2. Flow Health</p>
+                        <p className="mt-1">
+                          Use{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            team_metrics
+                          </code>{" "}
+                          cycle time and deployment frequency alongside allocation data. Teams with healthy
+                          allocation but slow cycle time may have process bottlenecks worth investigating.
+                        </p>
+                        <p className="mt-3 text-xs text-text-ghost">
+                          Source: jellyfish.co/platform/resource-allocations/
+                        </p>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "pm",
+                    label: "Prod Manager",
+                    content: (
+                      <>
+                        <p>
+                          Use{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            allocations_by_investment_category
+                          </code>{" "}
+                          to see where engineering effort actually goes — not where people think it goes.
+                          Jellyfish research shows engineering leaders overestimate roadmap allocation by 62%.
+                          This gap is critical for planning.
+                        </p>
+                        <p className="font-semibold text-text-dim mt-3">1. Strategic Alignment</p>
+                        <p className="mt-1">
+                          Pull{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            allocations_by_investment_category
+                          </code>{" "}
+                          quarterly to verify engineering investment matches product strategy. Present to
+                          leadership: &quot;X% of engineering is on roadmap, Y% on maintenance — here&apos;s
+                          what that means for Q3 delivery.&quot;
+                        </p>
+                        <p className="font-semibold text-text-dim mt-3">2. Headcount Justification</p>
+                        <p className="mt-1">
+                          Use allocation data with{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            company_metrics
+                          </code>{" "}
+                          to build a data-backed case: &quot;To deliver on our roadmap, we need N additional
+                          FTEs — here&apos;s the allocation analysis showing why.&quot;
+                        </p>
+                        <p className="mt-3 text-xs text-text-ghost">
+                          Source: jellyfish.co/case-studies/salsify/ — Salsify proved 80% engineering on
+                          roadmap to justify 25% headcount growth.
+                        </p>
+                      </>
+                    ),
+                  },
+                ]}
               />
             }
             apiExplorerContent={
@@ -673,53 +762,94 @@ export default function ProductMetricsPage() {
           <BottomPanel
             guidesContent={
               <GuidePanel
-                scrumMaster={
-                  <>
-                    <p>
-                      AI Impact measurement answers three questions: Are teams actually
-                      using AI tools? Which tools deliver measurable results? And where
-                      should the organization invest next? Jellyfish automatically detects
-                      AI usage patterns across GitHub Copilot, Cursor, Claude Code, and
-                      other tools — then links adoption data to delivery signals like
-                      throughput, cycle time, and code review speed. The goal is objective
-                      measurement, not advocacy for any specific tool.
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mt-4">
-                      <div>
-                        <div className="font-semibold text-text-primary mb-1">
-                          Retrospective
-                        </div>
+                tabs={[
+                  {
+                    key: "sm",
+                    label: "Scrum Master",
+                    content: (
+                      <>
                         <p>
-                          If a team adopted an AI tool 2–3 months ago, pull their
-                          before/after delivery metrics. If cycle time hasn&apos;t improved,
-                          investigate whether the tool is being used effectively, whether
-                          other bottlenecks dominate, or whether the team needs enablement
-                          support.
+                          AI Impact measurement answers three questions: Are teams actually
+                          using AI tools? Which tools deliver measurable results? And where
+                          should the organization invest next? Jellyfish automatically detects
+                          AI usage patterns across GitHub Copilot, Cursor, Claude Code, and
+                          other tools — then links adoption data to delivery signals like
+                          throughput, cycle time, and code review speed. The goal is objective
+                          measurement, not advocacy for any specific tool.
                         </p>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-text-primary mb-1">
-                          Planning
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+                          <div>
+                            <div className="font-semibold text-text-primary mb-1">
+                              Retrospective
+                            </div>
+                            <p>
+                              If a team adopted an AI tool 2–3 months ago, pull their
+                              before/after delivery metrics. If cycle time hasn&apos;t improved,
+                              investigate whether the tool is being used effectively, whether
+                              other bottlenecks dominate, or whether the team needs enablement
+                              support.
+                            </p>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-text-primary mb-1">
+                              Planning
+                            </div>
+                            <p>
+                              Factor AI tool impact into capacity assumptions. A team with high
+                              Copilot adoption may have higher throughput than historical
+                              baselines suggest — adjust commitments accordingly.
+                            </p>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-text-primary mb-1">
+                              Leadership review
+                            </div>
+                            <p>
+                              Present adoption rates alongside impact data. High adoption with
+                              no measurable improvement is a signal to investigate — not to roll
+                              back the tool.
+                            </p>
+                          </div>
                         </div>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "em",
+                    label: "Eng Manager",
+                    content: (
+                      <>
                         <p>
-                          Factor AI tool impact into capacity assumptions. A team with high
-                          Copilot adoption may have higher throughput than historical
-                          baselines suggest — adjust commitments accordingly.
+                          Use{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            team_metrics
+                          </code>{" "}
+                          alongside AI tool adoption data to measure the productivity impact of AI coding
+                          tools. 90% of teams now use AI tools, but only 20% measure impact with metrics —
+                          this is the measurement gap EMs should close.
                         </p>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-text-primary mb-1">
-                          Leadership review
-                        </div>
-                        <p>
-                          Present adoption rates alongside impact data. High adoption with
-                          no measurable improvement is a signal to investigate — not to roll
-                          back the tool.
+                        <p className="font-semibold text-text-dim mt-3">1. Before/After Analysis</p>
+                        <p className="mt-1">
+                          Compare{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            team_metrics
+                          </code>{" "}
+                          (PR cycle time, deployment frequency) before and after AI tool rollout. Look for
+                          concrete improvements, not just adoption numbers.
                         </p>
-                      </div>
-                    </div>
-                  </>
-                }
+                        <p className="font-semibold text-text-dim mt-3">2. Coaching on AI Usage</p>
+                        <p className="mt-1">
+                          Use adoption data to identify teams or individuals who haven&apos;t adopted AI
+                          tools, then coach on effective usage rather than mandating.
+                        </p>
+                        <p className="mt-3 text-xs text-text-ghost">
+                          Source: jellyfish.co/blog/3-takeaways-for-engineering-managers-from-semr/ — 62%
+                          report 25%+ productivity gains from AI.
+                        </p>
+                      </>
+                    ),
+                  },
+                ]}
               />
             }
             apiExplorerContent={
