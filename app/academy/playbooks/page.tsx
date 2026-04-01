@@ -76,7 +76,7 @@ export default function AcademyPlaybooksPage() {
                 <ol className="list-decimal list-inside text-sm text-text-dim">
                   {playbook.steps.map((step, index) => (
                     <li key={index} className="mb-1.5">
-                      {step}
+                      {step.title}
                       {endpointMap[playbook.id]?.[index] && (
                         <code className="ml-1.5 font-mono text-xs bg-blue-dim text-blue px-1.5 py-0.5 rounded">
                           {endpointMap[playbook.id][index]}
