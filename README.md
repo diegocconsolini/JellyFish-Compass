@@ -285,7 +285,7 @@ Primary visualization (table + chart side by side)
 ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ thin rule
 Secondary visualization (if applicable)
 ───────────────────────────────── gradient divider
-BottomPanel [closed by default]
+BottomPanel [Guides tab open by default]
   ├─ Guides tab → GuidePanel with persona sub-tabs
   └─ API Explorer tab → Token input + endpoint explorer
 ```

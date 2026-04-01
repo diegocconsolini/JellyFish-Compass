@@ -7,7 +7,7 @@ type Tab = "guides" | "api";
 export function BottomPanel({
   guidesContent,
   apiExplorerContent,
-  defaultOpen = false,
+  defaultOpen = true,
 }: {
   guidesContent: React.ReactNode;
   apiExplorerContent: React.ReactNode;
