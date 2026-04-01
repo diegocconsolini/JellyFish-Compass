@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/ui/page-hero";
-import { GuideBox } from "@/components/ui/guide-box";
 import { StatCard } from "@/components/ui/stat-card";
 import { DataTable } from "@/components/ui/data-table";
 import { BarChart } from "@/components/ui/bar-chart";
-import { ApiExplorer } from "@/components/ui/api-explorer";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { BottomPanel } from "@/components/ui/bottom-panel";
+import { GuidePanel } from "@/components/ui/guide-panel";
+import { ApiDrawer } from "@/components/ui/api-drawer";
 import { mockSprintKpis, mockSprints, mockScopeEffort } from "@/data/mock-data";
 import { endpointGroups } from "@/data/endpoints-full";
 
@@ -89,18 +91,7 @@ export default function SprintHealthPage() {
         subtitle="& carry-over"
       />
 
-      <GuideBox title="Scrum Master Guide: Sprint Metrics & Health">
-        <p>
-          Use <code>team_sprint_summary</code> to pull committed vs. completed story points and
-          issue counts per sprint for a given team and date range. This endpoint surfaces carry-over
-          items and velocity trends that power your sprint retrospectives.
-        </p>
-        <p className="mt-2">
-          Pair with <code>team_metrics</code> for broader engineering health signals — PR cycle
-          time, review depth, and commit frequency — giving you leading indicators of whether your
-          velocity numbers reflect sustainable delivery or unseen bottlenecks.
-        </p>
-      </GuideBox>
+      <SectionDivider />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
         <StatCard
@@ -137,6 +128,8 @@ export default function SprintHealthPage() {
         />
       </div>
 
+      <SectionDivider />
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
         <div className="rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-bold mb-4">Sprint History</h2>
@@ -152,69 +145,76 @@ export default function SprintHealthPage() {
         </div>
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="api-token" className="block text-[11.5px] font-semibold text-text-ghost mb-1.5">
-          Jellyfish API Token (optional — for live mode)
-        </label>
-        <input
-          id="api-token"
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="jf_..."
-          className="w-full max-w-sm px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue"
-        />
-      </div>
-
-      <ApiExplorer
-        token={token}
-        endpoints={metricsEndpoints}
-        getParams={getParams}
-        mockResponses={mockResponses}
+      <BottomPanel
+        guidesContent={
+          <GuidePanel
+            scrumMaster={
+              <div>
+                <p>
+                  Use <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_sprint_summary</code> to pull committed vs. completed story points and
+                  issue counts per sprint for a given team and date range. This endpoint surfaces carry-over
+                  items and velocity trends that power your sprint retrospectives.
+                </p>
+                <p className="mt-2">
+                  Pair with <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_metrics</code> for broader engineering health signals — PR cycle
+                  time, review depth, and commit frequency — giving you leading indicators of whether your
+                  velocity numbers reflect sustainable delivery or unseen bottlenecks.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-4">
+                  <div>
+                    <div className="font-semibold text-text-primary mb-0.5">Sprint Planning</div>
+                    <p>
+                      Query <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_sprint_summary</code> before planning to baseline your team&apos;s
+                      historical velocity. Use the last 3–4 sprints to set a realistic commitment ceiling
+                      and avoid over-promising.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-text-primary mb-0.5">Daily Standup</div>
+                    <p>
+                      Use <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_metrics</code> mid-sprint to spot PR bottlenecks or review delays
+                      that could threaten completion. An uptick in cycle time is an early warning before
+                      carry-over materialises.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-text-primary mb-0.5">Sprint Review</div>
+                    <p>
+                      Pull <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_sprint_summary</code> at sprint close to present committed vs.
+                      completed to stakeholders. Highlight carry-over items with context from{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">person_metrics</code> if individual blockers contributed.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-text-primary mb-0.5">Retrospective</div>
+                    <p>
+                      Combine <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_sprint_summary</code>, <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_metrics</code>, and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">unlinked_pull_requests</code> to run a data-driven retro — correlate carry-over
+                      spikes with PR hygiene gaps and identify systemic patterns across sprints.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            }
+            productOwner={
+              <div>
+                <p>Use sprint completion rate and velocity trends to <strong>forecast delivery confidence</strong> for stakeholders. A consistent completion rate above 85% signals reliable planning — share this in roadmap reviews.</p>
+                <p className="mt-2">Track carry-over trends to identify capacity issues <strong>before they impact your roadmap</strong>. Rising carry-over means the team is overcommitted — adjust scope in the next planning cycle rather than waiting for a missed deadline.</p>
+                <p className="mt-2 text-xs text-text-ghost">Source: jellyfish.co/solutions/engineering-product-operations/ — Precisely achieved 22% increase in sprint predictability.</p>
+              </div>
+            }
+          />
+        }
+        apiExplorerContent={
+          <ApiDrawer
+            token={token}
+            setToken={setToken}
+            endpoints={metricsEndpoints}
+            getParams={getParams}
+            mockResponses={mockResponses}
+          />
+        }
       />
-
-      <GuideBox title="How to Use This in Your Sprint Ceremonies">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-1">
-          <div>
-            <div className="font-semibold text-text-primary mb-0.5">Sprint Planning</div>
-            <p>
-              Query <code>team_sprint_summary</code> before planning to baseline your team&apos;s
-              historical velocity. Use the last 3–4 sprints to set a realistic commitment ceiling
-              and avoid over-promising.
-            </p>
-          </div>
-          <div>
-            <div className="font-semibold text-text-primary mb-0.5">Daily Standup</div>
-            <p>
-              Use <code>team_metrics</code> mid-sprint to spot PR bottlenecks or review delays
-              that could threaten completion. An uptick in cycle time is an early warning before
-              carry-over materialises.
-            </p>
-          </div>
-          <div>
-            <div className="font-semibold text-text-primary mb-0.5">Sprint Review</div>
-            <p>
-              Pull <code>team_sprint_summary</code> at sprint close to present committed vs.
-              completed to stakeholders. Highlight carry-over items with context from{" "}
-              <code>person_metrics</code> if individual blockers contributed.
-            </p>
-          </div>
-          <div>
-            <div className="font-semibold text-text-primary mb-0.5">Retrospective</div>
-            <p>
-              Combine <code>team_sprint_summary</code>, <code>team_metrics</code>, and{" "}
-              <code>unlinked_pull_requests</code> to run a data-driven retro — correlate carry-over
-              spikes with PR hygiene gaps and identify systemic patterns across sprints.
-            </p>
-          </div>
-        </div>
-      </GuideBox>
-
-      <GuideBox title="Product Owner Guide: Sprint Predictability">
-        <p>Use sprint completion rate and velocity trends to <strong>forecast delivery confidence</strong> for stakeholders. A consistent completion rate above 85% signals reliable planning — share this in roadmap reviews.</p>
-        <p className="mt-2">Track carry-over trends to identify capacity issues <strong>before they impact your roadmap</strong>. Rising carry-over means the team is overcommitted — adjust scope in the next planning cycle rather than waiting for a missed deadline.</p>
-        <p className="mt-2 text-xs text-text-ghost">Source: jellyfish.co/solutions/engineering-product-operations/ — Precisely achieved 22% increase in sprint predictability.</p>
-      </GuideBox>
     </div>
   );
 }
