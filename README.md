@@ -2,7 +2,7 @@
 
 # Jellyfish Compass
 
-**A practical companion for Scrum Masters and engineering teams using Jellyfish**
+**A practical companion for Engineering Managers, Product Managers, Scrum Masters, and Product Owners using Jellyfish**
 
 Understand platform metrics. Run guided workflows. Explore the API. Export presentation-ready decks.
 
@@ -43,7 +43,7 @@ graph LR
 
 ## Pages
 
-14 pages organized into 4 categories, each with Scrum Master guides, mock data visualizations, and API Explorer integration.
+14 pages organized into 4 categories, each with persona-specific guides (up to 4 personas: Scrum Master, Product Owner, Engineering Manager, Product Manager), mock data visualizations, and a collapsible API Explorer.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -168,7 +168,8 @@ sequenceDiagram
     participant JF as Jellyfish API
 
     User->>Compass: Open data page
-    Compass->>User: Show mock data (default)
+    Compass->>User: Show visualizations (mock data default)
+    User->>Compass: Open BottomPanel → API Explorer tab
     User->>Compass: Enter API token
     Compass->>JF: GET /endpoints/export/v0/teams/list_teams
     JF-->>Compass: 200 OK (token valid)
@@ -176,8 +177,8 @@ sequenceDiagram
     Compass->>JF: GET /endpoints/export/v0/{endpoint}
     JF-->>Compass: JSON response
     Compass->>User: Display data + preview
-    User->>Compass: Export PPTX
-    Compass->>User: Download .pptx file
+    User->>Compass: Open BottomPanel → Guides tab
+    Compass->>User: Show persona-specific guides (SM, PO, EM, PM)
 ```
 
 **Three modes:**
@@ -255,7 +256,7 @@ app/
   academy/                    Learning hub (4 tabs)
 components/
   layout/                     Header (responsive hamburger), footer
-  ui/                         StatCard, DataTable, ProgressBar, Badge, etc.
+  ui/                         StatCard, DataTable, ProgressBar, Badge, BottomPanel, GuidePanel, ApiDrawer, SectionDivider, etc.
   metrics/                    Deck Builder components
 data/
   endpoints-full.ts           25 API endpoints across 6 domains
@@ -268,6 +269,37 @@ lib/
   export-pptx.ts              PPTX slide generation engine
   export-pptx-themes.ts       Jellyfish dark/light brand themes
 ```
+
+---
+
+## Data Page Layout
+
+Every data page follows a consistent layout pattern with progressive disclosure:
+
+```
+PageHero (eyebrow + title + subtitle)
+───────────────────────────────── gradient divider
+Stat Cards (if applicable)
+───────────────────────────────── gradient divider
+Primary visualization (table + chart side by side)
+─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ thin rule
+Secondary visualization (if applicable)
+───────────────────────────────── gradient divider
+BottomPanel [closed by default]
+  ├─ Guides tab → GuidePanel with persona sub-tabs
+  └─ API Explorer tab → Token input + endpoint explorer
+```
+
+The **BottomPanel** keeps guide content and API tools out of the way for casual users while remaining one click away for power users. The **GuidePanel** inside supports up to 4 persona tabs (pills on desktop, dropdown on mobile):
+
+| Persona | Focus | Pages |
+|---------|-------|-------|
+| **Scrum Master** | Sprint ceremonies, tactical process health | All 11 |
+| **Product Owner** | Backlog priorities, delivery confidence | 10 of 11 |
+| **Engineering Manager** | Team coaching, capacity planning, burnout prevention | All 11 |
+| **Product Manager** | Investment allocation, roadmap feasibility, leadership communication | 9 of 11 |
+
+All guide content is grounded in official Jellyfish materials (jellyfish.co, case studies, solution pages) with source citations. No fabricated thresholds or benchmarks.
 
 ---
 
