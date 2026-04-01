@@ -2,48 +2,61 @@
 
 import { useState } from "react";
 
-export function GuidePanel({
-  scrumMaster,
-  productOwner,
-}: {
-  scrumMaster: React.ReactNode;
-  productOwner?: React.ReactNode;
-}) {
-  const [activeTab, setActiveTab] = useState<"sm" | "po">("sm");
+export type PersonaTab = {
+  key: string;
+  label: string;
+  content: React.ReactNode;
+};
 
-  // If only one persona has content, show it directly without tabs
-  if (!productOwner) {
-    return <div className="text-sm text-text-dim leading-relaxed">{scrumMaster}</div>;
+export function GuidePanel({ tabs }: { tabs: PersonaTab[] }) {
+  const [activeKey, setActiveKey] = useState(tabs[0]?.key ?? "");
+
+  if (tabs.length === 0) return null;
+
+  if (tabs.length === 1) {
+    return <div className="text-sm text-text-dim leading-relaxed">{tabs[0].content}</div>;
   }
+
+  const activeTab = tabs.find((t) => t.key === activeKey) ?? tabs[0];
 
   return (
     <div>
-      <div className="flex gap-2 mb-4">
-        <button
-          onClick={() => setActiveTab("sm")}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
-            activeTab === "sm"
-              ? "bg-blue-dim text-blue"
-              : "bg-surface-raised text-text-ghost hover:text-text-dim"
-          }`}
-          aria-pressed={activeTab === "sm"}
+      {/* Mobile: dropdown */}
+      <div className="sm:hidden mb-4">
+        <select
+          value={activeKey}
+          onChange={(e) => setActiveKey(e.target.value)}
+          aria-label="Select guide persona"
+          className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-xs font-semibold text-text-primary outline-none focus:border-blue"
         >
-          Scrum Master
-        </button>
-        <button
-          onClick={() => setActiveTab("po")}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
-            activeTab === "po"
-              ? "bg-blue-dim text-blue"
-              : "bg-surface-raised text-text-ghost hover:text-text-dim"
-          }`}
-          aria-pressed={activeTab === "po"}
-        >
-          Product Owner
-        </button>
+          {tabs.map((t) => (
+            <option key={t.key} value={t.key}>
+              {t.label}
+            </option>
+          ))}
+        </select>
       </div>
+
+      {/* Desktop: pill buttons */}
+      <div className="hidden sm:flex gap-2 mb-4 flex-wrap">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setActiveKey(t.key)}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
+              activeKey === t.key
+                ? "bg-blue-dim text-blue"
+                : "bg-surface-raised text-text-ghost hover:text-text-dim"
+            }`}
+            aria-pressed={activeKey === t.key}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       <div className="text-sm text-text-dim leading-relaxed">
-        {activeTab === "sm" ? scrumMaster : productOwner}
+        {activeTab.content}
       </div>
     </div>
   );
