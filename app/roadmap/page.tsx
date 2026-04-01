@@ -372,33 +372,149 @@ export default function RoadmapPage() {
       <BottomPanel
         guidesContent={
           <GuidePanel
-            scrumMaster={
-              <p>
-                When you see under-invested initiatives, discuss in planning — is
-                the team pulled toward unplanned work? When over-invested, check
-                if scope expanded without the Product Owner&apos;s knowledge. Use
-                this data to facilitate alignment conversations between product
-                and engineering. Look for patterns in the{" "}
-                <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
-                  allocations_by_work_category
-                </code>{" "}
-                endpoint to surface recurring misalignment.
-              </p>
-            }
-            productOwner={
-              <p>
-                Compare what you planned to invest in each initiative with
-                what&apos;s actually happening. The &apos;Actual FTE&apos; comes
-                from Jellyfish allocation data. The &apos;Planned FTE&apos; is
-                what you enter based on your roadmap. The gap tells you where
-                engineering effort diverges from product strategy. Jellyfish
-                integrates with Productboard, Aha!, and ProductPlan — use the{" "}
-                <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
-                  allocations_by_investment_category
-                </code>{" "}
-                endpoint for automatic alignment.
-              </p>
-            }
+            tabs={[
+              {
+                key: "sm",
+                label: "Scrum Master",
+                content: (
+                  <p>
+                    When you see under-invested initiatives, discuss in planning — is
+                    the team pulled toward unplanned work? When over-invested, check
+                    if scope expanded without the Product Owner&apos;s knowledge. Use
+                    this data to facilitate alignment conversations between product
+                    and engineering. Look for patterns in the{" "}
+                    <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                      allocations_by_work_category
+                    </code>{" "}
+                    endpoint to surface recurring misalignment.
+                  </p>
+                ),
+              },
+              {
+                key: "po",
+                label: "Product Owner",
+                content: (
+                  <p>
+                    Compare what you planned to invest in each initiative with
+                    what&apos;s actually happening. The &apos;Actual FTE&apos; comes
+                    from Jellyfish allocation data. The &apos;Planned FTE&apos; is
+                    what you enter based on your roadmap. The gap tells you where
+                    engineering effort diverges from product strategy. Jellyfish
+                    integrates with Productboard, Aha!, and ProductPlan — use the{" "}
+                    <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                      allocations_by_investment_category
+                    </code>{" "}
+                    endpoint for automatic alignment.
+                  </p>
+                ),
+              },
+              {
+                key: "em",
+                label: "Eng Manager",
+                content: (
+                  <div className="space-y-3">
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_investment_category
+                      </code>{" "}
+                      alongside{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        deliverable_details
+                      </code>{" "}
+                      to monitor initiative health and manage cross-team dependencies.
+                      As an EM, roadmap alignment means ensuring your team&apos;s
+                      execution matches the strategic investment plan — and flagging
+                      divergence early.
+                    </p>
+                    <div>
+                      <p className="font-semibold text-text-dim">
+                        (1) Initiative Health
+                      </p>
+                      <p>
+                        Track{" "}
+                        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                          deliverable_details
+                        </code>{" "}
+                        for each initiative your team owns. When percent complete
+                        stalls or effort allocation drops, investigate whether the
+                        team is being pulled into unplanned work.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-text-dim">
+                        (2) Dependency Management
+                      </p>
+                      <p>
+                        Use{" "}
+                        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                          allocations_by_team
+                        </code>{" "}
+                        to identify when your team&apos;s capacity is being consumed
+                        by dependencies from other teams. Surface these cross-team
+                        demands to leadership with data before they impact your own
+                        roadmap commitments.
+                      </p>
+                    </div>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/case-studies/buildium/ — improved release
+                      management visibility by linking individual work to strategic
+                      objectives.
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                key: "pm",
+                label: "Prod Manager",
+                content: (
+                  <div className="space-y-3">
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_investment_category
+                      </code>{" "}
+                      and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        deliverable_details
+                      </code>{" "}
+                      to verify that engineering investment aligns with product
+                      strategy. The roadmap page bridges the gap between &quot;what
+                      we planned&quot; and &quot;what engineering is actually working
+                      on.&quot;
+                    </p>
+                    <div>
+                      <p className="font-semibold text-text-dim">
+                        (1) Investment vs Plan
+                      </p>
+                      <p>
+                        Compare planned investment percentages against actual{" "}
+                        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                          allocations_by_investment_category
+                        </code>
+                        . If the plan says 60% features but actual is 40%, present
+                        this gap to leadership with data.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-text-dim">
+                        (2) Leadership Communication
+                      </p>
+                      <p>
+                        Translate engineering metrics to business language using FTEs
+                        and allocation percentages. Instead of &quot;velocity
+                        dropped,&quot; say &quot;2.5 FTEs were diverted to incident
+                        response last quarter — here&apos;s the impact on our roadmap
+                        timeline.&quot;
+                      </p>
+                    </div>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/solutions/product-leaders/
+                    </p>
+                  </div>
+                ),
+              },
+            ]}
           />
         }
         apiExplorerContent={
