@@ -125,69 +125,166 @@ export default function ScenariosPage() {
       <BottomPanel
         guidesContent={
           <GuidePanel
-            scrumMaster={
-              <div className="space-y-4">
-                <p>
-                  The Scenario Planner lets you model resource allocation scenarios by adjusting
-                  variables like team size and project priorities to see how changes affect delivery
-                  capacity. Use it before quarter planning to prepare data-backed proposals, or
-                  mid-sprint to evaluate the impact of unexpected changes. The key question:{" "}
-                  <em>
-                    &ldquo;If we shift resources from X to Y, what does the delivery forecast
-                    look like?&rdquo;
-                  </em>
-                </p>
-                <ul className="space-y-3">
-                  <li>
-                    <strong>Quarter Planning:</strong> Build 2&ndash;3 scenarios before the planning
-                    session. Present the tradeoffs clearly:{" "}
-                    <em>
-                      &ldquo;Scenario A adds 2 FTE to features but drops KTLO coverage to 16%.
-                      Scenario B keeps current balance but extends the roadmap by 3 weeks.&rdquo;
-                    </em>
-                  </li>
-                  <li>
-                    <strong>Mid-Sprint Adjustment:</strong> When priorities shift unexpectedly, model
-                    the reallocation impact before committing. Moving engineers between categories
-                    mid-sprint has a context-switching cost that the raw FTE numbers don&apos;t show.
-                    Use{" "}
-                    <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
-                      allocations_by_investment_category
-                    </code>{" "}
-                    to see the before/after split.
-                  </li>
-                  <li>
-                    <strong>Stakeholder Communication:</strong> Scenarios turn allocation
-                    conversations from opinions into data. Instead of &ldquo;we need more
-                    engineers,&rdquo; present:{" "}
-                    <em>
-                      &ldquo;Shifting 1.8 FTE from KTLO to Features increases feature throughput
-                      by an estimated 15% but creates KTLO risk in areas X and Y.&rdquo;
-                    </em>
-                  </li>
-                </ul>
-              </div>
-            }
-            productOwner={
-              <div className="space-y-3">
-                <p>
-                  Model &apos;what if&apos; scenarios before quarter planning to prepare{" "}
-                  <strong>data-backed proposals</strong>. Show stakeholders the trade-off clearly:
-                  &quot;If we shift 2 FTE to Feature X, Initiative Y slips by 3 weeks.&quot;
-                </p>
-                <p>
-                  Use allocation scenarios to{" "}
-                  <strong>align product priorities with engineering capacity</strong>. This turns
-                  resource conversations from opinions into data &mdash; instead of &quot;we need
-                  more engineers,&quot; present the specific impact of reallocation. Pull current
-                  numbers via{" "}
-                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
-                    allocations_by_team
-                  </code>{" "}
-                  to ground the conversation in actuals before proposing shifts.
-                </p>
-              </div>
-            }
+            tabs={[
+              {
+                key: "sm",
+                label: "Scrum Master",
+                content: (
+                  <div className="space-y-4">
+                    <p>
+                      The Scenario Planner lets you model resource allocation scenarios by adjusting
+                      variables like team size and project priorities to see how changes affect delivery
+                      capacity. Use it before quarter planning to prepare data-backed proposals, or
+                      mid-sprint to evaluate the impact of unexpected changes. The key question:{" "}
+                      <em>
+                        &ldquo;If we shift resources from X to Y, what does the delivery forecast
+                        look like?&rdquo;
+                      </em>
+                    </p>
+                    <ul className="space-y-3">
+                      <li>
+                        <strong>Quarter Planning:</strong> Build 2&ndash;3 scenarios before the planning
+                        session. Present the tradeoffs clearly:{" "}
+                        <em>
+                          &ldquo;Scenario A adds 2 FTE to features but drops KTLO coverage to 16%.
+                          Scenario B keeps current balance but extends the roadmap by 3 weeks.&rdquo;
+                        </em>
+                      </li>
+                      <li>
+                        <strong>Mid-Sprint Adjustment:</strong> When priorities shift unexpectedly, model
+                        the reallocation impact before committing. Moving engineers between categories
+                        mid-sprint has a context-switching cost that the raw FTE numbers don&apos;t show.
+                        Use{" "}
+                        <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                          allocations_by_investment_category
+                        </code>{" "}
+                        to see the before/after split.
+                      </li>
+                      <li>
+                        <strong>Stakeholder Communication:</strong> Scenarios turn allocation
+                        conversations from opinions into data. Instead of &ldquo;we need more
+                        engineers,&rdquo; present:{" "}
+                        <em>
+                          &ldquo;Shifting 1.8 FTE from KTLO to Features increases feature throughput
+                          by an estimated 15% but creates KTLO risk in areas X and Y.&rdquo;
+                        </em>
+                      </li>
+                    </ul>
+                  </div>
+                ),
+              },
+              {
+                key: "po",
+                label: "Product Owner",
+                content: (
+                  <div className="space-y-3">
+                    <p>
+                      Model &apos;what if&apos; scenarios before quarter planning to prepare{" "}
+                      <strong>data-backed proposals</strong>. Show stakeholders the trade-off clearly:
+                      &quot;If we shift 2 FTE to Feature X, Initiative Y slips by 3 weeks.&quot;
+                    </p>
+                    <p>
+                      Use allocation scenarios to{" "}
+                      <strong>align product priorities with engineering capacity</strong>. This turns
+                      resource conversations from opinions into data &mdash; instead of &quot;we need
+                      more engineers,&quot; present the specific impact of reallocation. Pull current
+                      numbers via{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_team
+                      </code>{" "}
+                      to ground the conversation in actuals before proposing shifts.
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                key: "em",
+                label: "Eng Manager",
+                content: (
+                  <div className="space-y-3">
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_investment_category
+                      </code>{" "}
+                      and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_team
+                      </code>{" "}
+                      to model the delivery impact of resource reallocation before making changes.
+                      Scenario planning lets EMs quantify trade-offs.
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-semibold text-text-dim">Resource Reallocation</p>
+                        <p>
+                          Before moving engineers between teams, model the impact on both source and
+                          destination using allocation data. The net impact is rarely zero &mdash; make
+                          the trade-off explicit with data.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-text-dim">Investment Shift Modeling</p>
+                        <p>
+                          Use{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            allocations_by_investment_category
+                          </code>{" "}
+                          to model what happens when you shift investment between categories.
+                        </p>
+                      </div>
+                    </div>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/solutions/scenario-planner/
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                key: "pm",
+                label: "Prog Manager",
+                content: (
+                  <div className="space-y-3">
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_investment_category
+                      </code>{" "}
+                      and{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                        allocations_by_team
+                      </code>{" "}
+                      to present leadership with multiple credible plans backed by data &mdash; not a
+                      single optimistic estimate.
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-semibold text-text-dim">Three-Option Presentation</p>
+                        <p>
+                          For any roadmap decision, model three scenarios: (A) current resources and
+                          scope, (B) reduced scope with same resources, (C) added headcount with same
+                          scope. Present all three with timeline impact.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-text-dim">Scope Trade-Offs</p>
+                        <p>
+                          When leadership asks &ldquo;can we add feature X?&rdquo;, model the impact on
+                          existing commitments using{" "}
+                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">
+                            allocations_by_team
+                          </code>
+                          .
+                        </p>
+                      </div>
+                    </div>
+                    <p className="mt-3 text-xs text-text-ghost">
+                      Source: jellyfish.co/blog/what-is-scenario-planning/
+                    </p>
+                  </div>
+                ),
+              },
+            ]}
           />
         }
         apiExplorerContent={
