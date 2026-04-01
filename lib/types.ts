@@ -37,12 +37,45 @@ export type MetricDefinition = {
   related: string[];
 };
 
+export type PlaybookVisualization = {
+  type: "stat-cards" | "bar-chart" | "data-table" | "progress-bars";
+  dataKey: string;
+  props?: Record<string, unknown>;
+};
+
+export type PlaybookStep = {
+  title: string;
+  description: string;
+  endpoints?: string[];
+  visualization?: PlaybookVisualization;
+};
+
+export type PlaybookPersonaGuide = {
+  key: string;
+  label: string;
+  description: string;
+};
+
+export type PlaybookCategory =
+  | "sprint-delivery"
+  | "capacity-planning"
+  | "devex-health"
+  | "metrics"
+  | "executive"
+  | "ai-innovation";
+
 export type PlaybookDefinition = {
   id: string;
+  slug: string;
   title: string;
   goal: string;
+  category: PlaybookCategory;
+  personas: string[];
   outputs: string[];
-  steps: string[];
+  steps: PlaybookStep[];
+  guides: PlaybookPersonaGuide[];
+  source: { label: string; url: string };
+  color: { from: string; to: string };
 };
 
 export type ExampleDefinition = {
