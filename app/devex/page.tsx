@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/ui/page-hero";
-import { GuideBox } from "@/components/ui/guide-box";
 import { Badge } from "@/components/ui/badge";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { ApiExplorer } from "@/components/ui/api-explorer";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { BottomPanel } from "@/components/ui/bottom-panel";
+import { GuidePanel } from "@/components/ui/guide-panel";
+import { ApiDrawer } from "@/components/ui/api-drawer";
 import { mockDevExScores, mockUnlinkedPrs } from "@/data/mock-data";
 import { endpointGroups } from "@/data/endpoints-full";
 import { doraMetrics } from "@/data/dora-metrics";
@@ -56,22 +58,7 @@ export default function DevExPage() {
         subtitle="& blockers"
       />
 
-      <GuideBox title="Scrum Master Guide: Developer Experience & Blockers">
-        <p>
-          The <strong>DevEx Index</strong> is a composite score derived from two sources:{" "}
-          <code>developer surveys</code> (measuring perceived friction, tool satisfaction, and
-          psychological safety) and <code>DORA / SPACE metrics</code> (deployment frequency, lead
-          time, change failure rate, and mean time to resolution). Track your team&apos;s score over
-          time and investigate drops in any quarter. Use the trend — not a fixed threshold — to
-          decide when a focused retro is warranted.
-        </p>
-        <p className="mt-2">
-          <strong>Unlinked PRs</strong> are pull requests merged during the period that have no
-          associated Jira ticket or work item. They represent invisible work — effort that doesn&apos;t
-          appear in planning or retrospectives. Use the <code>unlinked_pull_requests</code> endpoint
-          to identify which teams have the highest ratio and run a targeted linking hygiene session.
-        </p>
-      </GuideBox>
+      <SectionDivider />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
         {/* Left card: DevEx Index by Team */}
@@ -113,6 +100,8 @@ export default function DevExPage() {
         </div>
       </div>
 
+      <SectionDivider variant="minor" />
+
       {/* DORA Metrics Reference */}
       <div className="mb-5">
         <h2 className="text-sm font-bold mb-3">DORA Metrics Reference</h2>
@@ -129,63 +118,81 @@ export default function DevExPage() {
         </div>
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="api-token" className="block text-[11.5px] font-semibold text-text-ghost mb-1.5">
-          Jellyfish API Token (optional — for live mode)
-        </label>
-        <input
-          id="api-token"
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="jf_..."
-          className="w-full max-w-sm px-3 py-2 rounded-md border border-border bg-surface text-sm font-mono text-text-primary outline-none focus:border-blue"
-        />
-      </div>
-
-      <ApiExplorer
-        token={token}
-        endpoints={explorerEndpoints}
-        getParams={getParams}
-        mockResponses={mockResponses}
+      <BottomPanel
+        guidesContent={
+          <GuidePanel
+            scrumMaster={
+              <div>
+                <p>
+                  The <strong>DevEx Index</strong> is a composite score derived from two sources:{" "}
+                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">developer surveys</code>{" "}
+                  (measuring perceived friction, tool satisfaction, and psychological safety) and{" "}
+                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">DORA / SPACE metrics</code>{" "}
+                  (deployment frequency, lead time, change failure rate, and mean time to resolution).
+                  Track your team&apos;s score over time and investigate drops in any quarter. Use the
+                  trend — not a fixed threshold — to decide when a focused retro is warranted.
+                </p>
+                <p className="mt-2">
+                  <strong>Unlinked PRs</strong> are pull requests merged during the period that have no
+                  associated Jira ticket or work item. They represent invisible work — effort that
+                  doesn&apos;t appear in planning or retrospectives. Use the{" "}
+                  <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">unlinked_pull_requests</code>{" "}
+                  endpoint to identify which teams have the highest ratio and run a targeted linking
+                  hygiene session.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-4">
+                  <div>
+                    <div className="font-semibold text-text-primary mb-0.5">Retrospective: DevEx deep dive</div>
+                    <p>
+                      Use{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">devex_insights_by_team</code>{" "}
+                      at the end of each quarter to present survey scores alongside DORA indicators.
+                      Teams showing a declining DevEx trend should identify the top friction sources —
+                      tooling, review wait time, or unclear requirements — and commit to one improvement
+                      per sprint.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-text-primary mb-0.5">Linking hygiene sprint ritual</div>
+                    <p>
+                      Pull{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">unlinked_pull_requests</code>{" "}
+                      weekly (narrow window: last 7 days) and share the list in your team Slack channel.
+                      Assign a rotating &quot;link captain&quot; who retrospectively links or flags PRs
+                      before the sprint closes. This keeps your allocation data accurate and eliminates
+                      invisible work.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-text-primary mb-0.5">DORA baseline &amp; goal-setting</div>
+                    <p>
+                      At the start of each quarter, record your team&apos;s four DORA metrics using{" "}
+                      <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_metrics</code>.
+                      Set specific, measurable targets based on your team&apos;s baseline and track
+                      weekly progress in your sprint review. Pair DORA improvements with DevEx survey
+                      results to confirm that tooling changes are actually felt by engineers.
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-4 text-xs text-text-ghost">
+                  Customer-reported DevEx outcomes: Kaleris achieved 21% more productive and 19% more
+                  efficient engineering teams (jellyfish.co/platform/devex/). Platform rated 4.5/5 on
+                  G2 and 4.8/5 on Gartner.
+                </p>
+              </div>
+            }
+          />
+        }
+        apiExplorerContent={
+          <ApiDrawer
+            token={token}
+            setToken={setToken}
+            endpoints={explorerEndpoints}
+            getParams={getParams}
+            mockResponses={mockResponses}
+          />
+        }
       />
-
-      <GuideBox title="Scrum Master Playbook: DevEx & Unlinked Work">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-1">
-          <div>
-            <div className="font-semibold text-text-primary mb-0.5">Retrospective: DevEx deep dive</div>
-            <p>
-              Use <code>devex_insights_by_team</code> at the end of each quarter to present survey
-              scores alongside DORA indicators. Teams showing a declining DevEx trend should identify
-              the top friction sources — tooling, review wait time, or unclear requirements — and
-              commit to one improvement per sprint.
-            </p>
-          </div>
-          <div>
-            <div className="font-semibold text-text-primary mb-0.5">Linking hygiene sprint ritual</div>
-            <p>
-              Pull <code>unlinked_pull_requests</code> weekly (narrow window: last 7 days) and share
-              the list in your team Slack channel. Assign a rotating &quot;link captain&quot; who
-              retrospectively links or flags PRs before the sprint closes. This keeps your allocation
-              data accurate and eliminates invisible work.
-            </p>
-          </div>
-          <div>
-            <div className="font-semibold text-text-primary mb-0.5">DORA baseline & goal-setting</div>
-            <p>
-              At the start of each quarter, record your team&apos;s four DORA metrics using{" "}
-              <code>team_metrics</code>. Set specific, measurable targets based on your team&apos;s
-              baseline and track weekly progress in your sprint review. Pair
-              DORA improvements with DevEx survey results to confirm that tooling changes are
-              actually felt by engineers.
-            </p>
-          </div>
-        </div>
-      </GuideBox>
-
-      <p className="text-xs text-text-ghost mt-6">
-        Customer-reported DevEx outcomes: Kaleris achieved 21% more productive and 19% more efficient engineering teams (jellyfish.co/platform/devex/). Platform rated 4.5/5 on G2 and 4.8/5 on Gartner.
-      </p>
     </div>
   );
 }
