@@ -256,47 +256,77 @@ export default function ProcessPage() {
           <BottomPanel
             guidesContent={
               <GuidePanel
-                scrumMaster={
-                  <div className="space-y-4">
-                    <p>
-                      The Life Cycle Explorer analyzes operational processes and trends at the issue level.
-                      Unlike sprint-level metrics, it shows how individual issues move through stages —
-                      revealing where work gets stuck, where handoffs create idle time, and which stages
-                      consistently slow delivery. Use this view to identify recurring bottleneck patterns
-                      and drive process improvements.
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 mt-1">
-                      <div>
-                        <div className="font-semibold text-text-primary mb-0.5">Retrospective</div>
+                tabs={[
+                  {
+                    key: "sm",
+                    label: "Scrum Master",
+                    content: (
+                      <div className="space-y-4">
                         <p>
-                          Pull the stage averages at sprint close. If <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Review</code> consistently takes
-                          longer than <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Progress</code>, your team has a review bottleneck — discuss
-                          whether it&apos;s capacity, complexity, or process.
+                          The Life Cycle Explorer analyzes operational processes and trends at the issue level.
+                          Unlike sprint-level metrics, it shows how individual issues move through stages —
+                          revealing where work gets stuck, where handoffs create idle time, and which stages
+                          consistently slow delivery. Use this view to identify recurring bottleneck patterns
+                          and drive process improvements.
                         </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 mt-1">
+                          <div>
+                            <div className="font-semibold text-text-primary mb-0.5">Retrospective</div>
+                            <p>
+                              Pull the stage averages at sprint close. If <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Review</code> consistently takes
+                              longer than <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Progress</code>, your team has a review bottleneck — discuss
+                              whether it&apos;s capacity, complexity, or process.
+                            </p>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-text-primary mb-0.5">Sprint Planning</div>
+                            <p>
+                              Use the issue-level data to identify outliers from the previous sprint. Issues that
+                              spent disproportionate time in <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">To Do</code> may indicate backlog grooming gaps.
+                            </p>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-text-primary mb-0.5">Standup</div>
+                            <p>
+                              Surface any issue currently in a stage for longer than the team average. Early
+                              detection prevents carry-over.
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-semibold text-text-primary mb-0.5">Sprint Planning</div>
+                    ),
+                  },
+                  {
+                    key: "po",
+                    label: "Product Owner",
+                    content: (
+                      <div className="space-y-2">
+                        <p>Identify which development stages consistently slow delivery. If <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Review</code> takes 3x longer than <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Progress</code>, <strong>budget accordingly in your roadmap</strong> — the bottleneck is real regardless of story point estimates.</p>
+                        <p>Use stage timing data to set <strong>accurate feature timelines</strong>. Tell stakeholders: &quot;Based on cycle time data, features of this size typically take 5-7 business days from start to deploy.&quot;</p>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: "em",
+                    label: "Eng Manager",
+                    content: (
+                      <div className="space-y-3">
                         <p>
-                          Use the issue-level data to identify outliers from the previous sprint. Issues that
-                          spent disproportionate time in <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">To Do</code> may indicate backlog grooming gaps.
+                          Use <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_metrics</code> to identify where issues stall in the development lifecycle. Life Cycle Explorer reveals whether delays stem from poor requirements (long refinement), technical complexity (long development), reviewer bottlenecks (long review), or deployment friction (long QA).
                         </p>
+                        <div>
+                          <p className="font-semibold text-text-dim">1. Bottleneck Identification</p>
+                          <p>Compare stage durations from <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_metrics</code> against your team&apos;s historical averages. A stage that suddenly doubles in duration is a signal worth investigating before it impacts delivery.</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-text-dim">2. Process Optimization</p>
+                          <p>Track cycle time trends after making process changes (e.g., introducing async review, reducing PR size limits). Use <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">team_metrics</code> to verify improvements stick over time.</p>
+                        </div>
+                        <p className="mt-3 text-xs text-text-ghost">Source: jellyfish.co/platform/life-cycle-explorer/</p>
                       </div>
-                      <div>
-                        <div className="font-semibold text-text-primary mb-0.5">Standup</div>
-                        <p>
-                          Surface any issue currently in a stage for longer than the team average. Early
-                          detection prevents carry-over.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                }
-                productOwner={
-                  <div className="space-y-2">
-                    <p>Identify which development stages consistently slow delivery. If <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Review</code> takes 3x longer than <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">In Progress</code>, <strong>budget accordingly in your roadmap</strong> — the bottleneck is real regardless of story point estimates.</p>
-                    <p>Use stage timing data to set <strong>accurate feature timelines</strong>. Tell stakeholders: &quot;Based on cycle time data, features of this size typically take 5-7 business days from start to deploy.&quot;</p>
-                  </div>
-                }
+                    ),
+                  },
+                ]}
               />
             }
             apiExplorerContent={
@@ -412,51 +442,81 @@ export default function ProcessPage() {
           <BottomPanel
             guidesContent={
               <GuidePanel
-                scrumMaster={
-                  <div className="space-y-4">
-                    <p>
-                      Workflow Analysis traces work from intake to deployment, uncovering
-                      bottlenecks, handoffs, and delays that sprint-level metrics miss. Each
-                      transition between stages has two components: active work time and
-                      handoff delay (idle time waiting for the next stage to pick up). High
-                      handoff delays often point to capacity gaps, unclear ownership, or
-                      missing automation.
-                    </p>
-                    <div className="space-y-3">
-                      <div>
-                        <p className="font-semibold text-text-primary">Retrospective</p>
+                tabs={[
+                  {
+                    key: "sm",
+                    label: "Scrum Master",
+                    content: (
+                      <div className="space-y-4">
                         <p>
-                          Present the handoff delay data. Ask:{" "}
-                          <em>&apos;Where does work sit waiting?&apos;</em> The <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">Review→QA</code> transition
-                          often has the highest idle time — is it a reviewer capacity issue or an unclear QA handoff process?
+                          Workflow Analysis traces work from intake to deployment, uncovering
+                          bottlenecks, handoffs, and delays that sprint-level metrics miss. Each
+                          transition between stages has two components: active work time and
+                          handoff delay (idle time waiting for the next stage to pick up). High
+                          handoff delays often point to capacity gaps, unclear ownership, or
+                          missing automation.
                         </p>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="font-semibold text-text-primary">Retrospective</p>
+                            <p>
+                              Present the handoff delay data. Ask:{" "}
+                              <em>&apos;Where does work sit waiting?&apos;</em> The <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">Review→QA</code> transition
+                              often has the highest idle time — is it a reviewer capacity issue or an unclear QA handoff process?
+                            </p>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-text-primary">Planning</p>
+                            <p>
+                              Set WIP limits per stage based on where idle time concentrates. If
+                              <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded mx-1">Development→Review</code> has a 6-hour delay, the team may need to
+                              prioritize reviews before starting new work.
+                            </p>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-text-primary">Process improvement</p>
+                            <p>
+                              Target the single worst handoff each quarter. Reducing one
+                              transition&apos;s idle time by 50% has more impact than small
+                              improvements across all stages.
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-text-primary">Planning</p>
+                    ),
+                  },
+                  {
+                    key: "po",
+                    label: "Product Owner",
+                    content: (
+                      <div className="space-y-2">
+                        <p>Understand handoff delays that <strong>impact your delivery timeline</strong>. The transitions with highest idle time are where your features sit waiting — not being worked on.</p>
+                        <p>Focus improvement efforts on the <strong>single worst handoff</strong>. Reducing one transition&apos;s idle time by 50% has more roadmap impact than small improvements across all stages.</p>
+                        <p>Use workflow data to explain delivery timelines to stakeholders with specifics: &quot;Features spend an average of 16 hours waiting between Review and QA — we&apos;re working to reduce that.&quot;</p>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: "em",
+                    label: "Eng Manager",
+                    content: (
+                      <div className="space-y-3">
                         <p>
-                          Set WIP limits per stage based on where idle time concentrates. If
-                          <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded mx-1">Development→Review</code> has a 6-hour delay, the team may need to
-                          prioritize reviews before starting new work.
+                          Use <code className="text-xs font-mono bg-blue-dim text-blue px-1 py-0.5 rounded">deliverable_details</code> alongside workflow transition data to identify handoff friction between stages. EMs should focus on reducing idle time between stages — time where work sits waiting rather than being actively progressed.
                         </p>
+                        <div>
+                          <p className="font-semibold text-text-dim">1. Handoff Friction Reduction</p>
+                          <p>When handoff delay exceeds active time for a transition, investigate the cause: reviewer availability, unclear acceptance criteria, or tooling gaps. Target the highest-delay transitions first.</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-text-dim">2. Cross-Stage Visibility</p>
+                          <p>Use handoff data in retrospectives to identify systemic process issues that span multiple stages, rather than optimizing one stage in isolation.</p>
+                        </div>
+                        <p className="mt-3 text-xs text-text-ghost">Source: jellyfish.co/blog/issue-cycle-time-the-staple-engineering-operations-metric/</p>
                       </div>
-                      <div>
-                        <p className="font-semibold text-text-primary">Process improvement</p>
-                        <p>
-                          Target the single worst handoff each quarter. Reducing one
-                          transition&apos;s idle time by 50% has more impact than small
-                          improvements across all stages.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                }
-                productOwner={
-                  <div className="space-y-2">
-                    <p>Understand handoff delays that <strong>impact your delivery timeline</strong>. The transitions with highest idle time are where your features sit waiting — not being worked on.</p>
-                    <p>Focus improvement efforts on the <strong>single worst handoff</strong>. Reducing one transition&apos;s idle time by 50% has more roadmap impact than small improvements across all stages.</p>
-                    <p>Use workflow data to explain delivery timelines to stakeholders with specifics: &quot;Features spend an average of 16 hours waiting between Review and QA — we&apos;re working to reduce that.&quot;</p>
-                  </div>
-                }
+                    ),
+                  },
+                ]}
               />
             }
             apiExplorerContent={
