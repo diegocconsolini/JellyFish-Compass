@@ -90,7 +90,7 @@ graph LR
 |------|--------------|
 | **Deck Builder** | Visual PPTX builder with 9 templates, 13 slide blocks, Jellyfish-branded export |
 | **Reference** | 16 subsections: 25 endpoints, MCP tools, DORA, integrations, infrastructure, and more |
-| **Academy** | 4-tab learning hub: Modules, Playbooks, Workspace, Showcase |
+| **Academy** | 4-tab learning hub: Modules, 17 Interactive Playbooks, Workspace, Showcase |
 
 ---
 
@@ -254,15 +254,17 @@ app/
   metrics/                    PPTX Deck Builder
   reference/                  API reference (16 subsections)
   academy/                    Learning hub (4 tabs)
+    playbooks/[slug]/         Dynamic interactive playbook detail pages
 components/
   layout/                     Header (responsive hamburger), footer
-  ui/                         StatCard, DataTable, ProgressBar, Badge, BottomPanel, GuidePanel, ApiDrawer, SectionDivider, etc.
+  ui/                         StatCard, DataTable, ProgressBar, Badge, BottomPanel, GuidePanel, ApiDrawer, SectionDivider, PlaybookCard, PlaybookProgress, PlaybookStepSection, etc.
   metrics/                    Deck Builder components
 data/
   endpoints-full.ts           25 API endpoints across 6 domains
   mock-data.ts                Mock data for all visualization pages
   dora-metrics.ts             4 DORA metrics (verbatim)
   integrations.ts             33 tools across 5 categories
+  playbooks.ts                17 interactive playbook definitions
   slide-templates.ts          13 slide blocks, 9 deck templates
 lib/
   api-client.ts               Jellyfish API client
@@ -300,6 +302,30 @@ The **BottomPanel** keeps guide content and API tools out of the way for casual 
 | **Product Manager** | Investment allocation, roadmap feasibility, leadership communication | 9 of 11 |
 
 All guide content is grounded in official Jellyfish materials (jellyfish.co, case studies, solution pages) with source citations. No fabricated thresholds or benchmarks.
+
+---
+
+## Interactive Playbooks
+
+17 guided workflows organized as a category journey timeline, each with inline visualizations, embedded API Explorer, and persona-specific guidance.
+
+| Category | Playbooks | Source |
+|----------|-----------|--------|
+| **Sprint & Delivery** | Sprint Retrospective, Delivery Health Check, Issue Cycle Time Analysis, Delivery Timeline Management | jellyfish.co/blog |
+| **Capacity & Planning** | Capacity & Allocation Review, Capacity Planning for Quarterly Roadmap, Resource Allocation Audit | jellyfish.co/blog |
+| **DevEx & Health** | DevEx Survey & Action Planning, Team Health Assessment, Burnout Detection & Prevention | jellyfish.co/blog |
+| **Metrics** | DORA Metrics Implementation, Engineering Metrics Strategy, Developer Productivity Measurement | jellyfish.co/blog |
+| **Executive** | Stakeholder Status Summary, Board Presentation Prep | jellyfish.co/blog |
+| **AI & Innovation** | AI Impact Measurement, Technical Debt Prioritization | jellyfish.co/blog |
+
+Each playbook features:
+- **Sticky progress bar** tracking current step via IntersectionObserver
+- **Inline visualizations** (StatCards, BarCharts, DataTables, ProgressBars) with mock data
+- **Per-step API Explorer** pre-loaded with relevant endpoints
+- **Persona guides** at the top (SM, PO, EM, PM — varies by playbook)
+- **Source citation** linking to the official Jellyfish blog/resource page
+
+All playbook content is grounded in official Jellyfish materials — no fabricated data.
 
 ---
 
